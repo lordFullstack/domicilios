@@ -13,4 +13,11 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
+  // GitHub Pages configuration
+  base: process.env.VITE_BASE_URL || '/',
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    minify: 'terser',
+  },
 })

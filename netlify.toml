@@ -1,0 +1,22 @@
+[build]
+  command = "npm run build"
+  functions = "netlify/functions"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production]
+  environment = { VITE_SUPABASE_URL = "@vite_supabase_url", VITE_SUPABASE_ANON_KEY = "@vite_supabase_anon_key" }
+
+[context.deploy-preview]
+  command = "npm run build"

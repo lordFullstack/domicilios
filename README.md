@@ -210,6 +210,46 @@ npm run type-check
 - [ ] Fase 9: Pagos
 - [ ] Fase 10: Deploy en producción
 
+## 🚀 DEPLOYMENT
+
+### GitHub Pages + GitHub Actions
+
+Este proyecto está configurado para despliegue automático en GitHub Pages.
+
+**Ver guía completa:** [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+#### Quick Deploy
+
+1. **Crear repositorio en GitHub**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin https://github.com/tu-usuario/repo.git
+   git push -u origin main
+   ```
+
+2. **Configurar secretos** (Settings → Secrets → Actions)
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+
+3. **Habilitar GitHub Pages** (Settings → Pages)
+   - Source: Deploy from a branch
+   - Branch: main
+   - Folder: / (root)
+
+4. **URL de la app**
+   ```
+   https://tu-usuario.github.io/loop-maestro-mvp
+   ```
+
+#### Workflows Incluidos
+
+- **deploy.yml** - Deploy automático en push a main
+- **pr-checks.yml** - Validación de PRs
+
+---
+
 ## 📞 Soporte
 
 Para preguntas o problemas, contacta al equipo de desarrollo.
