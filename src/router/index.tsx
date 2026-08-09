@@ -18,6 +18,7 @@ import { OrderDetailPage } from '@/features/client/pages/OrderDetailPage'
 // Restaurant Pages
 import { RestaurantDashboard } from '@/features/restaurant/pages/DashboardPage'
 import { RestaurantOrdersPage } from '@/features/restaurant/pages/OrdersPage'
+import { MenuManagementPage } from '@/features/restaurant/pages/MenuManagementPage'
 
 // Delivery Pages
 import { DeliveryDashboard } from '@/features/delivery/pages/DashboardPage'
@@ -105,6 +106,14 @@ export const Router = () => {
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.RESTAURANT]}>
               <RestaurantOrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.RESTAURANT_PRODUCTS}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.RESTAURANT]}>
+              <MenuManagementPage />
             </ProtectedRoute>
           }
         />

@@ -65,7 +65,7 @@ export const useProducts = (restaurantId?: string) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const reload = () => {
     try {
       let data = localStorageService.get(STORAGE_KEYS.PRODUCTS) || []
 
@@ -80,9 +80,75 @@ export const useProducts = (restaurantId?: string) => {
     } finally {
       setLoading(false)
     }
+  }
+
+  useEffect(() => {
+    reload()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restaurantId])
 
-  return { products, loading, error }
+  const createProduct = (product: Product) => {
+    try {
+      const current = localStorageService.get(STORAGE_KEYS.PRODUCTS) || []
+      const updated = [...current, product]
+      localStorageService.set(STORAGE_KEYS.PRODUCTS, updated)
+      reload()
+      return true
+    } catch (err) {
+      console.error('Error creating product:', err)
+      setError('Error al crear producto')
+      return false
+    }
+  }
+
+  const updateProduct = (productId: string, updates: Partial<Product>) => {
+    try {
+      const current = localStorageService.get(STORAGE_KEYS.PRODUCTS) || []
+      const updated = current.map((p: Product) => {
+        if (p.id === productId) {
+          return { ...p, ...updates }
+        }
+        return p
+      })
+      localStorageService.set(STORAGE_KEYS.PRODUCTS, updated)
+      reload()
+      return true
+    } catch (err) {
+      console.error('Error updating product:', err)
+      setError('Error al actualizar producto')
+      return false
+    }
+  }
+
+  const deleteProduct = (productId: string) => {
+    try {
+      const current = localStorageService.get(STORAGE_KEYS.PRODUCTS) || []
+      const updated = current.filter((p: Product) => p.id !== productId)
+      localStorageService.set(STORAGE_KEYS.PRODUCTS, updated)
+      reload()
+      return true
+    } catch (err) {
+      console.error('Error deleting product:', err)
+      setError('Error al eliminar producto')
+      return false
+    }
+  }
+
+  const toggleAvailability = (productId: string) => {
+    const product = products.find((p) => p.id === productId)
+    if (!product) return false
+    return updateProduct(productId, { available: !product.available })
+  }
+
+  return {
+    products,
+    loading,
+    error,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    toggleAvailability,
+  }
 }
 
 // ============================================

@@ -1,8 +1,9 @@
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders, useRestaurants, useProducts } from '@/hooks/useLocalData'
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
-import { ORDER_STATUS } from '@/config/constants'
+import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { Order, OrderStatus } from '@/shared/types'
 
 const STATUS_FLOW: Record<string, string | null> = {
@@ -33,6 +34,7 @@ const NEXT_ACTION_LABELS: Record<string, string> = {
 }
 
 export const RestaurantDashboard = () => {
+  const navigate = useNavigate()
   const { user } = useAuth()
   const { restaurants } = useRestaurants()
   const { updateOrder, getOrdersByRestaurant } = useOrders()
@@ -136,8 +138,13 @@ export const RestaurantDashboard = () => {
               {products.length} productos • {products.filter((p) => p.available).length}{' '}
               disponibles
             </p>
-            <Button fullWidth variant="outline" size="sm" disabled>
-              Gestionar menú (próximamente)
+            <Button
+              fullWidth
+              variant="outline"
+              size="sm"
+              onClick={() => navigate(ROUTES.RESTAURANT_PRODUCTS)}
+            >
+              📋 Gestionar menú
             </Button>
           </Card>
           <Card>
