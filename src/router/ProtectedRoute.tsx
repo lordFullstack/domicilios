@@ -1,9 +1,10 @@
 import { Navigate } from 'react-router-dom'
+import { ReactNode } from 'react'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { ROUTES, USER_ROLES } from '@/config/constants'
+import { ROUTES } from '@/config/constants'
 
 interface ProtectedRouteProps {
-  children: React.ReactNode
+  children: ReactNode
   allowedRoles?: string[]
 }
 

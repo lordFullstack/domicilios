@@ -11,6 +11,7 @@ export const ROUTES = {
   CLIENT_RESTAURANTS: '/app/restaurants',
   CLIENT_RESTAURANT: '/app/restaurant/:id',
   CLIENT_CART: '/app/cart',
+  CLIENT_CHECKOUT: '/app/checkout',
   CLIENT_ORDERS: '/app/orders',
   CLIENT_ORDER: '/app/order/:id',
   

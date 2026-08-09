@@ -7,10 +7,13 @@ import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { RegisterPage } from '@/features/auth/pages/RegisterPage'
 
 // Client Pages
-import { HomePage } from '@/features/client/pages/HomePage'
+import { ClientDashboardPage } from '@/features/client/pages/ClientDashboardPage'
 import { RestaurantListPage } from '@/features/client/pages/RestaurantListPage'
+import { RestaurantDetailPage } from '@/features/client/pages/RestaurantDetailPage'
 import { CartPage } from '@/features/client/pages/CartPage'
+import { CheckoutPage } from '@/features/client/pages/CheckoutPage'
 import { OrdersPage } from '@/features/client/pages/OrdersPage'
+import { OrderDetailPage } from '@/features/client/pages/OrderDetailPage'
 
 // Restaurant Pages
 import { RestaurantDashboard } from '@/features/restaurant/pages/DashboardPage'
@@ -35,7 +38,7 @@ export const Router = () => {
           path={ROUTES.CLIENT_HOME}
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
-              <HomePage />
+              <ClientDashboardPage />
             </ProtectedRoute>
           }
         />
@@ -48,6 +51,14 @@ export const Router = () => {
           }
         />
         <Route
+          path={ROUTES.CLIENT_RESTAURANT}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
+              <RestaurantDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path={ROUTES.CLIENT_CART}
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
@@ -56,10 +67,26 @@ export const Router = () => {
           }
         />
         <Route
+          path={ROUTES.CLIENT_CHECKOUT}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path={ROUTES.CLIENT_ORDERS}
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
               <OrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.CLIENT_ORDER}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
+              <OrderDetailPage />
             </ProtectedRoute>
           }
         />

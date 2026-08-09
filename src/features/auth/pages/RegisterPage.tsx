@@ -5,19 +5,20 @@ import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { Card } from '@/shared/components/Card'
 import { ROUTES, USER_ROLES } from '@/config/constants'
+import { UserRole } from '@/shared/types'
 
 export const RegisterPage = () => {
+  const [searchParams] = useSearchParams()
+  const initialRole = (searchParams.get('role') as UserRole) || USER_ROLES.CLIENT
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
-  const [role, setRole] = useState(USER_ROLES.CLIENT)
+  const [role, setRole] = useState<UserRole>(initialRole)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
   const { register } = useAuth()
-
-  const initialRole = searchParams.get('role') || USER_ROLES.CLIENT
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -79,7 +80,7 @@ export const RegisterPage = () => {
             </label>
             <select
               value={role}
-              onChange={(e) => setRole(e.target.value)}
+              onChange={(e) => setRole(e.target.value as UserRole)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
             >
               <option value={USER_ROLES.CLIENT}>Cliente</option>
