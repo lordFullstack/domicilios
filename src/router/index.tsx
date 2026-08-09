@@ -26,9 +26,6 @@ import { DeliveryDashboard } from '@/features/delivery/pages/DashboardPage'
 // Admin Pages
 import { AdminDashboard } from '@/features/admin/pages/DashboardPage'
 
-// Design System (preview interno)
-import { DesignSystemPage } from '@/features/design-system/DesignSystemPage'
-
 export const Router = () => {
   return (
     <BrowserRouter>
@@ -36,7 +33,6 @@ export const Router = () => {
         {/* Public */}
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
-        <Route path="/design-system" element={<DesignSystemPage />} />
 
         {/* Client */}
         <Route

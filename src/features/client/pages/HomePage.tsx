@@ -14,7 +14,7 @@ export const HomePage = () => {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-secondary text-white p-8">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold mb-2">🍕 Loop Maestro</h1>
+          <h1 className="text-4xl font-bold mb-2">🍕 Domicilios Riohacha</h1>
           <p className="text-lg">Comida deliciosa entregada rápido</p>
         </div>
       </div>

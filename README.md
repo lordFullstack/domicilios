@@ -1,4 +1,4 @@
-# 🍔 Loop Maestro MVP - Delivery Platform
+# 🍔 Domicilios Riohacha - Delivery Platform
 
 Plataforma SaaS de delivery tipo Uber Eats/Rappi construida con React 19, Supabase y TailwindCSS.
 

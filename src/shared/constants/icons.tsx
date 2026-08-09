@@ -1,5 +1,5 @@
 /**
- * Iconos Semánticos de Loop Maestro
+ * Iconos Semánticos de Domicilios Riohacha
  *
  * Centraliza el set de iconos usados en toda la app para mantener
  * consistencia visual (reemplaza el uso de emojis como iconos).

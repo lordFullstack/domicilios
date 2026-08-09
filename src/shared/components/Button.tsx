@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react'
 import clsx from 'clsx'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'accent' | 'accent-outline'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
   fullWidth?: boolean
@@ -18,16 +18,13 @@ export const Button = ({
   disabled,
   ...props
 }: ButtonProps) => {
-  const baseStyles = 'font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2'
+  const baseStyles = 'font-display font-semibold rounded-full transition-all duration-200 flex items-center justify-center gap-2'
 
   const variants = {
-    primary: 'bg-primary text-white hover:bg-primary/90 disabled:bg-gray-400',
-    secondary: 'bg-secondary text-white hover:bg-secondary/90 disabled:bg-gray-400',
-    outline: 'border-2 border-primary text-primary hover:bg-primary/10 disabled:border-gray-400',
-    ghost: 'text-primary hover:bg-primary/10 disabled:text-gray-400',
-    // Sistema oscuro/premium (nuevo, opt-in) — pensado para usarse sobre bg-ink / Card variant="dark"
-    accent: 'bg-ember text-ink font-semibold shadow-glow-sm hover:shadow-glow hover:bg-ember/90 disabled:bg-line disabled:shadow-none disabled:text-text-low',
-    'accent-outline': 'border border-line text-text-hi hover:border-ember hover:text-ember disabled:border-line disabled:text-text-low',
+    primary: 'bg-primary text-white hover:bg-primary-dark active:scale-[0.98] disabled:bg-gray-300',
+    secondary: 'bg-secondary text-white hover:bg-secondary/90 active:scale-[0.98] disabled:bg-gray-300',
+    outline: 'border-2 border-primary text-primary hover:bg-primary/5 disabled:border-gray-300 disabled:text-gray-400',
+    ghost: 'text-primary hover:bg-primary/5 disabled:text-gray-400',
   }
 
   const sizes = {
