@@ -4,6 +4,7 @@ import { useAuth } from '@/shared/hooks/useAuth'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { Card } from '@/shared/components/Card'
+import { RocketMark } from '@/shared/components/RocketMark'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 import { UserRole } from '@/shared/types'
 
@@ -36,73 +37,92 @@ export const RegisterPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary to-secondary flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary mb-2">Domicilios Riohacha</h1>
-          <p className="text-gray-600">Crea tu cuenta</p>
+    <div className="min-h-screen bg-secondary relative overflow-hidden flex flex-col">
+      {/* Nubes decorativas (igual que el mockup de marca) */}
+      <div className="absolute -bottom-10 -left-10 w-56 h-56 rounded-full bg-primary/20 blur-2xl pointer-events-none" />
+      <div className="absolute -bottom-16 right-0 w-72 h-72 rounded-full bg-white/5 blur-2xl pointer-events-none" />
+
+      {/* Hero de marca */}
+      <div className="flex flex-col items-center justify-center px-6 pt-16 pb-10 relative z-10">
+        <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+          <RocketMark size={36} />
         </div>
+        <p className="text-xs font-semibold tracking-widest text-accent mb-0.5">DOMICILIOS</p>
+        <h1 className="font-display text-3xl font-extrabold text-white mb-2">RIOHACHA</h1>
+        <p className="text-[11px] tracking-widest text-white/60 font-medium">
+          RÁPIDO · SEGURO · CONFIABLE
+        </p>
+      </div>
 
-        {error && (
-          <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-4">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Nombre completo"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Juan Pérez"
-            required
-          />
-          <Input
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="tu@email.com"
-            required
-          />
-          <Input
-            label="Contraseña"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            required
-          />
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tipo de cuenta
-            </label>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value as UserRole)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
-            >
-              <option value={USER_ROLES.CLIENT}>Cliente</option>
-              <option value={USER_ROLES.RESTAURANT}>Restaurante</option>
-              <option value={USER_ROLES.DELIVERY}>Domiciliario</option>
-            </select>
+      {/* Hoja blanca con el formulario */}
+      <div className="relative z-10 flex-1 flex items-end">
+        <Card className="w-full rounded-b-none rounded-t-3xl max-w-md mx-auto p-6 pb-10">
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-display font-bold text-secondary mb-1">Crea tu cuenta</h2>
+            <p className="text-gray-500 text-sm">Únete a Domicilios Riohacha</p>
           </div>
 
-          <Button type="submit" fullWidth loading={loading}>
-            Registrarse
-          </Button>
-        </form>
+          {error && (
+            <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-4 text-sm">
+              {error}
+            </div>
+          )}
 
-        <div className="mt-6 text-center">
-          <p className="text-gray-600 text-sm">
-            ¿Ya tienes cuenta?{' '}
-            <a href={ROUTES.LOGIN} className="text-primary font-semibold hover:underline">
-              Inicia sesión
-            </a>
-          </p>
-        </div>
-      </Card>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              label="Nombre completo"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Juan Pérez"
+              required
+            />
+            <Input
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="tu@email.com"
+              required
+            />
+            <Input
+              label="Contraseña"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Tipo de cuenta
+              </label>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value as UserRole)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+              >
+                <option value={USER_ROLES.CLIENT}>Cliente</option>
+                <option value={USER_ROLES.RESTAURANT}>Restaurante</option>
+                <option value={USER_ROLES.DELIVERY}>Domiciliario</option>
+              </select>
+            </div>
+
+            <Button type="submit" fullWidth loading={loading}>
+              Registrarse
+            </Button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-gray-600 text-sm">
+              ¿Ya tienes cuenta?{' '}
+              <a href={ROUTES.LOGIN} className="text-primary font-semibold hover:underline">
+                Inicia sesión
+              </a>
+            </p>
+          </div>
+        </Card>
+      </div>
     </div>
   )
 }
