@@ -30,10 +30,11 @@ export const ClientDashboardPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-secondary text-white p-8">
+      <div className="bg-white border-b border-gray-100 p-8">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold mb-2">👋 Bienvenido, {user?.name?.split(' ')[0]}</h1>
-          <p className="text-lg">¿Qué quieres ordenar hoy?</p>
+          <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
+          <h1 className="text-4xl font-display font-bold text-secondary mb-2">👋 Bienvenido, {user?.name?.split(' ')[0]}</h1>
+          <p className="text-lg text-gray-500">¿Qué quieres ordenar hoy?</p>
         </div>
       </div>
 

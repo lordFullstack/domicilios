@@ -41,10 +41,11 @@ export const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-gray-800 to-gray-900 text-white p-8">
+      <div className="bg-secondary text-white p-8">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">👔 Panel de Administración</h1>
-          <p className="text-lg">Visión general de la plataforma</p>
+          <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
+          <h1 className="text-3xl font-display font-bold mb-2">👔 Panel de Administración</h1>
+          <p className="text-lg text-gray-300">Visión general de la plataforma</p>
         </div>
       </div>
 

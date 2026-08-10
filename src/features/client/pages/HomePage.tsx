@@ -12,10 +12,10 @@ export const HomePage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-secondary text-white p-8">
+      <div className="bg-white border-b border-gray-100 p-8">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold mb-2">🍕 Domicilios Riohacha</h1>
-          <p className="text-lg">Comida deliciosa entregada rápido</p>
+          <h1 className="text-4xl font-display font-bold text-secondary mb-2">🍕 Domicilios Riohacha</h1>
+          <p className="text-lg text-gray-500">Comida deliciosa entregada rápido</p>
         </div>
       </div>
 

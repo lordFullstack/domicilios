@@ -83,18 +83,18 @@ export const MenuManagementPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-secondary to-primary text-white p-8">
+      <div className="bg-white border-b border-gray-100 p-8">
         <div className="max-w-6xl mx-auto">
           <button
             onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}
-            className="mb-4 hover:opacity-80"
+            className="mb-4 text-primary font-semibold hover:opacity-80"
           >
             ← Dashboard
           </button>
-          <h1 className="text-3xl font-bold mb-2">
+          <h1 className="text-3xl font-display font-bold text-secondary mb-2">
             📋 Menú de {myRestaurant.name}
           </h1>
-          <p className="text-lg">Gestiona tus productos y categorías</p>
+          <p className="text-lg text-gray-500">Gestiona tus productos y categorías</p>
         </div>
       </div>
 

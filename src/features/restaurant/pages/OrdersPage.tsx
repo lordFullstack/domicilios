@@ -25,15 +25,15 @@ export const RestaurantOrdersPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-secondary to-primary text-white p-8">
+      <div className="bg-white border-b border-gray-100 p-8">
         <div className="max-w-6xl mx-auto">
           <button
             onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}
-            className="mb-4 hover:opacity-80"
+            className="mb-4 text-primary font-semibold hover:opacity-80"
           >
             ← Dashboard
           </button>
-          <h1 className="text-3xl font-bold">📜 Historial de Órdenes</h1>
+          <h1 className="text-3xl font-display font-bold text-secondary">📜 Historial de Órdenes</h1>
         </div>
       </div>
 

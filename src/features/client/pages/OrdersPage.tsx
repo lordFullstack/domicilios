@@ -17,12 +17,12 @@ export const OrdersPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-secondary text-white p-8">
+      <div className="bg-white border-b border-gray-100 p-8">
         <div className="max-w-6xl mx-auto">
-          <button onClick={() => navigate(ROUTES.CLIENT_HOME)} className="mb-4 hover:opacity-80">
+          <button onClick={() => navigate(ROUTES.CLIENT_HOME)} className="mb-4 text-primary font-semibold hover:opacity-80">
             ← Atrás
           </button>
-          <h1 className="text-3xl font-bold">📦 Mis Órdenes</h1>
+          <h1 className="text-3xl font-display font-bold text-secondary">📦 Mis Órdenes</h1>
         </div>
       </div>
 

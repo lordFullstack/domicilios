@@ -90,12 +90,13 @@ export const RestaurantDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-secondary to-primary text-white p-8">
+      <div className="bg-white border-b border-gray-100 p-8">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">
+          <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
+          <h1 className="text-3xl font-display font-bold text-secondary mb-2">
             {myRestaurant.image_url} {myRestaurant.name}
           </h1>
-          <p className="text-lg">Panel de gestión de pedidos</p>
+          <p className="text-lg text-gray-500">Panel de gestión de pedidos</p>
         </div>
       </div>
 
