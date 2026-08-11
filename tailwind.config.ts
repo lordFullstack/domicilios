@@ -18,6 +18,7 @@ export default {
         danger: '#E11D48',        // estados "cancelado"
         surface: '#F4F6FA',       // fondo gris claro de marca
         ink: '#1D2433',           // texto oscuro de marca (uso puntual, no reemplaza gray-*)
+        info: '#1657E6',          // azul de marca — callouts informativos
       },
       fontFamily: {
         display: ['"Poppins"', 'sans-serif'],
