@@ -230,7 +230,7 @@ export const CheckoutPage = () => {
         </Card>
 
         {/* Info adicional */}
-        <Card className="bg-info/10 border border-info/30">
+        <Card className="bg-blue-50 border border-blue-200">
           <p className="text-sm text-gray-600">
             💡 <strong>Nota:</strong> Tu orden será procesada inmediatamente. El restaurante
             y el domiciliario recibirán la notificación.

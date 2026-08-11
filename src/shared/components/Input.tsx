@@ -23,9 +23,9 @@ export const Input = ({
       )}
       <input
         className={clsx(
-          'w-full px-4 py-2 border rounded-lg',
+          'w-full px-4 py-3 border rounded-2xl text-sm',
           'focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary',
-          error ? 'border-red-500' : 'border-gray-300',
+          error ? 'border-red-500' : 'border-gray-200',
           className
         )}
         {...props}

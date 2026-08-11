@@ -1,8 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { Card } from '@/shared/components/Card'
+import { ChevronLeft, Star, Clock, Plus } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
-import { useRestaurantById, useProducts } from '@/hooks/useLocalData'
-import { ProductCard } from '../components/ProductCard'
+import { useRestaurantById, useProducts, useCart } from '@/hooks/useLocalData'
 import { ROUTES } from '@/config/constants'
 
 export const RestaurantDetailPage = () => {
@@ -11,20 +10,23 @@ export const RestaurantDetailPage = () => {
 
   const { restaurant, loading: restaurantLoading } = useRestaurantById(id || '')
   const { products, loading: productsLoading } = useProducts(id)
+  const { cart, addItem, getTotal } = useCart()
+
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
 
   if (restaurantLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">Cargando restaurante...</p>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-gray-400 text-sm">Cargando restaurante...</p>
       </div>
     )
   }
 
   if (!restaurant) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">Restaurante no encontrado</p>
+          <p className="text-gray-400 text-sm mb-4">Restaurante no encontrado</p>
           <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>
         </div>
       </div>
@@ -32,86 +34,90 @@ export const RestaurantDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header del Restaurante */}
-      <div className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <button onClick={() => navigate(-1)} className="text-primary font-semibold mb-4">
-            ← Atrás
-          </button>
-
-          <div className="flex gap-6 items-start">
-            {/* Imagen */}
-            <div className="text-6xl bg-gray-100 p-8 rounded-lg">{restaurant.image_url}</div>
-
-            {/* Información */}
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2">{restaurant.name}</h1>
-              <p className="text-gray-600 mb-4">{restaurant.description}</p>
-
-              <div className="space-y-2 text-sm">
-                <p>
-                  <span className="font-semibold">📍 Dirección:</span> {restaurant.address}
-                </p>
-                <p>
-                  <span className="font-semibold">📞 Teléfono:</span> {restaurant.phone}
-                </p>
-                <p>
-                  <span className="font-semibold">🕐 Estado:</span>{' '}
-                  {restaurant.status === 'open' ? (
-                    <span className="text-success">🟢 Abierto</span>
-                  ) : (
-                    <span className="text-danger">🔴 Cerrado</span>
-                  )}
-                </p>
-              </div>
-
-              <div className="mt-4 flex gap-2">
-                <Button variant="primary" fullWidth>
-                  Realizar Pedido
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-white max-w-md mx-auto pb-28 relative">
+      {/* Hero */}
+      <div className="h-40 flex items-center justify-center text-6xl bg-orange-50 relative">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-4 left-4 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-card"
+        >
+          <ChevronLeft className="w-4 h-4 text-secondary" />
+        </button>
+        {restaurant.image_url}
       </div>
 
-      {/* Menú de Productos */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-6">🍽️ Menú</h2>
+      {/* Info */}
+      <div className="px-5 pt-4">
+        <h1 className="font-display text-xl font-bold text-secondary">{restaurant.name}</h1>
+        <div className="flex items-center gap-3 text-xs text-gray-500 mt-1 mb-1">
+          <span className="flex items-center gap-1">
+            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+            4.8
+          </span>
+          <span className="flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            25-35 min
+          </span>
+          <span className={restaurant.status === 'open' ? 'text-green-600' : 'text-red-500'}>
+            {restaurant.status === 'open' ? 'Abierto' : 'Cerrado'}
+          </span>
+        </div>
+        <p className="text-xs text-gray-400 mb-4">{restaurant.description}</p>
+      </div>
+
+      {/* Menú */}
+      <div className="px-5">
+        <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Menú</h2>
 
         {productsLoading ? (
-          <div className="text-center py-8">
-            <p className="text-gray-600">Cargando menú...</p>
-          </div>
+          <p className="text-gray-400 text-sm text-center py-8">Cargando menú...</p>
         ) : products.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="flex flex-col gap-3">
             {products.map((product) => (
-              <ProductCard
+              <div
                 key={product.id}
-                product={product}
-                onSelect={(prod) => {
-                  console.log('Producto seleccionado:', prod)
-                }}
-              />
+                className={`flex items-center gap-3 border border-gray-100 rounded-2xl p-3 ${
+                  !product.available ? 'opacity-50' : ''
+                }`}
+              >
+                <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0">
+                  {product.image_url}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
+                  <p className="text-xs text-gray-400 truncate">{product.description}</p>
+                  <p className="text-sm font-bold text-primary mt-1">
+                    ${product.price.toLocaleString('es-CO')}
+                  </p>
+                </div>
+                {product.available ? (
+                  <button
+                    onClick={() => addItem(product.id, product.price, 1)}
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white bg-primary flex-shrink-0 active:scale-90 transition-transform"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <span className="text-xs text-gray-400 flex-shrink-0">Agotado</span>
+                )}
+              </div>
             ))}
           </div>
         ) : (
-          <Card>
-            <p className="text-gray-600 text-center py-8">No hay productos disponibles</p>
-          </Card>
+          <p className="text-gray-400 text-sm text-center py-8">No hay productos disponibles</p>
         )}
       </div>
 
-      {/* Botón Flotante Carrito */}
-      <div className="fixed bottom-6 right-6">
-        <Button
+      {/* Barra flotante de carrito */}
+      {cartCount > 0 && (
+        <button
           onClick={() => navigate(ROUTES.CLIENT_CART)}
-          className="rounded-full w-16 h-16 flex items-center justify-center text-2xl shadow-lg"
+          className="fixed bottom-24 left-5 right-5 max-w-md mx-auto text-white rounded-full py-3 px-5 flex items-center justify-between shadow-lg active:scale-95 transition-transform bg-primary"
         >
-          🛒
-        </Button>
-      </div>
+          <span className="text-sm font-semibold">{cartCount} items en el carrito</span>
+          <span className="text-sm font-bold">${getTotal().toLocaleString('es-CO')}</span>
+        </button>
+      )}
     </div>
   )
 }
