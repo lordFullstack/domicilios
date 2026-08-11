@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Card } from '@/shared/components/Card'
-import { Button } from '@/shared/components/Button'
+import { RocketMark } from '@/shared/components/RocketMark'
 import { useRestaurants, useOrders } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { RestaurantCard } from '../components/RestaurantCard'
@@ -13,107 +14,103 @@ export const ClientDashboardPage = () => {
   const { user } = useAuth()
   const { restaurants } = useRestaurants()
   const { orders } = useOrders(user?.id)
+  const [search, setSearch] = useState('')
 
   // Estadísticas
   const totalOrders = orders.length
   const deliveredOrders = orders.filter(o => o.status === ORDER_STATUS.DELIVERED).length
-  const activeOrders = orders.filter(o => 
+  const activeOrders = orders.filter(o =>
     !([ORDER_STATUS.DELIVERED, ORDER_STATUS.CANCELLED] as OrderStatus[]).includes(o.status)
   ).length
   const totalSpent = orders
     .filter(o => o.status === ORDER_STATUS.DELIVERED)
     .reduce((sum, o) => sum + o.total, 0)
 
-  // Órdenes recientes (últimas 3)
   const recentOrders = orders.slice(0, 3)
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    navigate(search.trim() ? `${ROUTES.CLIENT_RESTAURANTS}?q=${encodeURIComponent(search.trim())}` : ROUTES.CLIENT_RESTAURANTS)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-100 p-8">
+      {/* Hero navy */}
+      <div className="bg-secondary rounded-b-[28px] px-4 pt-6 pb-6 md:rounded-b-none">
         <div className="max-w-6xl mx-auto">
-          <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
-          <h1 className="text-4xl font-display font-bold text-secondary mb-2">👋 Bienvenido, {user?.name?.split(' ')[0]}</h1>
-          <p className="text-lg text-gray-500">¿Qué quieres ordenar hoy?</p>
+          <div className="flex items-center gap-2 mb-5">
+            <RocketMark size={34} />
+            <span className="text-white/70 text-xs font-semibold tracking-widest">DOMICILIOS RIOHACHA</span>
+          </div>
+
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-1">
+            Hola, {user?.name?.split(' ')[0] || 'bienvenido'} 👋
+          </h1>
+          <p className="text-white/70 mb-5">¿Qué quieres ordenar hoy?</p>
+
+          <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 bg-white rounded-2xl px-4 py-2.5">
+            <span className="text-gray-400">🔍</span>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar restaurantes..."
+              className="flex-1 bg-transparent outline-none text-sm text-gray-900"
+            />
+          </form>
         </div>
       </div>
 
-      {/* Contenido Principal */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Estadísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-primary">{totalOrders}</p>
-              <p className="text-gray-600 text-sm mt-1">📦 Total de órdenes</p>
-            </div>
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        {/* Estadísticas — grid compacto de 2x2 en mobile */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <Card className="!p-3 text-center">
+            <p className="text-2xl font-bold text-primary">{totalOrders}</p>
+            <p className="text-gray-600 text-xs mt-0.5">📦 Órdenes</p>
           </Card>
-
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-success">{deliveredOrders}</p>
-              <p className="text-gray-600 text-sm mt-1">✅ Entregadas</p>
-            </div>
+          <Card className="!p-3 text-center">
+            <p className="text-2xl font-bold text-success">{deliveredOrders}</p>
+            <p className="text-gray-600 text-xs mt-0.5">✅ Entregadas</p>
           </Card>
-
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-warning">{activeOrders}</p>
-              <p className="text-gray-600 text-sm mt-1">🔄 En progreso</p>
-            </div>
+          <Card className="!p-3 text-center">
+            <p className="text-2xl font-bold text-warning">{activeOrders}</p>
+            <p className="text-gray-600 text-xs mt-0.5">🔄 En progreso</p>
           </Card>
-
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-primary">
-                ${totalSpent.toLocaleString('es-CO')}
-              </p>
-              <p className="text-gray-600 text-sm mt-1">💰 Total gastado</p>
-            </div>
+          <Card className="!p-3 text-center">
+            <p className="text-xl font-bold text-primary">${totalSpent.toLocaleString('es-CO')}</p>
+            <p className="text-gray-600 text-xs mt-0.5">💰 Gastado</p>
           </Card>
         </div>
 
-        {/* Acciones Rápidas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card hoverable onClick={() => navigate(ROUTES.CLIENT_HOME)}>
-            <div className="text-center py-6">
-              <p className="text-4xl mb-3">🍕</p>
-              <h3 className="font-bold mb-1">Ordenar Comida</h3>
-              <p className="text-sm text-gray-600 mb-4">Ver restaurantes disponibles</p>
-              <Button fullWidth variant="primary" size="sm">
-                Explorar
-              </Button>
-            </div>
-          </Card>
-
-          <Card hoverable onClick={() => navigate(ROUTES.CLIENT_ORDERS)}>
-            <div className="text-center py-6">
-              <p className="text-4xl mb-3">📦</p>
-              <h3 className="font-bold mb-1">Mis Órdenes</h3>
-              <p className="text-sm text-gray-600 mb-4">Ver historial y seguimiento</p>
-              <Button fullWidth variant="secondary" size="sm">
-                Ver todas
-              </Button>
-            </div>
-          </Card>
-
-          <Card hoverable onClick={() => navigate(ROUTES.CLIENT_CART)}>
-            <div className="text-center py-6">
-              <p className="text-4xl mb-3">🛒</p>
-              <h3 className="font-bold mb-1">Mi Carrito</h3>
-              <p className="text-sm text-gray-600 mb-4">Productos pendientes</p>
-              <Button fullWidth variant="outline" size="sm">
-                Revisar
-              </Button>
-            </div>
-          </Card>
+        {/* Accesos rápidos — fila compacta tipo chips */}
+        <div className="grid grid-cols-3 gap-3 mb-8">
+          <button
+            onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}
+            className="flex flex-col items-center gap-2 bg-white rounded-2xl py-4 border border-gray-100 hover:shadow-card transition-shadow"
+          >
+            <span className="text-2xl">🍕</span>
+            <span className="text-xs font-semibold text-secondary">Ordenar</span>
+          </button>
+          <button
+            onClick={() => navigate(ROUTES.CLIENT_ORDERS)}
+            className="flex flex-col items-center gap-2 bg-white rounded-2xl py-4 border border-gray-100 hover:shadow-card transition-shadow"
+          >
+            <span className="text-2xl">📦</span>
+            <span className="text-xs font-semibold text-secondary">Mis órdenes</span>
+          </button>
+          <button
+            onClick={() => navigate(ROUTES.CLIENT_CART)}
+            className="flex flex-col items-center gap-2 bg-white rounded-2xl py-4 border border-gray-100 hover:shadow-card transition-shadow"
+          >
+            <span className="text-2xl">🛒</span>
+            <span className="text-xs font-semibold text-secondary">Carrito</span>
+          </button>
         </div>
 
         {/* Órdenes Recientes */}
         {recentOrders.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">📦 Órdenes Recientes</h2>
-            <div className="space-y-4">
+            <h2 className="text-xl font-display font-bold text-secondary mb-3">Órdenes recientes</h2>
+            <div className="space-y-3">
               {recentOrders.map((order) => (
                 <OrderCard
                   key={order.id}
@@ -127,7 +124,12 @@ export const ClientDashboardPage = () => {
 
         {/* Restaurantes Destacados */}
         <div>
-          <h2 className="text-2xl font-bold mb-4">⭐ Restaurantes Populares</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xl font-display font-bold text-secondary">⭐ Restaurantes populares</h2>
+            <button onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)} className="text-primary text-sm font-semibold">
+              Ver todos
+            </button>
+          </div>
           {restaurants.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {restaurants.slice(0, 3).map((restaurant) => (
