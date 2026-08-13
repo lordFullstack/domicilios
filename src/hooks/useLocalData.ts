@@ -1,10 +1,16 @@
 /**
- * Hook useLocalData
- * Obtiene datos del almacenamiento local (localStorage/IndexedDB)
+ * Hooks de datos — Supabase real
+ *
+ * Mismos nombres/firmas que la versión anterior basada en localStorage,
+ * para no tener que tocar cada pantalla que ya los consume.
+ * El carrito (useCart) sigue siendo local: es estado efímero de sesión,
+ * no necesita tabla en la base de datos.
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { supabase } from '@/shared/utils/supabase'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
+import { useAuth } from '@/shared/hooks/useAuth'
 import { Restaurant, Product, Order } from '@/shared/types'
 
 // ============================================
@@ -17,14 +23,26 @@ export const useRestaurants = () => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    try {
-      const data = localStorageService.get(STORAGE_KEYS.RESTAURANTS)
-      setRestaurants(data || [])
-    } catch (err) {
-      setError('Error cargando restaurantes')
-      console.error(err)
-    } finally {
+    let cancelled = false
+    const load = async () => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('restaurants')
+        .select('*')
+        .order('name')
+
+      if (cancelled) return
+      if (error) {
+        setError('Error cargando restaurantes')
+        console.error(error)
+      } else {
+        setRestaurants(data || [])
+      }
       setLoading(false)
+    }
+    load()
+    return () => {
+      cancelled = true
     }
   }, [])
 
@@ -41,15 +59,31 @@ export const useRestaurantById = (id: string) => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    try {
-      const restaurants = localStorageService.get(STORAGE_KEYS.RESTAURANTS) || []
-      const found = restaurants.find((r: Restaurant) => r.id === id)
-      setRestaurant(found || null)
-    } catch (err) {
-      setError('Error cargando restaurante')
-      console.error(err)
-    } finally {
+    if (!id) {
       setLoading(false)
+      return
+    }
+    let cancelled = false
+    const load = async () => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('restaurants')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle()
+
+      if (cancelled) return
+      if (error) {
+        setError('Error cargando restaurante')
+        console.error(error)
+      } else {
+        setRestaurant(data)
+      }
+      setLoading(false)
+    }
+    load()
+    return () => {
+      cancelled = true
     }
   }, [id])
 
@@ -57,7 +91,7 @@ export const useRestaurantById = (id: string) => {
 }
 
 // ============================================
-// HOOK: useProducts
+// HOOK: useProducts (con CRUD)
 // ============================================
 
 export const useProducts = (restaurantId?: string) => {
@@ -65,76 +99,68 @@ export const useProducts = (restaurantId?: string) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const reload = () => {
-    try {
-      let data = localStorageService.get(STORAGE_KEYS.PRODUCTS) || []
-
-      if (restaurantId) {
-        data = data.filter((p: Product) => p.restaurant_id === restaurantId)
-      }
-
-      setProducts(data)
-    } catch (err) {
-      setError('Error cargando productos')
-      console.error(err)
-    } finally {
-      setLoading(false)
+  const reload = useCallback(async () => {
+    setLoading(true)
+    let query = supabase.from('products').select('*').order('name')
+    if (restaurantId) {
+      query = query.eq('restaurant_id', restaurantId)
     }
-  }
+    const { data, error } = await query
+
+    if (error) {
+      setError('Error cargando productos')
+      console.error(error)
+    } else {
+      setProducts(data || [])
+    }
+    setLoading(false)
+  }, [restaurantId])
 
   useEffect(() => {
     reload()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [restaurantId])
+  }, [reload])
 
-  const createProduct = (product: Product) => {
-    try {
-      const current = localStorageService.get(STORAGE_KEYS.PRODUCTS) || []
-      const updated = [...current, product]
-      localStorageService.set(STORAGE_KEYS.PRODUCTS, updated)
-      reload()
-      return true
-    } catch (err) {
-      console.error('Error creating product:', err)
+  const createProduct = async (product: {
+    restaurant_id: string
+    name: string
+    description: string
+    price: number
+    image_url: string
+    available: boolean
+  }) => {
+    const { error } = await supabase.from('products').insert(product)
+    if (error) {
+      console.error('Error creating product:', error)
       setError('Error al crear producto')
       return false
     }
+    await reload()
+    return true
   }
 
-  const updateProduct = (productId: string, updates: Partial<Product>) => {
-    try {
-      const current = localStorageService.get(STORAGE_KEYS.PRODUCTS) || []
-      const updated = current.map((p: Product) => {
-        if (p.id === productId) {
-          return { ...p, ...updates }
-        }
-        return p
-      })
-      localStorageService.set(STORAGE_KEYS.PRODUCTS, updated)
-      reload()
-      return true
-    } catch (err) {
-      console.error('Error updating product:', err)
+  const updateProduct = async (productId: string, updates: Partial<Product>) => {
+    const { error } = await supabase.from('products').update(updates).eq('id', productId)
+    if (error) {
+      console.error('Error updating product:', error)
       setError('Error al actualizar producto')
       return false
     }
+    await reload()
+    return true
   }
 
-  const deleteProduct = (productId: string) => {
-    try {
-      const current = localStorageService.get(STORAGE_KEYS.PRODUCTS) || []
-      const updated = current.filter((p: Product) => p.id !== productId)
-      localStorageService.set(STORAGE_KEYS.PRODUCTS, updated)
-      reload()
-      return true
-    } catch (err) {
-      console.error('Error deleting product:', err)
+  const deleteProduct = async (productId: string) => {
+    const { error } = await supabase.from('products').delete().eq('id', productId)
+    if (error) {
+      console.error('Error deleting product:', error)
       setError('Error al eliminar producto')
       return false
     }
+    await reload()
+    return true
   }
 
-  const toggleAvailability = (productId: string) => {
+  const toggleAvailability = async (productId: string) => {
     const product = products.find((p) => p.id === productId)
     if (!product) return false
     return updateProduct(productId, { available: !product.available })
@@ -161,15 +187,31 @@ export const useProductById = (id: string) => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    try {
-      const products = localStorageService.get(STORAGE_KEYS.PRODUCTS) || []
-      const found = products.find((p: Product) => p.id === id)
-      setProduct(found || null)
-    } catch (err) {
-      setError('Error cargando producto')
-      console.error(err)
-    } finally {
+    if (!id) {
       setLoading(false)
+      return
+    }
+    let cancelled = false
+    const load = async () => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle()
+
+      if (cancelled) return
+      if (error) {
+        setError('Error cargando producto')
+        console.error(error)
+      } else {
+        setProduct(data)
+      }
+      setLoading(false)
+    }
+    load()
+    return () => {
+      cancelled = true
     }
   }, [id])
 
@@ -177,7 +219,7 @@ export const useProductById = (id: string) => {
 }
 
 // ============================================
-// HOOK: useOrders
+// HOOK: useOrders (con CRUD)
 // ============================================
 
 export const useOrders = (userId?: string) => {
@@ -185,86 +227,96 @@ export const useOrders = (userId?: string) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    try {
-      let data = localStorageService.get(STORAGE_KEYS.ORDERS) || []
-
-      if (userId) {
-        data = data.filter((o: Order) => o.user_id === userId)
-      }
-
-      // Ordenar por fecha descendente (más recientes primero)
-      data = data.sort((a: Order, b: Order) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      )
-
-      setOrders(data)
-    } catch (err) {
-      setError('Error cargando órdenes')
-      console.error(err)
-    } finally {
-      setLoading(false)
+  const reload = useCallback(async () => {
+    setLoading(true)
+    let query = supabase.from('orders').select('*').order('created_at', { ascending: false })
+    if (userId) {
+      query = query.eq('user_id', userId)
     }
+    const { data, error } = await query
+
+    if (error) {
+      setError('Error cargando órdenes')
+      console.error(error)
+    } else {
+      setOrders(data || [])
+    }
+    setLoading(false)
   }, [userId])
 
-  const createOrder = (order: Order) => {
-    try {
-      const current = localStorageService.get(STORAGE_KEYS.ORDERS) || []
-      const updated = [...current, order]
-      localStorageService.set(STORAGE_KEYS.ORDERS, updated)
-      
-      // Actualizar estado local
-      setOrders(prev => [order, ...prev])
-      return true
-    } catch (err) {
-      console.error('Error creating order:', err)
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  const createOrder = async (
+    order: {
+      user_id: string
+      restaurant_id: string
+      total: number
+      status: string
+      delivery_address: string
+      special_instructions?: string
+    },
+    items: { product_id: string; quantity: number; unit_price: number }[]
+  ) => {
+    const { data: newOrder, error: orderError } = await supabase
+      .from('orders')
+      .insert(order)
+      .select()
+      .single()
+
+    if (orderError || !newOrder) {
+      console.error('Error creating order:', orderError)
       setError('Error al crear orden')
       return false
     }
+
+    if (items.length > 0) {
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(items.map((item) => ({ ...item, order_id: newOrder.id })))
+
+      if (itemsError) {
+        console.error('Error creating order items:', itemsError)
+      }
+    }
+
+    await reload()
+    return true
   }
 
-  const updateOrder = (orderId: string, updates: Partial<Order>) => {
-    try {
-      const current = localStorageService.get(STORAGE_KEYS.ORDERS) || []
-      const updated = current.map((o: Order) => {
-        if (o.id === orderId) {
-          return { ...o, ...updates, updated_at: new Date().toISOString() }
-        }
-        return o
-      })
-      localStorageService.set(STORAGE_KEYS.ORDERS, updated)
-      setOrders(updated.sort((a: Order, b: Order) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      ))
-      return true
-    } catch (err) {
-      console.error('Error updating order:', err)
+  const updateOrder = async (orderId: string, updates: Partial<Order>) => {
+    const { error } = await supabase.from('orders').update(updates).eq('id', orderId)
+    if (error) {
+      console.error('Error updating order:', error)
       setError('Error al actualizar orden')
       return false
     }
+    await reload()
+    return true
   }
 
   const getOrdersByRestaurant = (restaurantId: string) => {
-    return orders.filter((o: Order) => o.restaurant_id === restaurantId)
+    return orders.filter((o) => o.restaurant_id === restaurantId)
   }
 
   const getOrdersByDelivery = (deliveryId: string) => {
-    return orders.filter((o: Order) => o.delivery_person_id === deliveryId)
+    return orders.filter((o) => o.delivery_person_id === deliveryId)
   }
 
-  return { 
-    orders, 
-    loading, 
-    error, 
-    createOrder, 
+  return {
+    orders,
+    loading,
+    error,
+    createOrder,
     updateOrder,
     getOrdersByRestaurant,
-    getOrdersByDelivery
+    getOrdersByDelivery,
   }
 }
 
 // ============================================
-// HOOK: useCart
+// HOOK: useCart (sigue local — carrito efímero de sesión)
 // ============================================
 
 interface CartItem {
@@ -368,38 +420,62 @@ export const useCart = () => {
 // ============================================
 
 export const useFavorites = () => {
+  const { user } = useAuth()
   const [favorites, setFavorites] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    try {
-      const data = localStorageService.get(STORAGE_KEYS.RESTAURANT_FAVORITES) || []
-      setFavorites(data)
-    } catch (err) {
-      console.error('Error loading favorites:', err)
-    } finally {
+  const reload = useCallback(async () => {
+    if (!user) {
+      setFavorites([])
       setLoading(false)
+      return
     }
-  }, [])
+    setLoading(true)
+    const { data, error } = await supabase
+      .from('favorites')
+      .select('restaurant_id')
+      .eq('user_id', user.id)
 
-  const toggleFavorite = (restaurantId: string) => {
-    try {
-      const updated = favorites.includes(restaurantId)
-        ? favorites.filter((id) => id !== restaurantId)
-        : [...favorites, restaurantId]
-
-      localStorageService.set(STORAGE_KEYS.RESTAURANT_FAVORITES, updated)
-      setFavorites(updated)
-      return true
-    } catch (err) {
-      console.error('Error toggling favorite:', err)
-      return false
+    if (error) {
+      console.error('Error loading favorites:', error)
+    } else {
+      setFavorites((data || []).map((f: { restaurant_id: string }) => f.restaurant_id))
     }
+    setLoading(false)
+  }, [user])
+
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  const toggleFavorite = async (restaurantId: string) => {
+    if (!user) return false
+    const isFav = favorites.includes(restaurantId)
+
+    if (isFav) {
+      const { error } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('restaurant_id', restaurantId)
+      if (error) {
+        console.error('Error removing favorite:', error)
+        return false
+      }
+    } else {
+      const { error } = await supabase
+        .from('favorites')
+        .insert({ user_id: user.id, restaurant_id: restaurantId })
+      if (error) {
+        console.error('Error adding favorite:', error)
+        return false
+      }
+    }
+    await reload()
+    return true
   }
 
-  const isFavorite = (restaurantId: string) => {
-    return favorites.includes(restaurantId)
-  }
+  const isFavorite = (restaurantId: string) => favorites.includes(restaurantId)
 
   return { favorites, loading, toggleFavorite, isFavorite }
 }

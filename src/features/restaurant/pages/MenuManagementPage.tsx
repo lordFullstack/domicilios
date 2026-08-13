@@ -38,7 +38,7 @@ export const MenuManagementPage = () => {
     setIsModalOpen(true)
   }
 
-  const handleSave = (data: {
+  const handleSave = async (data: {
     name: string
     description: string
     price: number
@@ -48,16 +48,13 @@ export const MenuManagementPage = () => {
     if (!myRestaurant) return
 
     if (editingProduct) {
-      updateProduct(editingProduct.id, data)
+      await updateProduct(editingProduct.id, data)
       showSuccess('Producto actualizado')
     } else {
-      const newProduct: Product = {
-        id: `prod-${Date.now()}`,
+      await createProduct({
         restaurant_id: myRestaurant.id,
         ...data,
-        created_at: new Date().toISOString(),
-      }
-      createProduct(newProduct)
+      })
       showSuccess('Producto creado')
     }
 
@@ -65,7 +62,7 @@ export const MenuManagementPage = () => {
     setEditingProduct(null)
   }
 
-  const handleDelete = (productId: string) => {
+  const handleDelete = async (productId: string) => {
     deleteProduct(productId)
     setDeleteConfirmId(null)
     showSuccess('Producto eliminado')

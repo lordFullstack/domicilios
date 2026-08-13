@@ -1,8 +1,6 @@
 import { createContext, useState, useEffect, ReactNode } from 'react'
 import { User } from '@/shared/types'
-import { mockSupabase, getAuthUser, getCurrentUserProfile } from '@/services/mockSupabase'
-import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
-import { initializeMockData } from '@/data/mockData'
+import { supabase, getAuthUser, getCurrentUserProfile } from '@/shared/utils/supabase'
 
 interface AuthContextType {
   user: User | null
@@ -23,16 +21,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Inicializar datos mock en primera carga
-  useEffect(() => {
-    const isInitialized = localStorageService.get('app_initialized')
-    if (!isInitialized) {
-      initializeMockData()
-      localStorageService.set('app_initialized', true)
-      console.log('✅ App inicializada con datos mock')
-    }
-  }, [])
-
   // Verificar sesión existente
   useEffect(() => {
     const checkAuth = async () => {
@@ -52,11 +40,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     checkAuth()
 
     // Suscribirse a cambios de autenticación
-    const subscription = mockSupabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         if (session?.user) {
-          const profile = await getCurrentUserProfile(session.user.id)
-          setUser(profile)
+          try {
+            const profile = await getCurrentUserProfile(session.user.id)
+            setUser(profile)
+          } catch (error) {
+            console.error('Error loading profile:', error)
+          }
         } else {
           setUser(null)
         }
@@ -69,10 +61,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (email: string, password: string) => {
     setLoading(true)
     try {
-      const { data, error } = await mockSupabase.auth.signInWithPassword(
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        password
-      )
+        password,
+      })
 
       if (error) throw error
 
@@ -91,23 +83,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const register = async (email: string, password: string, name: string, role: string) => {
     setLoading(true)
     try {
-      const { data, error } = await mockSupabase.auth.signUp(email, password)
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { name, role },
+        },
+      })
 
       if (error) throw error
 
       if (data?.user) {
-        // Actualizar datos del usuario
-        const users = localStorageService.get(STORAGE_KEYS.USERS) || []
-        const updatedUsers = users.map((u: User) => {
-          if (u.id === data.user.id) {
-            return { ...u, name, role }
+        // El trigger handle_new_user crea el perfil automáticamente con name/role
+        // desde raw_user_meta_data. Puede tomar un instante en propagarse.
+        let profile = null
+        for (let i = 0; i < 5 && !profile; i++) {
+          try {
+            profile = await getCurrentUserProfile(data.user.id)
+          } catch {
+            await new Promise((r) => setTimeout(r, 400))
           }
-          return u
-        })
-        localStorageService.set(STORAGE_KEYS.USERS, updatedUsers)
-
-        // Actualizar usuario actual
-        const profile = await getCurrentUserProfile(data.user.id)
+        }
         setUser(profile)
       }
     } catch (error) {
@@ -121,7 +117,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = async () => {
     setLoading(true)
     try {
-      await mockSupabase.auth.signOut()
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
       setUser(null)
     } catch (error) {
       console.error('Logout error:', error)

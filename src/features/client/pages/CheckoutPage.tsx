@@ -51,28 +51,27 @@ export const CheckoutPage = () => {
         throw new Error('Información de restaurante o usuario no disponible')
       }
 
-      const orderId = `order-${Date.now()}`
-      const now = new Date().toISOString()
-
       const order = {
-        id: orderId,
         user_id: user.id,
         restaurant_id: restaurant.id,
         total: getTotal(),
         status: ORDER_STATUS.PENDING,
-        delivery_person_id: undefined,
         delivery_address: formData.deliveryAddress,
         special_instructions: formData.specialInstructions,
-        created_at: now,
-        updated_at: now,
       }
 
-      const success = createOrder(order)
+      const items = cart.map((item) => ({
+        product_id: item.productId,
+        quantity: item.quantity,
+        unit_price: item.unitPrice,
+      }))
+
+      const success = await createOrder(order, items)
       if (!success) throw new Error('Error al crear la orden')
 
       clear()
       navigate(ROUTES.CLIENT_ORDERS, {
-        state: { message: '¡Orden creada exitosamente!', orderId },
+        state: { message: '¡Orden creada exitosamente!' },
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido')
