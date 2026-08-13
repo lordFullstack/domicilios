@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ChevronLeft, Plus, Pencil, Trash2 } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useRestaurants, useProducts } from '@/hooks/useLocalData'
-import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
+import { BottomNav } from '@/shared/components/BottomNav'
 import { ProductFormModal } from '../components/ProductFormModal'
 import { ROUTES } from '@/config/constants'
 import { Product } from '@/shared/types'
@@ -48,7 +49,7 @@ export const MenuManagementPage = () => {
 
     if (editingProduct) {
       updateProduct(editingProduct.id, data)
-      showSuccess('✅ Producto actualizado')
+      showSuccess('Producto actualizado')
     } else {
       const newProduct: Product = {
         id: `prod-${Date.now()}`,
@@ -57,7 +58,7 @@ export const MenuManagementPage = () => {
         created_at: new Date().toISOString(),
       }
       createProduct(newProduct)
-      showSuccess('✅ Producto creado')
+      showSuccess('Producto creado')
     }
 
     setIsModalOpen(false)
@@ -67,148 +68,134 @@ export const MenuManagementPage = () => {
   const handleDelete = (productId: string) => {
     deleteProduct(productId)
     setDeleteConfirmId(null)
-    showSuccess('🗑️ Producto eliminado')
+    showSuccess('Producto eliminado')
   }
 
   if (!myRestaurant) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card>
-          <p className="text-gray-600">No tienes un restaurante asignado todavía.</p>
-        </Card>
+      <div className="min-h-screen bg-white flex items-center justify-center px-8">
+        <p className="text-gray-400 text-sm text-center">No tienes un restaurante asignado todavía.</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
       {/* Header */}
-      <div className="bg-white border-b border-gray-100 p-8">
-        <div className="max-w-6xl mx-auto">
-          <button
-            onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}
-            className="mb-4 text-primary font-semibold hover:opacity-80"
-          >
-            ← Dashboard
-          </button>
-          <h1 className="text-3xl font-display font-bold text-secondary mb-2">
-            📋 Menú de {myRestaurant.name}
-          </h1>
-          <p className="text-lg text-gray-500">Gestiona tus productos y categorías</p>
+      <div className="px-5 pt-6 pb-4 flex items-center gap-3">
+        <button
+          onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}
+          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0"
+        >
+          <ChevronLeft className="w-4 h-4 text-secondary" />
+        </button>
+        <div>
+          <h1 className="font-display text-lg font-bold text-secondary">Menú</h1>
+          <p className="text-xs text-gray-400">{myRestaurant.name}</p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Mensaje de éxito */}
+      <div className="px-5">
         {successMessage && (
-          <Card className="mb-6 bg-success/10 border border-success/20">
-            <p className="text-success font-semibold">{successMessage}</p>
-          </Card>
+          <div className="mb-4 bg-green-50 text-green-700 text-sm font-semibold rounded-2xl p-3">
+            {successMessage}
+          </div>
         )}
 
-        {/* Acciones y estadísticas */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <div className="flex gap-4 text-sm text-gray-600">
-            <span>
-              📦 <strong>{products.length}</strong> productos totales
-            </span>
-            <span>
-              ✅ <strong>{products.filter((p) => p.available).length}</strong> disponibles
-            </span>
-          </div>
-          <Button variant="primary" onClick={handleOpenCreate}>
-            ➕ Nuevo Producto
-          </Button>
+        {/* Stats + botón nuevo */}
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-xs text-gray-400">
+            <strong className="text-secondary">{products.length}</strong> productos ·{' '}
+            <strong className="text-secondary">{products.filter((p) => p.available).length}</strong> activos
+          </p>
+          <button
+            onClick={handleOpenCreate}
+            className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
+          >
+            <Plus className="w-4 h-4 text-white" />
+          </button>
         </div>
 
         {/* Lista de productos */}
         {products.length === 0 ? (
-          <Card>
-            <div className="text-center py-12">
-              <p className="text-4xl mb-4">🍽️</p>
-              <h2 className="text-xl font-bold mb-2">Tu menú está vacío</h2>
-              <p className="text-gray-600 mb-6">Agrega tu primer producto para empezar a vender</p>
-              <Button variant="primary" onClick={handleOpenCreate}>
-                ➕ Crear primer producto
-              </Button>
-            </div>
-          </Card>
+          <div className="text-center py-16">
+            <p className="text-5xl mb-4">🍽️</p>
+            <p className="font-display font-bold mb-1 text-secondary">Tu menú está vacío</p>
+            <p className="text-sm text-gray-400 mb-6">Agrega tu primer producto para empezar a vender</p>
+            <Button variant="primary" onClick={handleOpenCreate}>
+              Crear primer producto
+            </Button>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-3">
             {products.map((product) => (
-              <Card key={product.id} className={!product.available ? 'opacity-60' : ''}>
-                <div className="flex gap-4">
-                  <div className="text-4xl">{product.image_url}</div>
+              <div
+                key={product.id}
+                className={`border border-gray-100 rounded-2xl p-3 ${
+                  !product.available ? 'opacity-50' : ''
+                }`}
+              >
+                <div className="flex gap-3">
+                  <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0">
+                    {product.image_url}
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start gap-2 mb-1">
-                      <h3 className="font-bold truncate">{product.name}</h3>
-                      <span className="font-bold text-primary whitespace-nowrap">
+                    <div className="flex justify-between items-start gap-2 mb-0.5">
+                      <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
+                      <span className="font-bold text-primary text-sm whitespace-nowrap">
                         ${product.price.toLocaleString('es-CO')}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    <p className="text-xs text-gray-400 truncate mb-2">
                       {product.description || 'Sin descripción'}
                     </p>
 
-                    {/* Toggle disponibilidad */}
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center justify-between">
                       <button
                         onClick={() => toggleAvailability(product.id)}
-                        className={`relative w-10 h-5 rounded-full transition-colors ${
+                        className={`relative w-9 h-5 rounded-full transition-colors ${
                           product.available ? 'bg-success' : 'bg-gray-300'
                         }`}
                       >
                         <span
                           className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
-                            product.available ? 'translate-x-5' : 'translate-x-0.5'
+                            product.available ? 'translate-x-4' : 'translate-x-0.5'
                           }`}
                         />
                       </button>
-                      <span className="text-xs text-gray-600">
-                        {product.available ? 'Disponible' : 'No disponible'}
-                      </span>
-                    </div>
 
-                    {/* Acciones */}
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        fullWidth
-                        onClick={() => handleOpenEdit(product)}
-                      >
-                        ✏️ Editar
-                      </Button>
-                      {deleteConfirmId === product.id ? (
-                        <Button
-                          size="sm"
-                          variant="primary"
-                          fullWidth
-                          onClick={() => handleDelete(product.id)}
-                          className="!bg-danger"
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleOpenEdit(product)}
+                          className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
                         >
-                          Confirmar
-                        </Button>
-                      ) : (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          fullWidth
-                          onClick={() => setDeleteConfirmId(product.id)}
-                        >
-                          🗑️ Eliminar
-                        </Button>
-                      )}
+                          <Pencil className="w-3 h-3 text-gray-500" />
+                        </button>
+                        {deleteConfirmId === product.id ? (
+                          <button
+                            onClick={() => handleDelete(product.id)}
+                            className="text-xs font-semibold text-white bg-danger px-2 rounded-full"
+                          >
+                            Confirmar
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setDeleteConfirmId(product.id)}
+                            className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                          >
+                            <Trash2 className="w-3 h-3 text-gray-500" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         )}
       </div>
 
-      {/* Modal de formulario */}
       <ProductFormModal
         isOpen={isModalOpen}
         onClose={() => {
@@ -218,6 +205,8 @@ export const MenuManagementPage = () => {
         onSave={handleSave}
         product={editingProduct}
       />
+
+      <BottomNav role="restaurant" />
     </div>
   )
 }

@@ -1,25 +1,44 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Home, UtensilsCrossed, ShoppingCart, ClipboardList } from 'lucide-react'
+import { Home, UtensilsCrossed, ShoppingCart, ClipboardList, LucideIcon } from 'lucide-react'
 import { useCart } from '@/hooks/useLocalData'
 import { ROUTES } from '@/config/constants'
 
-const NAV_ITEMS = [
+interface NavItem {
+  icon: LucideIcon
+  label: string
+  path: string
+  cartBadge?: boolean
+}
+
+const CLIENT_ITEMS: NavItem[] = [
   { icon: Home, label: 'Inicio', path: ROUTES.CLIENT_HOME },
   { icon: UtensilsCrossed, label: 'Restaurantes', path: ROUTES.CLIENT_RESTAURANTS },
-  { icon: ShoppingCart, label: 'Carrito', path: ROUTES.CLIENT_CART },
+  { icon: ShoppingCart, label: 'Carrito', path: ROUTES.CLIENT_CART, cartBadge: true },
   { icon: ClipboardList, label: 'Pedidos', path: ROUTES.CLIENT_ORDERS },
 ]
 
-export const BottomNav = () => {
+const RESTAURANT_ITEMS: NavItem[] = [
+  { icon: Home, label: 'Panel', path: ROUTES.RESTAURANT_DASHBOARD },
+  { icon: ClipboardList, label: 'Órdenes', path: ROUTES.RESTAURANT_ORDERS },
+  { icon: UtensilsCrossed, label: 'Menú', path: ROUTES.RESTAURANT_PRODUCTS },
+]
+
+interface BottomNavProps {
+  role?: 'client' | 'restaurant'
+}
+
+export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
   const navigate = useNavigate()
   const location = useLocation()
   const { cart } = useCart()
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
 
+  const items = role === 'restaurant' ? RESTAURANT_ITEMS : CLIENT_ITEMS
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-2 py-2 z-40">
       <div className="max-w-md mx-auto flex items-center justify-between px-4">
-        {NAV_ITEMS.map(({ icon: Icon, label, path }) => {
+        {items.map(({ icon: Icon, label, path, cartBadge }) => {
           const isActive = location.pathname === path
           return (
             <button
@@ -39,7 +58,7 @@ export const BottomNav = () => {
               >
                 {label}
               </span>
-              {label === 'Carrito' && cartCount > 0 && (
+              {cartBadge && cartCount > 0 && (
                 <span className="absolute -top-0.5 right-1 bg-primary text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                   {cartCount}
                 </span>
