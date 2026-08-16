@@ -1,35 +1,67 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Suspense, lazy } from 'react'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 import { ProtectedRoute } from './ProtectedRoute'
 
-// Auth Pages
+// Auth Pages (eager: son el punto de entrada, no vale la pena diferirlas)
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { RegisterPage } from '@/features/auth/pages/RegisterPage'
 
-// Client Pages
-import { ClientDashboardPage } from '@/features/client/pages/ClientDashboardPage'
-import { RestaurantListPage } from '@/features/client/pages/RestaurantListPage'
-import { RestaurantDetailPage } from '@/features/client/pages/RestaurantDetailPage'
-import { CartPage } from '@/features/client/pages/CartPage'
-import { CheckoutPage } from '@/features/client/pages/CheckoutPage'
-import { OrdersPage } from '@/features/client/pages/OrdersPage'
-import { OrderDetailPage } from '@/features/client/pages/OrderDetailPage'
+// Client Pages (lazy: se cargan solo cuando se visitan)
+const ClientDashboardPage = lazy(() =>
+  import('@/features/client/pages/ClientDashboardPage').then((m) => ({ default: m.ClientDashboardPage }))
+)
+const RestaurantListPage = lazy(() =>
+  import('@/features/client/pages/RestaurantListPage').then((m) => ({ default: m.RestaurantListPage }))
+)
+const RestaurantDetailPage = lazy(() =>
+  import('@/features/client/pages/RestaurantDetailPage').then((m) => ({ default: m.RestaurantDetailPage }))
+)
+const CartPage = lazy(() =>
+  import('@/features/client/pages/CartPage').then((m) => ({ default: m.CartPage }))
+)
+const CheckoutPage = lazy(() =>
+  import('@/features/client/pages/CheckoutPage').then((m) => ({ default: m.CheckoutPage }))
+)
+const OrdersPage = lazy(() =>
+  import('@/features/client/pages/OrdersPage').then((m) => ({ default: m.OrdersPage }))
+)
+const OrderDetailPage = lazy(() =>
+  import('@/features/client/pages/OrderDetailPage').then((m) => ({ default: m.OrderDetailPage }))
+)
 
 // Restaurant Pages
-import { RestaurantDashboard } from '@/features/restaurant/pages/DashboardPage'
-import { RestaurantOrdersPage } from '@/features/restaurant/pages/OrdersPage'
-import { MenuManagementPage } from '@/features/restaurant/pages/MenuManagementPage'
+const RestaurantDashboard = lazy(() =>
+  import('@/features/restaurant/pages/DashboardPage').then((m) => ({ default: m.RestaurantDashboard }))
+)
+const RestaurantOrdersPage = lazy(() =>
+  import('@/features/restaurant/pages/OrdersPage').then((m) => ({ default: m.RestaurantOrdersPage }))
+)
+const MenuManagementPage = lazy(() =>
+  import('@/features/restaurant/pages/MenuManagementPage').then((m) => ({ default: m.MenuManagementPage }))
+)
 
 // Delivery Pages
-import { DeliveryDashboard } from '@/features/delivery/pages/DashboardPage'
+const DeliveryDashboard = lazy(() =>
+  import('@/features/delivery/pages/DashboardPage').then((m) => ({ default: m.DeliveryDashboard }))
+)
 
 // Admin Pages
-import { AdminDashboard } from '@/features/admin/pages/DashboardPage'
+const AdminDashboard = lazy(() =>
+  import('@/features/admin/pages/DashboardPage').then((m) => ({ default: m.AdminDashboard }))
+)
+
+const PageLoader = () => (
+  <div className="min-h-screen bg-white flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-gray-200 border-t-primary rounded-full animate-spin" />
+  </div>
+)
 
 export const Router = () => {
   return (
     <BrowserRouter>
-      <Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
         {/* Public */}
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
@@ -141,7 +173,8 @@ export const Router = () => {
         {/* Fallback */}
         <Route path="/" element={<Navigate to={ROUTES.LOGIN} replace />} />
         <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
-      </Routes>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }
