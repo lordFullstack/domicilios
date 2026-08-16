@@ -1,7 +1,8 @@
+import { Banknote } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders, useRestaurantById } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
-import { ORDER_STATUS } from '@/config/constants'
+import { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/config/constants'
 import { Order } from '@/shared/types'
 
 export const DeliveryDashboard = () => {
@@ -31,7 +32,12 @@ export const DeliveryDashboard = () => {
   }
 
   const handleCompleteDelivery = (order: Order) => {
-    updateOrder(order.id, { status: ORDER_STATUS.DELIVERED as any })
+    const updates: Partial<Order> = { status: ORDER_STATUS.DELIVERED as any }
+    // Si es efectivo/datáfono, el domiciliario cobra al entregar → marcar pagado
+    if (order.payment_method === PAYMENT_METHOD.CASH_ON_DELIVERY) {
+      updates.payment_status = PAYMENT_STATUS.PAID as any
+    }
+    updateOrder(order.id, updates)
   }
 
   return (
@@ -155,13 +161,21 @@ const DeliveryOrderCard = ({
     <div className="border border-gray-100 rounded-2xl p-3">
       <div className="flex gap-3 mb-3">
         <div className="text-3xl flex-shrink-0">{restaurant?.image_url || '🏪'}</div>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="font-semibold text-sm text-secondary truncate">{restaurant?.name}</p>
           <p className="text-xs text-gray-400 truncate">Recoger: {restaurant?.address}</p>
           <p className="text-xs text-gray-400 truncate">Entregar: {order.delivery_address}</p>
-          <p className="text-base font-display font-bold text-primary mt-1">
-            ${order.total.toLocaleString('es-CO')}
-          </p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-base font-display font-bold text-primary">
+              ${order.total.toLocaleString('es-CO')}
+            </p>
+            {order.payment_method === 'cash_on_delivery' && (
+              <span className="flex items-center gap-1 bg-orange-50 text-primary text-xs font-semibold px-2 py-0.5 rounded-full">
+                <Banknote className="w-3 h-3" />
+                Cobrar al entregar
+              </span>
+            )}
+          </div>
         </div>
       </div>
       {action}

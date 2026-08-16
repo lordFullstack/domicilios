@@ -45,3 +45,14 @@ export const ORDER_STATUS = {
   DELIVERED: 'delivered',
   CANCELLED: 'cancelled',
 } as const
+
+export const PAYMENT_METHOD = {
+  CASH_ON_DELIVERY: 'cash_on_delivery',
+  ONLINE: 'online',
+} as const
+
+export const PAYMENT_STATUS = {
+  PENDING: 'pending',
+  PAID: 'paid',
+  FAILED: 'failed',
+} as const

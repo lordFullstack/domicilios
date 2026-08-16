@@ -256,6 +256,7 @@ export const useOrders = (userId?: string) => {
       status: string
       delivery_address: string
       special_instructions?: string
+      payment_method?: string
     },
     items: { product_id: string; quantity: number; unit_price: number }[]
   ) => {

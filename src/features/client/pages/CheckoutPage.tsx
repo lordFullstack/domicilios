@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Banknote, CreditCard } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { useCart, useOrders, useRestaurantById, useProductById } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { ROUTES, ORDER_STATUS } from '@/config/constants'
+import { ROUTES, ORDER_STATUS, PAYMENT_METHOD } from '@/config/constants'
+import { PaymentMethod } from '@/shared/types'
 
 export const CheckoutPage = () => {
   const navigate = useNavigate()
@@ -15,6 +16,9 @@ export const CheckoutPage = () => {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
+    PAYMENT_METHOD.CASH_ON_DELIVERY
+  )
   const [formData, setFormData] = useState({
     deliveryAddress: '',
     specialInstructions: '',
@@ -58,6 +62,7 @@ export const CheckoutPage = () => {
         status: ORDER_STATUS.PENDING,
         delivery_address: formData.deliveryAddress,
         special_instructions: formData.specialInstructions,
+        payment_method: paymentMethod,
       }
 
       const items = cart.map((item) => ({
@@ -139,6 +144,53 @@ export const CheckoutPage = () => {
               <span>Total</span>
               <span className="text-primary">${total.toLocaleString('es-CO')}</span>
             </div>
+          </div>
+        </div>
+
+        {/* Método de pago */}
+        <div className="mb-4">
+          <p className="text-sm font-medium text-gray-700 mb-2">Método de pago</p>
+          <div className="flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => setPaymentMethod(PAYMENT_METHOD.CASH_ON_DELIVERY)}
+              className={`flex items-center gap-3 border rounded-2xl p-3 text-left transition-colors ${
+                paymentMethod === PAYMENT_METHOD.CASH_ON_DELIVERY
+                  ? 'border-primary bg-orange-50'
+                  : 'border-gray-200'
+              }`}
+            >
+              <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center flex-shrink-0">
+                <Banknote className="w-4 h-4 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-secondary">
+                  Efectivo o datáfono al domiciliario
+                </p>
+                <p className="text-xs text-gray-400">Pagas al recibir tu pedido</p>
+              </div>
+              <div
+                className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${
+                  paymentMethod === PAYMENT_METHOD.CASH_ON_DELIVERY
+                    ? 'border-primary bg-primary'
+                    : 'border-gray-300'
+                }`}
+              />
+            </button>
+
+            <button
+              type="button"
+              disabled
+              className="flex items-center gap-3 border border-gray-100 rounded-2xl p-3 text-left opacity-50 cursor-not-allowed"
+            >
+              <div className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
+                <CreditCard className="w-4 h-4 text-gray-400" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-gray-400">Pagar en línea</p>
+                <p className="text-xs text-gray-400">Tarjeta, PSE, Nequi — próximamente</p>
+              </div>
+            </button>
           </div>
         </div>
 

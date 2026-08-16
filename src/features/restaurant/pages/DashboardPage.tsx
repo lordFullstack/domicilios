@@ -147,9 +147,14 @@ export const RestaurantDashboard = () => {
                 {order.special_instructions && (
                   <p className="text-xs text-gray-400 italic mb-1">"{order.special_instructions}"</p>
                 )}
-                <p className="text-base font-display font-bold text-primary mb-3">
-                  ${order.total.toLocaleString('es-CO')}
-                </p>
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-base font-display font-bold text-primary">
+                    ${order.total.toLocaleString('es-CO')}
+                  </p>
+                  <span className="text-xs text-gray-400">
+                    {order.payment_method === 'cash_on_delivery' ? '💵 Contra entrega' : '💳 Pagado en línea'}
+                  </span>
+                </div>
 
                 <div className="flex gap-2">
                   {order.status === ORDER_STATUS.PENDING && (

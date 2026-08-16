@@ -50,6 +50,9 @@ export interface OrderItem {
   created_at: string
 }
 
+export type PaymentMethod = 'cash_on_delivery' | 'online'
+export type PaymentStatus = 'pending' | 'paid' | 'failed'
+
 export interface Order {
   id: string
   user_id: string
@@ -59,6 +62,8 @@ export interface Order {
   delivery_person_id?: string
   delivery_address: string
   special_instructions?: string
+  payment_method: PaymentMethod
+  payment_status: PaymentStatus
   created_at: string
   updated_at: string
 }
