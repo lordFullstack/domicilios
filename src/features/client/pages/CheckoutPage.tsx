@@ -115,20 +115,9 @@ export const CheckoutPage = () => {
           </div>
 
           <div className="flex flex-col gap-1.5 mb-3">
-            {cart.map((item) => {
-              const { product } = useProductById(item.productId)
-              if (!product) return null
-              return (
-                <div key={item.productId} className="flex justify-between text-sm text-gray-500">
-                  <span>
-                    {product.name} x{item.quantity}
-                  </span>
-                  <span className="font-semibold text-secondary">
-                    ${(product.price * item.quantity).toLocaleString('es-CO')}
-                  </span>
-                </div>
-              )
-            })}
+            {cart.map((item) => (
+              <CheckoutItemRow key={item.productId} item={item} />
+            ))}
           </div>
 
           <div className="pt-3 border-t border-gray-100 space-y-1">
@@ -228,6 +217,29 @@ export const CheckoutPage = () => {
           Tu orden será procesada inmediatamente. El restaurante y el domiciliario recibirán la notificación.
         </p>
       </div>
+    </div>
+  )
+}
+
+// Componente auxiliar: fila de producto en el resumen del checkout.
+// Extraído aparte para que useProductById se llame de forma consistente
+// (nunca dentro de un .map() en el componente padre).
+const CheckoutItemRow = ({
+  item,
+}: {
+  item: { productId: string; quantity: number; unitPrice: number }
+}) => {
+  const { product } = useProductById(item.productId)
+  if (!product) return null
+
+  return (
+    <div className="flex justify-between text-sm text-gray-500">
+      <span>
+        {product.name} x{item.quantity}
+      </span>
+      <span className="font-semibold text-secondary">
+        ${(product.price * item.quantity).toLocaleString('es-CO')}
+      </span>
     </div>
   )
 }
