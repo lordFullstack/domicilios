@@ -21,8 +21,16 @@ export const RestaurantOrdersPage = () => {
   const { restaurants } = useRestaurants()
   const { getOrdersByRestaurant } = useOrders()
 
-  const myRestaurant = restaurants.find((r) => r.owner_id === user?.id) || restaurants[0]
+  const myRestaurant = restaurants.find((r) => r.owner_id === user?.id)
   const myOrders = myRestaurant ? getOrdersByRestaurant(myRestaurant.id) : []
+
+  if (!myRestaurant) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center px-8">
+        <p className="text-gray-400 text-sm text-center">No tienes un restaurante asignado todavía.</p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">

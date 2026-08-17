@@ -14,7 +14,7 @@ export const MenuManagementPage = () => {
   const { user } = useAuth()
   const { restaurants } = useRestaurants()
 
-  const myRestaurant = restaurants.find((r) => r.owner_id === user?.id) || restaurants[0]
+  const myRestaurant = restaurants.find((r) => r.owner_id === user?.id)
   const { products, createProduct, updateProduct, deleteProduct, toggleAvailability } =
     useProducts(myRestaurant?.id)
 

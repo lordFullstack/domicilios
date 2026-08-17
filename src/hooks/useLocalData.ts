@@ -219,6 +219,44 @@ export const useProductById = (id: string) => {
 }
 
 // ============================================
+// FUNCIÓN: getAvailableDeliveryPerson
+// ============================================
+// Busca un domiciliario (role = 'delivery') que no tenga ninguna
+// orden actualmente en camino ('in_delivery'). Si todos están
+// ocupados, devuelve null en vez de forzar una asignación.
+
+export const getAvailableDeliveryPerson = async (): Promise<string | null> => {
+  const { data: deliveryPeople, error: peopleError } = await supabase
+    .from('profiles')
+    .select('id, name')
+    .eq('role', 'delivery')
+    .order('name')
+
+  if (peopleError) {
+    console.error('Error cargando domiciliarios:', peopleError)
+    return null
+  }
+  if (!deliveryPeople || deliveryPeople.length === 0) {
+    return null
+  }
+
+  const { data: activeOrders, error: ordersError } = await supabase
+    .from('orders')
+    .select('delivery_person_id')
+    .eq('status', 'in_delivery')
+
+  if (ordersError) {
+    console.error('Error revisando órdenes en camino:', ordersError)
+    return null
+  }
+
+  const busyIds = new Set((activeOrders || []).map((o) => o.delivery_person_id))
+  const free = deliveryPeople.find((p) => !busyIds.has(p.id))
+
+  return free ? free.id : null
+}
+
+// ============================================
 // HOOK: useOrders (con CRUD)
 // ============================================
 

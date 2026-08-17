@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { useOrders, useRestaurants, useProducts } from '@/hooks/useLocalData'
+import { useOrders, useRestaurants, useProducts, getAvailableDeliveryPerson } from '@/hooks/useLocalData'
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
@@ -40,10 +41,11 @@ export const RestaurantDashboard = () => {
   const { restaurants } = useRestaurants()
   const { updateOrder, getOrdersByRestaurant } = useOrders()
 
-  const myRestaurant = restaurants.find((r) => r.owner_id === user?.id) || restaurants[0]
+  const myRestaurant = restaurants.find((r) => r.owner_id === user?.id)
   const { products } = useProducts(myRestaurant?.id)
 
   const myOrders = myRestaurant ? getOrdersByRestaurant(myRestaurant.id) : []
+  const [noDeliveryMsg, setNoDeliveryMsg] = useState(false)
 
   const pendingOrders = myOrders.filter((o) => o.status === ORDER_STATUS.PENDING)
   const activeOrders = myOrders.filter(
@@ -55,13 +57,21 @@ export const RestaurantDashboard = () => {
   })
   const revenueToday = deliveredToday.reduce((sum, o) => sum + o.total, 0)
 
-  const handleAdvanceStatus = (order: Order) => {
+  const handleAdvanceStatus = async (order: Order) => {
     const nextStatus = STATUS_FLOW[order.status]
     if (!nextStatus) return
     const updates: Partial<Order> = { status: nextStatus as any }
+
     if (nextStatus === ORDER_STATUS.IN_DELIVERY) {
-      updates.delivery_person_id = 'user-delivery-1'
+      const deliveryPersonId = await getAvailableDeliveryPerson()
+      if (!deliveryPersonId) {
+        setNoDeliveryMsg(true)
+        setTimeout(() => setNoDeliveryMsg(false), 4000)
+        return
+      }
+      updates.delivery_person_id = deliveryPersonId
     }
+
     updateOrder(order.id, updates)
   }
 
@@ -87,6 +97,12 @@ export const RestaurantDashboard = () => {
         </h1>
         <p className="text-sm text-gray-400">Panel de gestión de pedidos</p>
       </div>
+
+      {noDeliveryMsg && (
+        <div className="mx-5 mb-4 bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3">
+          No hay domiciliarios disponibles en este momento. Intenta de nuevo en unos minutos.
+        </div>
+      )}
 
       {/* Estadísticas */}
       <div className="grid grid-cols-2 gap-3 px-5 mb-4">
