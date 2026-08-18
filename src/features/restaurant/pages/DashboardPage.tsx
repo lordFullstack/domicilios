@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { MapPin } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { useOrders, useRestaurants, useProducts, getAvailableDeliveryPerson } from '@/hooks/useLocalData'
+import { useOrders, useRestaurants, useProducts, getAvailableDeliveryPerson, updateRestaurant } from '@/hooks/useLocalData'
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
@@ -39,7 +40,7 @@ const NEXT_ACTION_LABELS: Record<string, string> = {
 export const RestaurantDashboard = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { restaurants } = useRestaurants()
+  const { restaurants, reload: reloadRestaurants } = useRestaurants()
   const { updateOrder, getOrdersByRestaurant } = useOrders()
 
   const myRestaurant = restaurants.find((r) => r.owner_id === user?.id)
@@ -47,6 +48,7 @@ export const RestaurantDashboard = () => {
 
   const myOrders = myRestaurant ? getOrdersByRestaurant(myRestaurant.id) : []
   const [noDeliveryMsg, setNoDeliveryMsg] = useState(false)
+  const [togglingStatus, setTogglingStatus] = useState(false)
 
   const pendingOrders = myOrders.filter((o) => o.status === ORDER_STATUS.PENDING)
   const activeOrders = myOrders.filter(
@@ -80,19 +82,72 @@ export const RestaurantDashboard = () => {
     updateOrder(order.id, { status: ORDER_STATUS.CANCELLED as any })
   }
 
+  const handleToggleStatus = async () => {
+    if (!myRestaurant || togglingStatus) return
+    setTogglingStatus(true)
+    try {
+      await updateRestaurant(myRestaurant.id, {
+        status: myRestaurant.status === 'open' ? 'closed' : 'open',
+      })
+      await reloadRestaurants()
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setTogglingStatus(false)
+    }
+  }
+
   if (!myRestaurant) {
     return <CreateRestaurantPage onCreated={() => window.location.reload()} />
   }
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
-      {/* Header */}
-      <div className="px-5 pt-6 pb-4">
-        <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
-        <h1 className="font-display text-xl font-bold text-secondary">
-          {myRestaurant.image_url} {myRestaurant.name}
-        </h1>
-        <p className="text-sm text-gray-400">Panel de gestión de pedidos</p>
+      {/* Hero del restaurante */}
+      <div className="mx-5 mt-5 mb-4 bg-secondary rounded-3xl p-5 relative overflow-hidden">
+        <div className="absolute -right-6 -top-6 w-28 h-28 bg-primary/20 rounded-full" />
+        <div className="absolute -right-2 -bottom-8 w-20 h-20 bg-primary/10 rounded-full" />
+
+        <div className="relative flex items-start gap-3">
+          <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-3xl flex-shrink-0">
+            {myRestaurant.image_url || '🍽️'}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="font-display text-lg font-bold text-white truncate">
+              {myRestaurant.name}
+            </h1>
+            <p className="flex items-center gap-1 text-xs text-white/60 mt-0.5 truncate">
+              <MapPin className="w-3 h-3 flex-shrink-0" />
+              {myRestaurant.address}
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={handleToggleStatus}
+          disabled={togglingStatus}
+          className="relative w-full flex items-center justify-between bg-white/10 rounded-2xl px-4 py-3 mt-4 active:scale-[0.98] transition-transform disabled:opacity-60"
+        >
+          <span className="flex items-center gap-2 text-sm font-semibold text-white">
+            <span
+              className={`w-2 h-2 rounded-full ${
+                myRestaurant.status === 'open' ? 'bg-success' : 'bg-gray-400'
+              }`}
+            />
+            {myRestaurant.status === 'open' ? 'Abierto — recibiendo pedidos' : 'Cerrado — no recibes pedidos'}
+          </span>
+          <span
+            className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
+              myRestaurant.status === 'open' ? 'bg-success' : 'bg-gray-500'
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
+                myRestaurant.status === 'open' ? 'translate-x-4' : 'translate-x-0.5'
+              }`}
+            />
+          </span>
+        </button>
       </div>
 
       {noDeliveryMsg && (
@@ -152,7 +207,7 @@ export const RestaurantDashboard = () => {
                   <span className="font-semibold text-sm text-secondary">
                     #{order.id.substring(0, 8).toUpperCase()}
                   </span>
-                  <span className="px-2 py-0.5 bg-orange-50 text-primary text-xs rounded-full font-semibold">
+                  <span className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-semibold">
                     {STATUS_LABELS[order.status]}
                   </span>
                 </div>

@@ -45,6 +45,9 @@ const MenuManagementPage = lazy(() =>
 const DeliveryDashboard = lazy(() =>
   import('@/features/delivery/pages/DashboardPage').then((m) => ({ default: m.DeliveryDashboard }))
 )
+const DeliveryProfilePage = lazy(() =>
+  import('@/features/delivery/pages/ProfilePage').then((m) => ({ default: m.DeliveryProfilePage }))
+)
 
 // Admin Pages
 const AdminDashboard = lazy(() =>
@@ -156,6 +159,14 @@ export const Router = () => {
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.DELIVERY]}>
               <DeliveryDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.DELIVERY_PROFILE}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.DELIVERY]}>
+              <DeliveryProfilePage />
             </ProtectedRoute>
           }
         />

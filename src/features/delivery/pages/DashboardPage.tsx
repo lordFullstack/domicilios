@@ -3,6 +3,7 @@ import { Banknote, MapPin, MapPinOff } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders, useRestaurantById, updateOrderLocation } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
+import { BottomNav } from '@/shared/components/BottomNav'
 import { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/config/constants'
 import { Order } from '@/shared/types'
 
@@ -85,7 +86,7 @@ export const DeliveryDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-10">
+    <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
       {/* Header */}
       <div className="px-5 pt-6 pb-4">
         <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
@@ -200,6 +201,8 @@ export const DeliveryDashboard = () => {
           </div>
         </div>
       )}
+
+      <BottomNav role="delivery" />
     </div>
   )
 }
@@ -227,7 +230,7 @@ const DeliveryOrderCard = ({
               ${order.total.toLocaleString('es-CO')}
             </p>
             {order.payment_method === 'cash_on_delivery' && (
-              <span className="flex items-center gap-1 bg-orange-50 text-primary text-xs font-semibold px-2 py-0.5 rounded-full">
+              <span className="flex items-center gap-1 bg-primary/10 text-primary text-xs font-semibold px-2 py-0.5 rounded-full">
                 <Banknote className="w-3 h-3" />
                 Cobrar al entregar
               </span>

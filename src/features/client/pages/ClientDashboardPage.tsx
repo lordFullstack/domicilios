@@ -49,7 +49,7 @@ export const ClientDashboardPage = () => {
       </div>
 
       {/* Banner promo */}
-      <div className="mx-5 mb-6 rounded-2xl p-4 flex items-center justify-between bg-orange-50">
+      <div className="mx-5 mb-6 rounded-2xl p-4 flex items-center justify-between bg-primary/10">
         <div>
           <p className="font-display font-bold text-sm text-primary">Envío gratis hoy</p>
           <p className="text-xs text-gray-500">En pedidos mayores a $40.000</p>
@@ -73,7 +73,7 @@ export const ClientDashboardPage = () => {
                 onClick={() => navigate(ROUTES.CLIENT_RESTAURANT.replace(':id', restaurant.id))}
                 className="text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
               >
-                <div className="h-28 flex items-center justify-center text-5xl bg-orange-50">
+                <div className="h-28 flex items-center justify-center text-5xl bg-primary/10">
                   {restaurant.image_url}
                 </div>
                 <div className="p-3">

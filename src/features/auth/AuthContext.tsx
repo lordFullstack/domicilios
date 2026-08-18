@@ -9,6 +9,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<User | undefined>
   register: (email: string, password: string, name: string, role: string) => Promise<void>
   logout: () => Promise<void>
+  updateProfile: (updates: Partial<User>) => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -129,6 +130,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
+  const updateProfile = async (updates: Partial<User>) => {
+    if (!user) return
+    const { error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', user.id)
+
+    if (error) {
+      console.error('Update profile error:', error)
+      throw new Error('No se pudo actualizar el perfil')
+    }
+    setUser({ ...user, ...updates })
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -138,6 +153,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         login,
         register,
         logout,
+        updateProfile,
       }}
     >
       {children}

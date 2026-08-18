@@ -8,9 +8,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Paleta clara estilo Rappi: naranja/rojo vibrante sobre fondo blanco
-        primary: '#FF441F',       // naranja-rojo vibrante (acento principal, CTAs)
-        'primary-dark': '#E22F0C',
+        // Identidad propia de Domicilios Riohacha: azul cobalto eléctrico (🚀),
+        // sin parecerse al naranja de Rappi.
+        primary: '#2F5EFF',       // azul cobalto vibrante (acento principal, CTAs)
+        'primary-dark': '#1D3FCC',
         secondary: '#1A1A1A',     // negro suave para texto fuerte / botones secundarios
         accent: '#FFC532',        // amarillo cálido para badges/promos
         success: '#0EA96B',

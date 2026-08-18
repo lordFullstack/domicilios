@@ -37,7 +37,7 @@ export const RestaurantDetailPage = () => {
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-28 relative">
       {/* Hero */}
-      <div className="h-40 flex items-center justify-center text-6xl bg-orange-50 relative">
+      <div className="h-40 flex items-center justify-center text-6xl bg-primary/10 relative">
         <button
           onClick={() => navigate(-1)}
           className="absolute top-4 left-4 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-card"

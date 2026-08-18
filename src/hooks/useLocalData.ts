@@ -22,31 +22,43 @@ export const useRestaurants = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    let cancelled = false
-    const load = async () => {
-      setLoading(true)
-      const { data, error } = await supabase
-        .from('restaurants')
-        .select('*')
-        .order('name')
+  const reload = useCallback(async () => {
+    setLoading(true)
+    const { data, error } = await supabase
+      .from('restaurants')
+      .select('*')
+      .order('name')
 
-      if (cancelled) return
-      if (error) {
-        setError('Error cargando restaurantes')
-        console.error(error)
-      } else {
-        setRestaurants(data || [])
-      }
-      setLoading(false)
+    if (error) {
+      setError('Error cargando restaurantes')
+      console.error(error)
+    } else {
+      setRestaurants(data || [])
     }
-    load()
-    return () => {
-      cancelled = true
-    }
+    setLoading(false)
   }, [])
 
-  return { restaurants, loading, error }
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  return { restaurants, loading, error, reload }
+}
+
+// ============================================
+// FUNCIÓN: updateRestaurant
+// ============================================
+
+export const updateRestaurant = async (restaurantId: string, updates: Partial<Restaurant>) => {
+  const { error } = await supabase
+    .from('restaurants')
+    .update(updates)
+    .eq('id', restaurantId)
+
+  if (error) {
+    console.error('Error actualizando restaurante:', error)
+    throw new Error('No se pudo actualizar el restaurante')
+  }
 }
 
 // ============================================

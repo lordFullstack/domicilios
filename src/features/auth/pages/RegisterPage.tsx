@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Bike, Bot } from 'lucide-react'
+import { Rocket, Bot } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
@@ -46,7 +46,7 @@ export const RegisterPage = () => {
     <div className="min-h-screen bg-white flex flex-col justify-center px-8 py-10 max-w-md mx-auto">
       <div className="flex flex-col items-center mb-8">
         <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mb-4">
-          <Bike className="w-8 h-8 text-white" />
+          <Rocket className="w-8 h-8 text-white" />
         </div>
         <h1 className="font-display text-2xl font-bold text-secondary text-center">
           Crea tu cuenta

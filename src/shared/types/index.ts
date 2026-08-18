@@ -10,6 +10,8 @@ export interface User {
   phone?: string
   role: UserRole
   avatar_url?: string
+  vehicle_type?: 'moto' | 'bici' | null
+  vehicle_plate?: string | null
   created_at: string
 }
 

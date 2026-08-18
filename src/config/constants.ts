@@ -24,6 +24,7 @@ export const ROUTES = {
   DELIVERY_DASHBOARD: '/delivery/dashboard',
   DELIVERY_AVAILABLE: '/delivery/available',
   DELIVERY_ACTIVE: '/delivery/active',
+  DELIVERY_PROFILE: '/delivery/profile',
   
   // Admin
   ADMIN_DASHBOARD: '/admin/dashboard',

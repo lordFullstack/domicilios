@@ -145,7 +145,7 @@ export const CheckoutPage = () => {
               onClick={() => setPaymentMethod(PAYMENT_METHOD.CASH_ON_DELIVERY)}
               className={`flex items-center gap-3 border rounded-2xl p-3 text-left transition-colors ${
                 paymentMethod === PAYMENT_METHOD.CASH_ON_DELIVERY
-                  ? 'border-primary bg-orange-50'
+                  ? 'border-primary bg-primary/10'
                   : 'border-gray-200'
               }`}
             >

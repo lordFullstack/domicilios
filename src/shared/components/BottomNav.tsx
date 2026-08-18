@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Home, UtensilsCrossed, ShoppingCart, ClipboardList, LucideIcon } from 'lucide-react'
+import { Home, UtensilsCrossed, ShoppingCart, ClipboardList, User, LucideIcon } from 'lucide-react'
 import { useCart } from '@/hooks/useLocalData'
 import { ROUTES } from '@/config/constants'
 
@@ -23,8 +23,13 @@ const RESTAURANT_ITEMS: NavItem[] = [
   { icon: UtensilsCrossed, label: 'Menú', path: ROUTES.RESTAURANT_PRODUCTS },
 ]
 
+const DELIVERY_ITEMS: NavItem[] = [
+  { icon: Home, label: 'Panel', path: ROUTES.DELIVERY_DASHBOARD },
+  { icon: User, label: 'Perfil', path: ROUTES.DELIVERY_PROFILE },
+]
+
 interface BottomNavProps {
-  role?: 'client' | 'restaurant'
+  role?: 'client' | 'restaurant' | 'delivery'
 }
 
 export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
@@ -33,7 +38,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
   const { cart } = useCart()
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
 
-  const items = role === 'restaurant' ? RESTAURANT_ITEMS : CLIENT_ITEMS
+  const items = role === 'restaurant' ? RESTAURANT_ITEMS : role === 'delivery' ? DELIVERY_ITEMS : CLIENT_ITEMS
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-2 py-2 z-40">
@@ -49,7 +54,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
               <Icon
                 className="w-5 h-5"
                 strokeWidth={isActive ? 2.5 : 2}
-                color={isActive ? '#FF441F' : '#9CA3AF'}
+                color={isActive ? '#2F5EFF' : '#9CA3AF'}
               />
               <span
                 className={`text-xs font-medium ${
