@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { ChevronLeft, Star, Clock, Plus } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
+import { ProductImage } from '@/shared/components/ProductImage'
 import { useRestaurantById, useProducts, useCart } from '@/hooks/useLocalData'
 import { ROUTES } from '@/config/constants'
 
@@ -80,8 +81,8 @@ export const RestaurantDetailPage = () => {
                   !product.available ? 'opacity-50' : ''
                 }`}
               >
-                <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0">
-                  {product.image_url}
+                <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
+                  <ProductImage imageUrl={product.image_url} alt={product.name} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>

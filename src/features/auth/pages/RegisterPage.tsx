@@ -1,11 +1,18 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Bike } from 'lucide-react'
+import { Bike, Bot } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 import { UserRole } from '@/shared/types'
+
+const ROUTE_BY_ROLE: Record<string, string> = {
+  [USER_ROLES.CLIENT]: ROUTES.CLIENT_HOME,
+  [USER_ROLES.RESTAURANT]: ROUTES.RESTAURANT_DASHBOARD,
+  [USER_ROLES.DELIVERY]: ROUTES.DELIVERY_DASHBOARD,
+  [USER_ROLES.ADMIN]: ROUTES.ADMIN_DASHBOARD,
+}
 
 export const RegisterPage = () => {
   const [searchParams] = useSearchParams()
@@ -27,7 +34,7 @@ export const RegisterPage = () => {
 
     try {
       await register(email, password, name, role)
-      navigate(ROUTES.CLIENT_HOME)
+      navigate(ROUTE_BY_ROLE[role] || ROUTES.CLIENT_HOME)
     } catch (err: any) {
       setError(err.message || 'Error al registrarse')
     } finally {
@@ -103,6 +110,11 @@ export const RegisterPage = () => {
         <a href={ROUTES.LOGIN} className="text-primary font-semibold">
           Inicia sesión
         </a>
+      </p>
+
+      <p className="flex items-center justify-center gap-1.5 text-xs text-gray-300 mt-8">
+        <Bot className="w-3.5 h-3.5" />
+        by Jorge Ghisays y Claude
       </p>
     </div>
   )

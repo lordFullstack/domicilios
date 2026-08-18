@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { ChevronLeft, XCircle } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
-import { useOrders, useRestaurantById } from '@/hooks/useLocalData'
+import { useOrders, useRestaurantById, useOrderLocation } from '@/hooks/useLocalData'
 import { OrderStatusIcon } from '@/shared/constants/icons'
+import { DeliveryLiveMap } from '@/shared/components/DeliveryLiveMap'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 
 const TRACKER_STEPS = [
@@ -21,6 +22,8 @@ export const OrderDetailPage = () => {
 
   const order = orders.find((o) => o.id === id)
   const { restaurant } = useRestaurantById(order?.restaurant_id || '')
+  const isInDelivery = order?.status === ORDER_STATUS.IN_DELIVERY
+  const liveLocation = useOrderLocation(isInDelivery ? order?.id : undefined)
 
   if (loading) {
     return (
@@ -121,6 +124,28 @@ export const OrderDetailPage = () => {
                 )
               })}
             </div>
+          </div>
+        )}
+
+        {/* Mapa en vivo del domiciliario */}
+        {isInDelivery && (
+          <div className="mb-4">
+            <p className="font-display font-bold text-sm text-secondary mb-2">
+              Tu domiciliario en camino
+            </p>
+            {liveLocation ? (
+              <DeliveryLiveMap
+                lat={liveLocation.lat}
+                lng={liveLocation.lng}
+                updatedAt={liveLocation.updatedAt}
+              />
+            ) : (
+              <div className="bg-gray-50 rounded-2xl p-6 text-center">
+                <p className="text-gray-400 text-xs">
+                  Esperando la ubicación del domiciliario...
+                </p>
+              </div>
+            )}
           </div>
         )}
 

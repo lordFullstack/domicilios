@@ -3,6 +3,7 @@ import { ChevronLeft } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders, useRestaurants } from '@/hooks/useLocalData'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ROUTES, ORDER_STATUS } from '@/config/constants'
 
 const STATUS_LABELS: Record<string, string> = {
@@ -25,11 +26,7 @@ export const RestaurantOrdersPage = () => {
   const myOrders = myRestaurant ? getOrdersByRestaurant(myRestaurant.id) : []
 
   if (!myRestaurant) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-8">
-        <p className="text-gray-400 text-sm text-center">No tienes un restaurante asignado todavía.</p>
-      </div>
-    )
+    return <CreateRestaurantPage onCreated={() => window.location.reload()} />
   }
 
   return (

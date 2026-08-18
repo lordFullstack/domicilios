@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null
   loading: boolean
   isAuthenticated: boolean
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string) => Promise<User | undefined>
   register: (email: string, password: string, name: string, role: string) => Promise<void>
   logout: () => Promise<void>
 }
@@ -71,6 +71,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (data?.user) {
         const profile = await getCurrentUserProfile(data.user.id)
         setUser(profile)
+        return profile
       }
     } catch (error) {
       console.error('Login error:', error)

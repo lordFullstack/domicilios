@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, Plus, Minus } from 'lucide-react'
 import { useCart, useProductById } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
+import { ProductImage } from '@/shared/components/ProductImage'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { ROUTES } from '@/config/constants'
 
@@ -111,8 +112,8 @@ const CartItemRow = ({
 
   return (
     <div className="flex items-center gap-3 border border-gray-100 rounded-2xl p-3">
-      <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl flex-shrink-0">
-        {product.image_url}
+      <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl flex-shrink-0 overflow-hidden">
+        <ProductImage imageUrl={product.image_url} alt={product.name} />
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>

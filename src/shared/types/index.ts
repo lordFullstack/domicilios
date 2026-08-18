@@ -64,6 +64,9 @@ export interface Order {
   special_instructions?: string
   payment_method: PaymentMethod
   payment_status: PaymentStatus
+  current_lat?: number | null
+  current_lng?: number | null
+  location_updated_at?: string | null
   created_at: string
   updated_at: string
 }

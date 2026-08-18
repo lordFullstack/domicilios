@@ -50,6 +50,30 @@ export const useRestaurants = () => {
 }
 
 // ============================================
+// FUNCIÓN: createRestaurant
+// ============================================
+
+export const createRestaurant = async (restaurant: {
+  owner_id: string
+  name: string
+  description: string
+  address: string
+  phone: string
+}) => {
+  const { data, error } = await supabase
+    .from('restaurants')
+    .insert([{ ...restaurant, status: 'open' }])
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error creando restaurante:', error)
+    throw new Error('No se pudo crear el restaurante. Intenta de nuevo.')
+  }
+  return data
+}
+
+// ============================================
 // HOOK: useRestaurantById
 // ============================================
 
@@ -257,6 +281,76 @@ export const getAvailableDeliveryPerson = async (): Promise<string | null> => {
 }
 
 // ============================================
+// FUNCIÓN: updateOrderLocation
+// ============================================
+// Actualización liviana de solo la ubicación, sin recargar toda la
+// lista de órdenes cada vez (el GPS manda esto muy seguido).
+
+export const updateOrderLocation = async (orderId: string, lat: number, lng: number) => {
+  const { error } = await supabase
+    .from('orders')
+    .update({
+      current_lat: lat,
+      current_lng: lng,
+      location_updated_at: new Date().toISOString(),
+    })
+    .eq('id', orderId)
+
+  if (error) {
+    console.error('Error actualizando ubicación:', error)
+  }
+}
+
+// ============================================
+// HOOK: useOrderLocation
+// ============================================
+// Sigue la ubicación en vivo de UNA orden puntual (la del domiciliario
+// asignado), sin recargar la lista completa de órdenes en cada tick de GPS.
+
+export const useOrderLocation = (orderId: string | undefined) => {
+  const [location, setLocation] = useState<{ lat: number; lng: number; updatedAt: string } | null>(null)
+
+  useEffect(() => {
+    if (!orderId) return
+    let cancelled = false
+
+    const load = async () => {
+      const { data } = await supabase
+        .from('orders')
+        .select('current_lat, current_lng, location_updated_at')
+        .eq('id', orderId)
+        .maybeSingle()
+
+      if (!cancelled && data?.current_lat != null && data?.current_lng != null) {
+        setLocation({ lat: data.current_lat, lng: data.current_lng, updatedAt: data.location_updated_at })
+      }
+    }
+    load()
+
+    const channel = supabase
+      .channel(`order-location-${orderId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'orders', filter: `id=eq.${orderId}` },
+        (payload) => {
+          const row = payload.new as any
+          if (row.current_lat != null && row.current_lng != null) {
+            setLocation({ lat: row.current_lat, lng: row.current_lng, updatedAt: row.location_updated_at })
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      cancelled = true
+      supabase.removeChannel(channel)
+    }
+  }, [orderId])
+
+  return location
+}
+
+// ============================================
 // HOOK: useOrders (con CRUD)
 // ============================================
 
@@ -284,6 +378,22 @@ export const useOrders = (userId?: string) => {
 
   useEffect(() => {
     reload()
+  }, [reload])
+
+  // Tiempo real: cualquier cambio en 'orders' (nueva orden, cambio de
+  // estado, etc.) recarga la lista automáticamente, sin que el usuario
+  // tenga que refrescar la página.
+  useEffect(() => {
+    const channel = supabase
+      .channel('orders-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
+        reload()
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [reload])
 
   const createOrder = async (

@@ -1,13 +1,21 @@
-import { Banknote } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Banknote, MapPin, MapPinOff } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { useOrders, useRestaurantById } from '@/hooks/useLocalData'
+import { useOrders, useRestaurantById, updateOrderLocation } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
 import { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/config/constants'
 import { Order } from '@/shared/types'
 
+// Cada cuántos milisegundos se manda la ubicación al servidor mientras
+// hay una entrega activa. No hace falta mandarla en cada pulso del GPS.
+const LOCATION_UPDATE_INTERVAL_MS = 10000
+
 export const DeliveryDashboard = () => {
   const { user } = useAuth()
   const { orders, updateOrder, getOrdersByDelivery } = useOrders()
+  const [locationError, setLocationError] = useState<string | null>(null)
+  const [sharingLocation, setSharingLocation] = useState(false)
+  const lastSentAtRef = useRef(0)
 
   const availableOrders = orders.filter(
     (o) => o.status === ORDER_STATUS.READY && !o.delivery_person_id
@@ -16,6 +24,42 @@ export const DeliveryDashboard = () => {
   const myDeliveries = user ? getOrdersByDelivery(user.id) : []
   const activeDeliveries = myDeliveries.filter((o) => o.status === ORDER_STATUS.IN_DELIVERY)
   const completedDeliveries = myDeliveries.filter((o) => o.status === ORDER_STATUS.DELIVERED)
+  const activeOrderId = activeDeliveries[0]?.id
+
+  // Mientras haya una entrega activa, comparte la ubicación del celular
+  // para que el cliente pueda ver en un mapa por dónde va su pedido.
+  useEffect(() => {
+    if (!activeOrderId || !('geolocation' in navigator)) {
+      setSharingLocation(false)
+      return
+    }
+
+    setLocationError(null)
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        setSharingLocation(true)
+        setLocationError(null)
+        const now = Date.now()
+        if (now - lastSentAtRef.current < LOCATION_UPDATE_INTERVAL_MS) return
+        lastSentAtRef.current = now
+        updateOrderLocation(activeOrderId, position.coords.latitude, position.coords.longitude)
+      },
+      (err) => {
+        setSharingLocation(false)
+        setLocationError(
+          err.code === err.PERMISSION_DENIED
+            ? 'Activa el permiso de ubicación para que el cliente pueda ver por dónde vas.'
+            : 'No se pudo obtener tu ubicación. Revisa el GPS del celular.'
+        )
+      },
+      { enableHighAccuracy: true, maximumAge: 5000 }
+    )
+
+    return () => {
+      navigator.geolocation.clearWatch(watchId)
+      setSharingLocation(false)
+    }
+  }, [activeOrderId])
 
   const todayCompleted = completedDeliveries.filter((o) => {
     const today = new Date().toDateString()
@@ -75,6 +119,19 @@ export const DeliveryDashboard = () => {
       {activeDeliveries.length > 0 && (
         <div className="px-5 mb-6">
           <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Mi Entrega Actual</h2>
+
+          {locationError ? (
+            <div className="flex items-center gap-2 bg-red-50 text-danger text-xs font-semibold rounded-2xl p-3 mb-3">
+              <MapPinOff className="w-4 h-4 flex-shrink-0" />
+              {locationError}
+            </div>
+          ) : sharingLocation ? (
+            <div className="flex items-center gap-2 bg-green-50 text-success text-xs font-semibold rounded-2xl p-3 mb-3">
+              <MapPin className="w-4 h-4 flex-shrink-0" />
+              Compartiendo tu ubicación con el cliente
+            </div>
+          ) : null}
+
           <div className="flex flex-col gap-3">
             {activeDeliveries.map((order) => (
               <DeliveryOrderCard

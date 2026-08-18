@@ -6,6 +6,8 @@ import { useRestaurants, useProducts } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { ProductFormModal } from '../components/ProductFormModal'
+import { ProductImage } from '@/shared/components/ProductImage'
+import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ROUTES } from '@/config/constants'
 import { Product } from '@/shared/types'
 
@@ -69,11 +71,7 @@ export const MenuManagementPage = () => {
   }
 
   if (!myRestaurant) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-8">
-        <p className="text-gray-400 text-sm text-center">No tienes un restaurante asignado todavía.</p>
-      </div>
-    )
+    return <CreateRestaurantPage onCreated={() => window.location.reload()} />
   }
 
   return (
@@ -133,8 +131,8 @@ export const MenuManagementPage = () => {
                 }`}
               >
                 <div className="flex gap-3">
-                  <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0">
-                    {product.image_url}
+                  <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
+                    <ProductImage imageUrl={product.image_url} alt={product.name} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start gap-2 mb-0.5">
@@ -201,6 +199,7 @@ export const MenuManagementPage = () => {
         }}
         onSave={handleSave}
         product={editingProduct}
+        restaurantId={myRestaurant.id}
       />
 
       <BottomNav role="restaurant" />

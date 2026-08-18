@@ -5,6 +5,7 @@ import { useOrders, useRestaurants, useProducts, getAvailableDeliveryPerson } fr
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { Order, OrderStatus } from '@/shared/types'
 
@@ -80,11 +81,7 @@ export const RestaurantDashboard = () => {
   }
 
   if (!myRestaurant) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-8">
-        <p className="text-gray-400 text-sm text-center">No tienes un restaurante asignado todavía.</p>
-      </div>
-    )
+    return <CreateRestaurantPage onCreated={() => window.location.reload()} />
   }
 
   return (
