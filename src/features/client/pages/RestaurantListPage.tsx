@@ -33,8 +33,14 @@ export const RestaurantListPage = () => {
                 onClick={() => navigate(ROUTES.CLIENT_RESTAURANT.replace(':id', restaurant.id))}
                 className="text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
               >
-                <div className="h-28 flex items-center justify-center text-5xl bg-primary/10">
-                  {restaurant.image_url}
+                <div className="h-28 bg-primary/10 overflow-hidden">
+                  {restaurant.cover_url ? (
+                    <img src={restaurant.cover_url} alt={restaurant.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-5xl">
+                      {restaurant.image_url}
+                    </div>
+                  )}
                 </div>
                 <div className="p-3">
                   <p className="font-display font-bold text-sm text-secondary mb-1">

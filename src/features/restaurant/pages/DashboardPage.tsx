@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MapPin } from 'lucide-react'
+import { MapPin, Camera, Loader2 } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders, useRestaurants, useProducts, getAvailableDeliveryPerson, updateRestaurant } from '@/hooks/useLocalData'
+import { supabase } from '@/shared/utils/supabase'
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { NotificationBell } from '@/shared/components/NotificationBell'
 import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { Order, OrderStatus } from '@/shared/types'
@@ -49,6 +51,7 @@ export const RestaurantDashboard = () => {
   const myOrders = myRestaurant ? getOrdersByRestaurant(myRestaurant.id) : []
   const [noDeliveryMsg, setNoDeliveryMsg] = useState(false)
   const [togglingStatus, setTogglingStatus] = useState(false)
+  const [uploadingCover, setUploadingCover] = useState(false)
 
   const pendingOrders = myOrders.filter((o) => o.status === ORDER_STATUS.PENDING)
   const activeOrders = myOrders.filter(
@@ -97,6 +100,36 @@ export const RestaurantDashboard = () => {
     }
   }
 
+  const handleCoverChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !myRestaurant) return
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('La foto no puede pesar más de 5MB')
+      return
+    }
+
+    setUploadingCover(true)
+    try {
+      const ext = file.name.split('.').pop()
+      const path = `${myRestaurant.id}/cover.${ext}`
+      const { error: uploadError } = await supabase.storage
+        .from('restaurant-covers')
+        .upload(path, file, { upsert: true })
+
+      if (uploadError) throw uploadError
+
+      const { data } = supabase.storage.from('restaurant-covers').getPublicUrl(path)
+      await updateRestaurant(myRestaurant.id, { cover_url: `${data.publicUrl}?t=${Date.now()}` })
+      await reloadRestaurants()
+    } catch (err) {
+      console.error(err)
+      alert('No se pudo subir la portada. Intenta de nuevo.')
+    } finally {
+      setUploadingCover(false)
+    }
+  }
+
   if (!myRestaurant) {
     return <CreateRestaurantPage onCreated={() => window.location.reload()} />
   }
@@ -104,23 +137,48 @@ export const RestaurantDashboard = () => {
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
       {/* Hero del restaurante */}
-      <div className="mx-5 mt-5 mb-4 bg-secondary rounded-3xl p-5 relative overflow-hidden">
-        <div className="absolute -right-6 -top-6 w-28 h-28 bg-primary/20 rounded-full" />
-        <div className="absolute -right-2 -bottom-8 w-20 h-20 bg-primary/10 rounded-full" />
+      <div
+        className="mx-5 mt-5 mb-4 rounded-3xl p-5 relative overflow-hidden bg-secondary bg-cover bg-center"
+        style={myRestaurant.cover_url ? { backgroundImage: `url(${myRestaurant.cover_url})` } : undefined}
+      >
+        {!myRestaurant.cover_url && (
+          <>
+            <div className="absolute -right-6 -top-6 w-28 h-28 bg-primary/20 rounded-full" />
+            <div className="absolute -right-2 -bottom-8 w-20 h-20 bg-primary/10 rounded-full" />
+          </>
+        )}
+        {myRestaurant.cover_url && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+        )}
 
         <div className="relative flex items-start gap-3">
-          <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-3xl flex-shrink-0">
+          <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-3xl flex-shrink-0 backdrop-blur-sm">
             {myRestaurant.image_url || '🍽️'}
           </div>
           <div className="flex-1 min-w-0">
             <h1 className="font-display text-lg font-bold text-white truncate">
               {myRestaurant.name}
             </h1>
-            <p className="flex items-center gap-1 text-xs text-white/60 mt-0.5 truncate">
+            <p className="flex items-center gap-1 text-xs text-white/70 mt-0.5 truncate">
               <MapPin className="w-3 h-3 flex-shrink-0" />
               {myRestaurant.address}
             </p>
           </div>
+          <label className="relative w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center flex-shrink-0 cursor-pointer active:scale-90 transition-transform">
+            {uploadingCover ? (
+              <Loader2 className="w-4 h-4 text-white animate-spin" />
+            ) : (
+              <Camera className="w-4 h-4 text-white" />
+            )}
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              className="hidden"
+              onChange={handleCoverChange}
+              disabled={uploadingCover}
+            />
+          </label>
+          <NotificationBell variant="light" />
         </div>
 
         <button

@@ -3,7 +3,8 @@ import { Camera, Loader2 } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { ProductImage } from '@/shared/components/ProductImage'
-import { Product } from '@/shared/types'
+import { Product, ProductCategory } from '@/shared/types'
+import { PRODUCT_CATEGORIES } from '@/config/constants'
 import { supabase } from '@/shared/utils/supabase'
 
 interface ProductFormModalProps {
@@ -14,6 +15,7 @@ interface ProductFormModalProps {
     description: string
     price: number
     image_url: string
+    category: ProductCategory
     available: boolean
   }) => void
   product?: Product | null
@@ -36,6 +38,7 @@ export const ProductFormModal = ({
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [imageUrl, setImageUrl] = useState('🍽️')
+  const [category, setCategory] = useState<ProductCategory>('Platos')
   const [available, setAvailable] = useState(true)
   const [error, setError] = useState('')
   const [uploading, setUploading] = useState(false)
@@ -48,12 +51,14 @@ export const ProductFormModal = ({
       setDescription(product.description)
       setPrice(String(product.price))
       setImageUrl(product.image_url || '🍽️')
+      setCategory(product.category || 'Platos')
       setAvailable(product.available)
     } else {
       setName('')
       setDescription('')
       setPrice('')
       setImageUrl('🍽️')
+      setCategory('Platos')
       setAvailable(true)
     }
     setError('')
@@ -111,6 +116,7 @@ export const ProductFormModal = ({
       description: description.trim(),
       price: numericPrice,
       image_url: imageUrl,
+      category,
       available,
     })
   }
@@ -190,6 +196,27 @@ export const ProductFormModal = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+
+            {/* Categoría */}
+            <div>
+              <label className="block text-sm font-semibold text-secondary mb-2">Categoría</label>
+              <div className="flex flex-wrap gap-2">
+                {PRODUCT_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setCategory(cat)}
+                    className={`px-3 py-2 rounded-xl text-xs font-semibold border-2 transition-all active:scale-95 ${
+                      category === cat
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-gray-100 text-gray-500'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Descripción */}
             <div>

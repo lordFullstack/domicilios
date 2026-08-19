@@ -11,7 +11,117 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/shared/utils/supabase'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { Restaurant, Product, Order } from '@/shared/types'
+import { Restaurant, Product, Order, AppNotification } from '@/shared/types'
+
+// ============================================
+// HOOK: useDeliveryPersonProfile
+// ============================================
+// Trae los datos públicos del domiciliario (nombre, foto, vehículo) para
+// mostrárselos al cliente mientras su pedido va en camino.
+
+export const useDeliveryPersonProfile = (userId?: string | null) => {
+  const [profile, setProfile] = useState<{
+    name: string
+    avatar_url?: string | null
+    phone?: string | null
+    vehicle_type?: string | null
+    vehicle_plate?: string | null
+  } | null>(null)
+
+  useEffect(() => {
+    if (!userId) {
+      setProfile(null)
+      return
+    }
+    let cancelled = false
+    const load = async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('name, avatar_url, phone, vehicle_type, vehicle_plate')
+        .eq('id', userId)
+        .maybeSingle()
+      if (!cancelled) setProfile(data)
+    }
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [userId])
+
+  return profile
+}
+
+// ============================================
+// HOOK: useNotifications
+// ============================================
+// Campanita in-app: trae las notificaciones del usuario logueado y se
+// actualiza sola en tiempo real cuando llega una nueva (nuevo pedido,
+// cambio de estado, entrega asignada — generadas por trigger en Supabase).
+
+export const useNotifications = () => {
+  const { user } = useAuth()
+  const [notifications, setNotifications] = useState<AppNotification[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const reload = useCallback(async () => {
+    if (!user) {
+      setNotifications([])
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(50)
+
+    if (!error) setNotifications(data || [])
+    setLoading(false)
+  }, [user])
+
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  useEffect(() => {
+    if (!user) return
+    const channel = supabase
+      .channel(`notifications-${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          setNotifications((prev) => [payload.new as AppNotification, ...prev])
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [user])
+
+  const markAsRead = async (notificationId: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
+    )
+    await supabase.from('notifications').update({ read: true }).eq('id', notificationId)
+  }
+
+  const markAllAsRead = async () => {
+    if (!user) return
+    const unreadIds = notifications.filter((n) => !n.read).map((n) => n.id)
+    if (unreadIds.length === 0) return
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+    await supabase.from('notifications').update({ read: true }).eq('user_id', user.id).eq('read', false)
+  }
+
+  const unreadCount = notifications.filter((n) => !n.read).length
+
+  return { notifications, loading, unreadCount, markAsRead, markAllAsRead, reload }
+}
 
 // ============================================
 // HOOK: useRestaurants

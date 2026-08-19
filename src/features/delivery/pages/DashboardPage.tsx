@@ -4,6 +4,7 @@ import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders, useRestaurantById, updateOrderLocation } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { NotificationBell } from '@/shared/components/NotificationBell'
 import { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/config/constants'
 import { Order } from '@/shared/types'
 
@@ -88,10 +89,13 @@ export const DeliveryDashboard = () => {
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
       {/* Header */}
-      <div className="px-5 pt-6 pb-4">
-        <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
-        <h1 className="font-display text-xl font-bold text-secondary">🚴 Panel de Domiciliario</h1>
-        <p className="text-sm text-gray-400">Hola {user?.name?.split(' ')[0]}, aquí tus entregas</p>
+      <div className="flex items-start justify-between px-5 pt-6 pb-4">
+        <div>
+          <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
+          <h1 className="font-display text-xl font-bold text-secondary">🚴 Panel de Domiciliario</h1>
+          <p className="text-sm text-gray-400">Hola {user?.name?.split(' ')[0]}, aquí tus entregas</p>
+        </div>
+        <NotificationBell />
       </div>
 
       {/* Estadísticas */}

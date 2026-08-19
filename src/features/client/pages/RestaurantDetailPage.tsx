@@ -1,9 +1,10 @@
 import { useParams, useNavigate } from 'react-router-dom'
+import { useState, useMemo, useEffect } from 'react'
 import { ChevronLeft, Star, Clock, Plus } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { useRestaurantById, useProducts, useCart } from '@/hooks/useLocalData'
-import { ROUTES } from '@/config/constants'
+import { ROUTES, PRODUCT_CATEGORIES } from '@/config/constants'
 
 export const RestaurantDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -14,6 +15,20 @@ export const RestaurantDetailPage = () => {
   const { cart, addItem, getTotal } = useCart()
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+
+  const availableCategories = useMemo(
+    () => PRODUCT_CATEGORIES.filter((cat) => products.some((p) => p.category === cat)),
+    [products]
+  )
+  const [activeCategory, setActiveCategory] = useState<string>('')
+
+  useEffect(() => {
+    if (availableCategories.length > 0 && !availableCategories.includes(activeCategory as any)) {
+      setActiveCategory(availableCategories[0])
+    }
+  }, [availableCategories, activeCategory])
+
+  const filteredProducts = products.filter((p) => p.category === activeCategory)
 
   if (restaurantLoading) {
     return (
@@ -37,14 +52,23 @@ export const RestaurantDetailPage = () => {
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-28 relative">
       {/* Hero */}
-      <div className="h-40 flex items-center justify-center text-6xl bg-primary/10 relative">
+      <div className="h-40 bg-primary/10 relative overflow-hidden">
+        {restaurant.cover_url ? (
+          <>
+            <img src={restaurant.cover_url} alt={restaurant.name} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          </>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-6xl">
+            {restaurant.image_url}
+          </div>
+        )}
         <button
           onClick={() => navigate(-1)}
           className="absolute top-4 left-4 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-card"
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
-        {restaurant.image_url}
       </div>
 
       {/* Info */}
@@ -73,37 +97,56 @@ export const RestaurantDetailPage = () => {
         {productsLoading ? (
           <p className="text-gray-400 text-sm text-center py-8">Cargando menú...</p>
         ) : products.length > 0 ? (
-          <div className="flex flex-col gap-3">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className={`flex items-center gap-3 border border-gray-100 rounded-2xl p-3 ${
-                  !product.available ? 'opacity-50' : ''
-                }`}
-              >
-                <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
-                  <ProductImage imageUrl={product.image_url} alt={product.name} />
+          <>
+            {/* Pestañas de categoría */}
+            <div className="flex gap-2 overflow-x-auto pb-3 mb-2 -mx-1 px-1 no-scrollbar">
+              {availableCategories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
+                    activeCategory === cat
+                      ? 'bg-primary text-white'
+                      : 'bg-gray-50 text-gray-500'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {filteredProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className={`flex items-center gap-3 border border-gray-100 rounded-2xl p-3 ${
+                    !product.available ? 'opacity-50' : ''
+                  }`}
+                >
+                  <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
+                    <ProductImage imageUrl={product.image_url} alt={product.name} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
+                    <p className="text-xs text-gray-400 truncate">{product.description}</p>
+                    <p className="text-sm font-bold text-primary mt-1">
+                      ${product.price.toLocaleString('es-CO')}
+                    </p>
+                  </div>
+                  {product.available ? (
+                    <button
+                      onClick={() => addItem(product.id, product.price, 1)}
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-white bg-primary flex-shrink-0 active:scale-90 transition-transform"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  ) : (
+                    <span className="text-xs text-gray-400 flex-shrink-0">Agotado</span>
+                  )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
-                  <p className="text-xs text-gray-400 truncate">{product.description}</p>
-                  <p className="text-sm font-bold text-primary mt-1">
-                    ${product.price.toLocaleString('es-CO')}
-                  </p>
-                </div>
-                {product.available ? (
-                  <button
-                    onClick={() => addItem(product.id, product.price, 1)}
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white bg-primary flex-shrink-0 active:scale-90 transition-transform"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                ) : (
-                  <span className="text-xs text-gray-400 flex-shrink-0">Agotado</span>
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         ) : (
           <p className="text-gray-400 text-sm text-center py-8">No hay productos disponibles</p>
         )}

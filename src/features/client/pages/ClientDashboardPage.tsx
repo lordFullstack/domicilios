@@ -3,6 +3,7 @@ import { Search, MapPin, Star, Clock, Heart } from 'lucide-react'
 import { useRestaurants } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { NotificationBell } from '@/shared/components/NotificationBell'
 import { ROUTES } from '@/config/constants'
 
 const CATEGORIES = [
@@ -30,9 +31,12 @@ export const ClientDashboardPage = () => {
           <h1 className="font-display text-xl font-bold text-secondary">
             Hola, {user?.name?.split(' ')[0] || 'bienvenido'} 👋
           </h1>
-          <button className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
-            <Search className="w-4 h-4 text-gray-500" />
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <NotificationBell />
+            <button className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
+              <Search className="w-4 h-4 text-gray-500" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -73,8 +77,14 @@ export const ClientDashboardPage = () => {
                 onClick={() => navigate(ROUTES.CLIENT_RESTAURANT.replace(':id', restaurant.id))}
                 className="text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
               >
-                <div className="h-28 flex items-center justify-center text-5xl bg-primary/10">
-                  {restaurant.image_url}
+                <div className="h-28 bg-primary/10 overflow-hidden">
+                  {restaurant.cover_url ? (
+                    <img src={restaurant.cover_url} alt={restaurant.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-5xl">
+                      {restaurant.image_url}
+                    </div>
+                  )}
                 </div>
                 <div className="p-3">
                   <div className="flex items-center justify-between mb-1">

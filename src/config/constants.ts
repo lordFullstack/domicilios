@@ -47,6 +47,8 @@ export const ORDER_STATUS = {
   CANCELLED: 'cancelled',
 } as const
 
+export const PRODUCT_CATEGORIES = ['Entradas', 'Platos', 'Bebidas', 'Postres', 'Adicionales'] as const
+
 export const PAYMENT_METHOD = {
   CASH_ON_DELIVERY: 'cash_on_delivery',
   ONLINE: 'online',

@@ -8,8 +8,8 @@ import { BottomNav } from '@/shared/components/BottomNav'
 import { ProductFormModal } from '../components/ProductFormModal'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { CreateRestaurantPage } from './CreateRestaurantPage'
-import { ROUTES } from '@/config/constants'
-import { Product } from '@/shared/types'
+import { Product, ProductCategory } from '@/shared/types'
+import { ROUTES, PRODUCT_CATEGORIES } from '@/config/constants'
 
 export const MenuManagementPage = () => {
   const navigate = useNavigate()
@@ -45,6 +45,7 @@ export const MenuManagementPage = () => {
     description: string
     price: number
     image_url: string
+    category: ProductCategory
     available: boolean
   }) => {
     if (!myRestaurant) return
@@ -122,68 +123,77 @@ export const MenuManagementPage = () => {
             </Button>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className={`border border-gray-100 rounded-2xl p-3 ${
-                  !product.available ? 'opacity-50' : ''
-                }`}
-              >
-                <div className="flex gap-3">
-                  <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
-                    <ProductImage imageUrl={product.image_url} alt={product.name} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start gap-2 mb-0.5">
-                      <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
-                      <span className="font-bold text-primary text-sm whitespace-nowrap">
-                        ${product.price.toLocaleString('es-CO')}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-400 truncate mb-2">
-                      {product.description || 'Sin descripción'}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <button
-                        onClick={() => toggleAvailability(product.id)}
-                        className={`relative w-9 h-5 rounded-full transition-colors ${
-                          product.available ? 'bg-success' : 'bg-gray-300'
+          <div className="flex flex-col gap-5">
+            {PRODUCT_CATEGORIES.filter((cat) => products.some((p) => p.category === cat)).map((cat) => (
+              <div key={cat}>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{cat}</p>
+                <div className="flex flex-col gap-3">
+                  {products
+                    .filter((p) => p.category === cat)
+                    .map((product) => (
+                      <div
+                        key={product.id}
+                        className={`border border-gray-100 rounded-2xl p-3 ${
+                          !product.available ? 'opacity-50' : ''
                         }`}
                       >
-                        <span
-                          className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
-                            product.available ? 'translate-x-4' : 'translate-x-0.5'
-                          }`}
-                        />
-                      </button>
+                        <div className="flex gap-3">
+                          <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
+                            <ProductImage imageUrl={product.image_url} alt={product.name} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-start gap-2 mb-0.5">
+                              <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
+                              <span className="font-bold text-primary text-sm whitespace-nowrap">
+                                ${product.price.toLocaleString('es-CO')}
+                              </span>
+                            </div>
+                            <p className="text-xs text-gray-400 truncate mb-2">
+                              {product.description || 'Sin descripción'}
+                            </p>
 
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleOpenEdit(product)}
-                          className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
-                        >
-                          <Pencil className="w-3 h-3 text-gray-500" />
-                        </button>
-                        {deleteConfirmId === product.id ? (
-                          <button
-                            onClick={() => handleDelete(product.id)}
-                            className="text-xs font-semibold text-white bg-danger px-2 rounded-full"
-                          >
-                            Confirmar
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => setDeleteConfirmId(product.id)}
-                            className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
-                          >
-                            <Trash2 className="w-3 h-3 text-gray-500" />
-                          </button>
-                        )}
+                            <div className="flex items-center justify-between">
+                              <button
+                                onClick={() => toggleAvailability(product.id)}
+                                className={`relative w-9 h-5 rounded-full transition-colors ${
+                                  product.available ? 'bg-success' : 'bg-gray-300'
+                                }`}
+                              >
+                                <span
+                                  className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
+                                    product.available ? 'translate-x-4' : 'translate-x-0.5'
+                                  }`}
+                                />
+                              </button>
+
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleOpenEdit(product)}
+                                  className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                >
+                                  <Pencil className="w-3 h-3 text-gray-500" />
+                                </button>
+                                {deleteConfirmId === product.id ? (
+                                  <button
+                                    onClick={() => handleDelete(product.id)}
+                                    className="text-xs font-semibold text-white bg-danger px-2 rounded-full"
+                                  >
+                                    Confirmar
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => setDeleteConfirmId(product.id)}
+                                    className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                  >
+                                    <Trash2 className="w-3 h-3 text-gray-500" />
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    ))}
                 </div>
               </div>
             ))}

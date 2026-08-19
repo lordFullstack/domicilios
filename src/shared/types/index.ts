@@ -22,6 +22,7 @@ export interface Restaurant {
   name: string
   description: string
   image_url?: string
+  cover_url?: string | null
   address: string
   phone: string
   status: 'open' | 'closed'
@@ -29,6 +30,8 @@ export interface Restaurant {
 }
 
 // Product
+export type ProductCategory = 'Entradas' | 'Platos' | 'Bebidas' | 'Postres' | 'Adicionales'
+
 export interface Product {
   id: string
   restaurant_id: string
@@ -36,6 +39,7 @@ export interface Product {
   description: string
   price: number
   image_url?: string
+  category: ProductCategory
   available: boolean
   created_at: string
 }
@@ -94,4 +98,16 @@ export interface ApiError {
     message: string
     code: string
   }
+}
+
+// Notification
+export interface AppNotification {
+  id: string
+  user_id: string
+  title: string
+  body: string
+  type: string
+  order_id?: string | null
+  read: boolean
+  created_at: string
 }
