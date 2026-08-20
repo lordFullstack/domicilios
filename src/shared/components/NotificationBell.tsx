@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Bell, Check } from 'lucide-react'
 import { useNotifications } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
+import { requestNotificationPermission } from '@/shared/utils/notificationSound'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 
 const timeAgo = (dateStr: string) => {
@@ -55,7 +56,10 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
   return (
     <div className="relative" ref={panelRef}>
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          setOpen((v) => !v)
+          requestNotificationPermission()
+        }}
         className={`relative w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition-transform ${
           variant === 'light' ? 'bg-white/10' : 'bg-gray-50'
         }`}

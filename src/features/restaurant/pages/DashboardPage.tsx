@@ -8,6 +8,7 @@ import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
+import { OrderItemsList } from '@/shared/components/OrderItemsList'
 import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { Order, OrderStatus } from '@/shared/types'
@@ -273,6 +274,11 @@ export const RestaurantDashboard = () => {
                 {order.special_instructions && (
                   <p className="text-xs text-gray-400 italic mb-1">"{order.special_instructions}"</p>
                 )}
+
+                <div className="bg-gray-50 rounded-xl p-2.5 my-2">
+                  <OrderItemsList orderId={order.id} />
+                </div>
+
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-base font-display font-bold text-primary">
                     ${order.total.toLocaleString('es-CO')}

@@ -5,6 +5,7 @@ import { useOrders, useRestaurantById, updateOrderLocation } from '@/hooks/useLo
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
+import { OrderItemsList } from '@/shared/components/OrderItemsList'
 import { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/config/constants'
 import { Order } from '@/shared/types'
 
@@ -229,6 +230,11 @@ const DeliveryOrderCard = ({
           <p className="font-semibold text-sm text-secondary truncate">{restaurant?.name}</p>
           <p className="text-xs text-gray-400 truncate">Recoger: {restaurant?.address}</p>
           <p className="text-xs text-gray-400 truncate">Entregar: {order.delivery_address}</p>
+
+          <div className="bg-gray-50 rounded-xl p-2 my-2">
+            <OrderItemsList orderId={order.id} />
+          </div>
+
           <div className="flex items-center justify-between mt-1">
             <p className="text-base font-display font-bold text-primary">
               ${order.total.toLocaleString('es-CO')}

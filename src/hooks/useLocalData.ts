@@ -11,7 +11,63 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/shared/utils/supabase'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 import { useAuth } from '@/shared/hooks/useAuth'
+import { playNotificationSound, showBrowserNotification } from '@/shared/utils/notificationSound'
 import { Restaurant, Product, Order, AppNotification } from '@/shared/types'
+
+// ============================================
+// HOOK: useOrderItems
+// ============================================
+// Trae qué productos (nombre, cantidad, precio) tiene una orden puntual.
+// Esto faltaba: se guardaba en order_items pero nadie lo consultaba —
+// por eso ni el restaurante ni el cliente veían qué se pidió.
+
+export const useOrderItems = (orderId?: string) => {
+  const [items, setItems] = useState<
+    { id: string; product_id: string; quantity: number; unit_price: number; product_name: string; product_image: string | null }[]
+  >([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!orderId) {
+      setItems([])
+      setLoading(false)
+      return
+    }
+    let cancelled = false
+    const load = async () => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('order_items')
+        .select('id, product_id, quantity, unit_price, products(name, image_url)')
+        .eq('order_id', orderId)
+
+      if (!cancelled) {
+        if (error) {
+          console.error('Error cargando items de la orden:', error)
+          setItems([])
+        } else {
+          setItems(
+            (data || []).map((row: any) => ({
+              id: row.id,
+              product_id: row.product_id,
+              quantity: row.quantity,
+              unit_price: row.unit_price,
+              product_name: row.products?.name || 'Producto',
+              product_image: row.products?.image_url || null,
+            }))
+          )
+        }
+        setLoading(false)
+      }
+    }
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [orderId])
+
+  return { items, loading }
+}
 
 // ============================================
 // HOOK: useDeliveryPersonProfile
@@ -93,7 +149,10 @@ export const useNotifications = () => {
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
         (payload) => {
-          setNotifications((prev) => [payload.new as AppNotification, ...prev])
+          const notif = payload.new as AppNotification
+          setNotifications((prev) => [notif, ...prev])
+          playNotificationSound()
+          showBrowserNotification(notif.title, notif.body)
         }
       )
       .subscribe()

@@ -4,6 +4,7 @@ import { Button } from '@/shared/components/Button'
 import { useOrders, useRestaurantById, useOrderLocation, useDeliveryPersonProfile } from '@/hooks/useLocalData'
 import { OrderStatusIcon } from '@/shared/constants/icons'
 import { DeliveryLiveMap } from '@/shared/components/DeliveryLiveMap'
+import { OrderItemsList } from '@/shared/components/OrderItemsList'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 
 const TRACKER_STEPS = [
@@ -203,6 +204,12 @@ export const OrderDetailPage = () => {
           {order.special_instructions && (
             <p className="text-xs text-gray-400 italic">"{order.special_instructions}"</p>
           )}
+        </div>
+
+        {/* Productos pedidos */}
+        <div className="border border-gray-100 rounded-2xl p-4 mb-4">
+          <p className="font-display font-bold text-sm text-secondary mb-2">Tu pedido</p>
+          <OrderItemsList orderId={order.id} />
         </div>
 
         {/* Total */}
