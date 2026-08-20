@@ -76,12 +76,12 @@ export const MenuManagementPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
+    <div className="min-h-screen bg-white max-w-md mx-auto pb-24 md:max-w-none md:mx-0 md:pl-60 md:pb-10">
       {/* Header */}
-      <div className="px-5 pt-6 pb-4 flex items-center gap-3">
+      <div className="px-5 pt-6 pb-4 flex items-center gap-3 md:max-w-4xl md:mx-auto md:px-0 md:pt-8">
         <button
           onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}
-          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0"
+          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0 md:hidden"
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
@@ -91,7 +91,7 @@ export const MenuManagementPage = () => {
         </div>
       </div>
 
-      <div className="px-5">
+      <div className="px-5 md:max-w-4xl md:mx-auto md:px-0">
         {successMessage && (
           <div className="mb-4 bg-green-50 text-green-700 text-sm font-semibold rounded-2xl p-3">
             {successMessage}
@@ -127,7 +127,7 @@ export const MenuManagementPage = () => {
             {PRODUCT_CATEGORIES.filter((cat) => products.some((p) => p.category === cat)).map((cat) => (
               <div key={cat}>
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{cat}</p>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-3">
                   {products
                     .filter((p) => p.category === cat)
                     .map((product) => (

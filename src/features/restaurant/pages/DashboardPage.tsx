@@ -136,10 +136,10 @@ export const RestaurantDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
+    <div className="min-h-screen bg-white max-w-md mx-auto pb-24 md:max-w-none md:mx-0 md:pl-60 md:pb-10">
       {/* Hero del restaurante */}
       <div
-        className="mx-5 mt-5 mb-4 rounded-3xl p-5 relative overflow-hidden bg-secondary bg-cover bg-center"
+        className="mx-5 mt-5 mb-4 rounded-3xl p-5 relative overflow-hidden bg-secondary bg-cover bg-center md:max-w-4xl md:mx-auto md:mt-8"
         style={myRestaurant.cover_url ? { backgroundImage: `url(${myRestaurant.cover_url})` } : undefined}
       >
         {!myRestaurant.cover_url && (
@@ -210,13 +210,13 @@ export const RestaurantDashboard = () => {
       </div>
 
       {noDeliveryMsg && (
-        <div className="mx-5 mb-4 bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3">
+        <div className="mx-5 mb-4 bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3 md:max-w-4xl md:mx-auto">
           No hay domiciliarios disponibles en este momento. Intenta de nuevo en unos minutos.
         </div>
       )}
 
       {/* Estadísticas */}
-      <div className="grid grid-cols-2 gap-3 px-5 mb-4">
+      <div className="grid grid-cols-2 gap-3 px-5 mb-4 md:grid-cols-4 md:max-w-4xl md:mx-auto md:px-0">
         <Card className="text-center py-4">
           <p className="text-2xl font-display font-bold text-warning">{pendingOrders.length}</p>
           <p className="text-gray-400 text-xs mt-1">Pendientes</p>
@@ -238,7 +238,7 @@ export const RestaurantDashboard = () => {
       </div>
 
       {/* Info rápida */}
-      <div className="px-5 mb-6 flex flex-col gap-3">
+      <div className="px-5 mb-6 flex flex-col gap-3 md:max-w-4xl md:mx-auto md:px-0">
         <Card>
           <div className="flex items-center justify-between mb-2">
             <p className="font-display font-bold text-sm text-secondary">Menú</p>
@@ -253,13 +253,13 @@ export const RestaurantDashboard = () => {
       </div>
 
       {/* Órdenes Activas */}
-      <div className="px-5">
+      <div className="px-5 md:max-w-4xl md:mx-auto md:px-0">
         <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Órdenes Activas</h2>
 
         {activeOrders.length === 0 ? (
           <p className="text-gray-400 text-sm text-center py-8">No hay órdenes activas en este momento</p>
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
             {activeOrders.map((order) => (
               <Card key={order.id}>
                 <div className="flex items-center gap-2 mb-1">
