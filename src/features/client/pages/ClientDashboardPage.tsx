@@ -4,6 +4,8 @@ import { useRestaurants } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
+import { PromoBanner } from '../components/PromoBanner'
+import { FeaturedSection } from '../components/FeaturedSection'
 import { ROUTES } from '@/config/constants'
 
 const CATEGORIES = [
@@ -17,7 +19,10 @@ const CATEGORIES = [
 export const ClientDashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { restaurants, loading } = useRestaurants()
+  const { restaurants: allRestaurants, loading } = useRestaurants()
+  // Un restaurante suspendido por el Admin (approved = false) no debe verse
+  // en el listado del cliente, aunque el dueño lo tenga marcado como "abierto".
+  const restaurants = allRestaurants.filter((r) => r.approved !== false)
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
@@ -52,14 +57,12 @@ export const ClientDashboardPage = () => {
         ))}
       </div>
 
-      {/* Banner promo */}
-      <div className="mx-5 mb-6 rounded-2xl p-4 flex items-center justify-between bg-primary/10">
-        <div>
-          <p className="font-display font-bold text-sm text-primary">Envío gratis hoy</p>
-          <p className="text-xs text-gray-500">En pedidos mayores a $40.000</p>
-        </div>
-        <span className="text-3xl">🎉</span>
-      </div>
+      {/* Banner promo — gestionado desde el panel de Admin (Promociones) */}
+      <PromoBanner />
+
+      {/* Destacados — gestionados desde el panel de Admin (Promociones) */}
+      <FeaturedSection type="featured_restaurant" title="Restaurantes recomendados para ti" />
+      <FeaturedSection type="featured_product" title="Recomendados para ti" />
 
       {/* Lista de restaurantes */}
       <div className="px-5">
