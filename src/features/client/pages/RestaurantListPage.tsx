@@ -6,9 +6,7 @@ import { ROUTES } from '@/config/constants'
 
 export const RestaurantListPage = () => {
   const navigate = useNavigate()
-  const { restaurants: allRestaurants, loading } = useRestaurants()
-  // Un restaurante suspendido por el Admin no debe aparecer en el listado del cliente.
-  const restaurants = allRestaurants.filter((r) => r.approved !== false)
+  const { restaurants, loading } = useRestaurants()
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">

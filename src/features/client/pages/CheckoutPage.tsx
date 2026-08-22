@@ -25,7 +25,8 @@ export const CheckoutPage = () => {
   })
 
   const firstProduct = useProductById(cart[0]?.productId || '')
-  const { restaurant } = useRestaurantById(firstProduct.product?.restaurant_id || '')
+  const { restaurant, loading: restaurantLoading } = useRestaurantById(firstProduct.product?.restaurant_id || '')
+  const checkoutInfoReady = !firstProduct.loading && !restaurantLoading && !!restaurant
 
   if (cart.length === 0) {
     return (
@@ -50,6 +51,9 @@ export const CheckoutPage = () => {
     try {
       if (!formData.deliveryAddress.trim()) {
         throw new Error('La dirección de entrega es requerida')
+      }
+      if (!checkoutInfoReady) {
+        throw new Error('Aún estamos cargando la información del restaurante, espera un momento e intenta de nuevo')
       }
       if (!restaurant || !user) {
         throw new Error('Información de restaurante o usuario no disponible')
@@ -208,8 +212,8 @@ export const CheckoutPage = () => {
             />
           </div>
 
-          <Button type="submit" fullWidth size="lg" loading={loading}>
-            {loading ? 'Creando orden...' : 'Confirmar Pedido'}
+          <Button type="submit" fullWidth size="lg" loading={loading} disabled={loading || !checkoutInfoReady}>
+            {!checkoutInfoReady ? 'Cargando...' : loading ? 'Creando orden...' : 'Confirmar Pedido'}
           </Button>
         </form>
 
