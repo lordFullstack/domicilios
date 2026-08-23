@@ -28,6 +28,10 @@ export const ROUTES = {
   
   // Admin
   ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_RESTAURANTS: '/admin/restaurants',
+  ADMIN_ORDERS: '/admin/orders',
+  ADMIN_PROMOTIONS: '/admin/promotions',
 } as const
 
 export const USER_ROLES = {
