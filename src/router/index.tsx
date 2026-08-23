@@ -53,6 +53,18 @@ const DeliveryProfilePage = lazy(() =>
 const AdminDashboard = lazy(() =>
   import('@/features/admin/pages/DashboardPage').then((m) => ({ default: m.AdminDashboard }))
 )
+const AdminUsersPage = lazy(() =>
+  import('@/features/admin/pages/UsersPage').then((m) => ({ default: m.AdminUsersPage }))
+)
+const AdminRestaurantsPage = lazy(() =>
+  import('@/features/admin/pages/RestaurantsPage').then((m) => ({ default: m.AdminRestaurantsPage }))
+)
+const AdminOrdersPage = lazy(() =>
+  import('@/features/admin/pages/OrdersPage').then((m) => ({ default: m.AdminOrdersPage }))
+)
+const AdminPromotionsPage = lazy(() =>
+  import('@/features/admin/pages/PromotionsPage').then((m) => ({ default: m.AdminPromotionsPage }))
+)
 
 const PageLoader = () => (
   <div className="min-h-screen bg-white flex items-center justify-center">
@@ -177,6 +189,38 @@ export const Router = () => {
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.ADMIN_USERS}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <AdminUsersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.ADMIN_RESTAURANTS}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <AdminRestaurantsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.ADMIN_ORDERS}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <AdminOrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.ADMIN_PROMOTIONS}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <AdminPromotionsPage />
             </ProtectedRoute>
           }
         />
