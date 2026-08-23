@@ -12,6 +12,7 @@ export interface User {
   avatar_url?: string
   vehicle_type?: 'moto' | 'bici' | null
   vehicle_plate?: string | null
+  active: boolean
   created_at: string
 }
 
@@ -26,6 +27,7 @@ export interface Restaurant {
   address: string
   phone: string
   status: 'open' | 'closed'
+  approved: boolean
   created_at: string
 }
 
@@ -98,6 +100,25 @@ export interface ApiError {
     message: string
     code: string
   }
+}
+
+// Promotion
+export type PromotionType = 'banner' | 'featured_restaurant' | 'featured_product'
+
+export interface Promotion {
+  id: string
+  type: PromotionType
+  title: string
+  subtitle?: string | null
+  image_url?: string | null
+  restaurant_id?: string | null
+  product_id?: string | null
+  active: boolean
+  display_order: number
+  starts_at?: string | null
+  ends_at?: string | null
+  created_at: string
+  updated_at: string
 }
 
 // Notification
