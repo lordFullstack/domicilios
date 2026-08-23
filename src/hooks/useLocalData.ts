@@ -660,47 +660,13 @@ export const useCart = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    let cancelled = false
-
-    const loadAndValidate = async () => {
-      try {
-        const data: CartItem[] = localStorageService.get(STORAGE_KEYS.CART) || []
-
-        if (data.length === 0) {
-          setCart([])
-          return
-        }
-
-        // Auto-limpieza: el carrito vive en el celular (localStorage), no
-        // en la base de datos, así que si un producto guardado ahí ya no
-        // existe (borrado, restaurante eliminado, etc.), había quedado un
-        // "saldo fantasma" — un total sumando productos que ya no aparecen.
-        // Aquí se valida contra la base de datos real y se descarta lo huérfano.
-        const productIds = data.map((item) => item.productId)
-        const { data: existingProducts } = await supabase
-          .from('products')
-          .select('id')
-          .in('id', productIds)
-
-        if (cancelled) return
-
-        const validIds = new Set((existingProducts || []).map((p) => p.id))
-        const cleaned = data.filter((item) => validIds.has(item.productId))
-
-        if (cleaned.length !== data.length) {
-          localStorageService.set(STORAGE_KEYS.CART, cleaned)
-        }
-        setCart(cleaned)
-      } catch (err) {
-        console.error('Error loading cart:', err)
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
-
-    loadAndValidate()
-    return () => {
-      cancelled = true
+    try {
+      const data = localStorageService.get(STORAGE_KEYS.CART) || []
+      setCart(data)
+    } catch (err) {
+      console.error('Error loading cart:', err)
+    } finally {
+      setLoading(false)
     }
   }, [])
 
