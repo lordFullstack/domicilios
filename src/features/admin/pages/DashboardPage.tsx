@@ -1,161 +1,147 @@
-import { useOrders, useRestaurants } from '@/hooks/useLocalData'
-import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
+import { AdminSidebar, AdminMobileNav } from '../components/AdminSidebar'
+import { useAdminUsers } from '../hooks/useAdminUsers'
+import { useAdminRestaurants } from '../hooks/useAdminRestaurants'
+import { useAdminOrders } from '../hooks/useAdminOrders'
+import { useAdminStats } from '../hooks/useAdminStats'
 import { Card } from '@/shared/components/Card'
-import { ORDER_STATUS, USER_ROLES } from '@/config/constants'
-import { User, OrderStatus } from '@/shared/types'
 
 export const AdminDashboard = () => {
-  const { orders } = useOrders()
-  const { restaurants } = useRestaurants()
-  const users: User[] = localStorageService.get(STORAGE_KEYS.USERS) || []
+  const { users, loading: loadingUsers } = useAdminUsers()
+  const { restaurants, loading: loadingRestaurants } = useAdminRestaurants()
+  const { allOrders: orders, loading: loadingOrders } = useAdminOrders()
+  const stats = useAdminStats(users, restaurants, orders)
 
-  // Estadísticas generales
-  const totalUsers = users.length
-  const totalClients = users.filter((u) => u.role === USER_ROLES.CLIENT).length
-  const totalRestaurantOwners = users.filter((u) => u.role === USER_ROLES.RESTAURANT).length
-  const totalDelivery = users.filter((u) => u.role === USER_ROLES.DELIVERY).length
-
-  const totalOrders = orders.length
-  const deliveredOrders = orders.filter((o) => o.status === ORDER_STATUS.DELIVERED)
-  const activeOrders = orders.filter(
-    (o) => !([ORDER_STATUS.DELIVERED, ORDER_STATUS.CANCELLED] as OrderStatus[]).includes(o.status)
-  )
-  const cancelledOrders = orders.filter((o) => o.status === ORDER_STATUS.CANCELLED)
-
-  const totalRevenue = deliveredOrders.reduce((sum, o) => sum + o.total, 0)
-  const platformFee = totalRevenue * 0.15 // 15% comisión mock
-
-  // Órdenes por restaurante
-  const ordersByRestaurant = restaurants.map((r) => {
-    const restOrders = orders.filter((o) => o.restaurant_id === r.id)
-    const restRevenue = restOrders
-      .filter((o) => o.status === ORDER_STATUS.DELIVERED)
-      .reduce((sum, o) => sum + o.total, 0)
-    return {
-      restaurant: r,
-      totalOrders: restOrders.length,
-      revenue: restRevenue,
-    }
-  })
+  const loading = loadingUsers || loadingRestaurants || loadingOrders
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-secondary text-white p-8">
-        <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gray-50 md:pl-56">
+      <AdminMobileNav />
+      <AdminSidebar />
+
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
+        {/* Header */}
+        <div className="mb-8">
           <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
-          <h1 className="text-3xl font-display font-bold mb-2">👔 Panel de Administración</h1>
-          <p className="text-lg text-gray-300">Visión general de la plataforma</p>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Estadísticas de Usuarios */}
-        <h2 className="text-xl font-bold mb-4">👥 Usuarios</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-primary">{totalUsers}</p>
-              <p className="text-gray-600 text-sm mt-1">Total usuarios</p>
-            </div>
-          </Card>
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-secondary">{totalClients}</p>
-              <p className="text-gray-600 text-sm mt-1">🧑 Clientes</p>
-            </div>
-          </Card>
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-secondary">{totalRestaurantOwners}</p>
-              <p className="text-gray-600 text-sm mt-1">🏪 Restaurantes</p>
-            </div>
-          </Card>
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-secondary">{totalDelivery}</p>
-              <p className="text-gray-600 text-sm mt-1">🚴 Domiciliarios</p>
-            </div>
-          </Card>
+          <h1 className="font-display text-2xl font-bold text-secondary mb-1">
+            👔 Panel de Administración
+          </h1>
+          <p className="text-sm text-gray-500">Visión general de la plataforma</p>
         </div>
 
-        {/* Estadísticas de Órdenes */}
-        <h2 className="text-xl font-bold mb-4">📦 Órdenes</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-primary">{totalOrders}</p>
-              <p className="text-gray-600 text-sm mt-1">Total órdenes</p>
-            </div>
-          </Card>
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-warning">{activeOrders.length}</p>
-              <p className="text-gray-600 text-sm mt-1">🔄 Activas</p>
-            </div>
-          </Card>
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-success">{deliveredOrders.length}</p>
-              <p className="text-gray-600 text-sm mt-1">✅ Entregadas</p>
-            </div>
-          </Card>
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-danger">{cancelledOrders.length}</p>
-              <p className="text-gray-600 text-sm mt-1">❌ Canceladas</p>
-            </div>
-          </Card>
-        </div>
-
-        {/* Estadísticas Financieras */}
-        <h2 className="text-xl font-bold mb-4">💰 Finanzas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-primary">
-                ${totalRevenue.toLocaleString('es-CO')}
-              </p>
-              <p className="text-gray-600 text-sm mt-1">Volumen total transaccionado (GMV)</p>
-            </div>
-          </Card>
-          <Card>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-success">
-                ${platformFee.toLocaleString('es-CO', { maximumFractionDigits: 0 })}
-              </p>
-              <p className="text-gray-600 text-sm mt-1">Comisión plataforma (15%)</p>
-            </div>
-          </Card>
-        </div>
-
-        {/* Rendimiento por Restaurante */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">🏪 Rendimiento por Restaurante</h2>
-          <div className="space-y-3">
-            {ordersByRestaurant.map(({ restaurant, totalOrders, revenue }) => (
-              <Card key={restaurant.id}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-3xl">{restaurant.image_url}</span>
-                    <div>
-                      <p className="font-bold">{restaurant.name}</p>
-                      <p className="text-sm text-gray-600">
-                        {restaurant.status === 'open' ? '🟢 Abierto' : '🔴 Cerrado'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-bold text-primary">
-                      ${revenue.toLocaleString('es-CO')}
-                    </p>
-                    <p className="text-sm text-gray-600">{totalOrders} órdenes</p>
-                  </div>
+        {loading ? (
+          <p className="text-gray-400 text-sm text-center py-12">Cargando estadísticas...</p>
+        ) : (
+          <>
+            {/* Usuarios */}
+            <h2 className="text-lg font-bold text-secondary mb-4">👥 Usuarios</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-primary">{stats.totalUsers}</p>
+                  <p className="text-gray-500 text-sm mt-1">Total usuarios</p>
                 </div>
               </Card>
-            ))}
-          </div>
-        </div>
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-secondary">{stats.totalClients}</p>
+                  <p className="text-gray-500 text-sm mt-1">🧑 Clientes</p>
+                </div>
+              </Card>
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-secondary">{stats.totalRestaurantOwners}</p>
+                  <p className="text-gray-500 text-sm mt-1">🏪 Restaurantes</p>
+                </div>
+              </Card>
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-secondary">{stats.totalDelivery}</p>
+                  <p className="text-gray-500 text-sm mt-1">🚴 Domiciliarios</p>
+                </div>
+              </Card>
+            </div>
+
+            {/* Órdenes */}
+            <h2 className="text-lg font-bold text-secondary mb-4">📦 Órdenes</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-primary">{stats.totalOrders}</p>
+                  <p className="text-gray-500 text-sm mt-1">Total órdenes</p>
+                </div>
+              </Card>
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-warning">{stats.activeOrders.length}</p>
+                  <p className="text-gray-500 text-sm mt-1">🔄 Activas</p>
+                </div>
+              </Card>
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-success">{stats.deliveredOrders.length}</p>
+                  <p className="text-gray-500 text-sm mt-1">✅ Entregadas</p>
+                </div>
+              </Card>
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-danger">{stats.cancelledOrders.length}</p>
+                  <p className="text-gray-500 text-sm mt-1">❌ Canceladas</p>
+                </div>
+              </Card>
+            </div>
+
+            {/* Finanzas */}
+            <h2 className="text-lg font-bold text-secondary mb-4">💰 Finanzas</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-primary">
+                    ${stats.totalRevenue.toLocaleString('es-CO')}
+                  </p>
+                  <p className="text-gray-500 text-sm mt-1">Volumen total transaccionado (GMV)</p>
+                </div>
+              </Card>
+              <Card>
+                <div className="text-center">
+                  <p className="text-3xl font-bold text-success">
+                    ${stats.platformFee.toLocaleString('es-CO', { maximumFractionDigits: 0 })}
+                  </p>
+                  <p className="text-gray-500 text-sm mt-1">Comisión plataforma (15%)</p>
+                </div>
+              </Card>
+            </div>
+
+            {/* Rendimiento por restaurante */}
+            <div>
+              <h2 className="text-lg font-bold text-secondary mb-4">🏪 Rendimiento por Restaurante</h2>
+              <div className="space-y-3">
+                {stats.ordersByRestaurant.map(({ restaurant, totalOrders, revenue }) => (
+                  <Card key={restaurant.id}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div>
+                          <p className="font-bold text-secondary">{restaurant.name}</p>
+                          <p className="text-sm text-gray-500">
+                            {restaurant.status === 'open' ? '🟢 Abierto' : '🔴 Cerrado'}
+                            {' · '}
+                            {restaurant.approved ? '✅ Aprobado' : '⛔ Suspendido'}
+                            {restaurant.rating_count > 0 && (
+                              <> · ⭐ {restaurant.rating_avg} ({restaurant.rating_count})</>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-primary">${revenue.toLocaleString('es-CO')}</p>
+                        <p className="text-sm text-gray-500">{totalOrders} órdenes</p>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

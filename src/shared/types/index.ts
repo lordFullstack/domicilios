@@ -13,10 +13,14 @@ export interface User {
   vehicle_type?: 'moto' | 'bici' | null
   vehicle_plate?: string | null
   active: boolean
+  rating_avg: number
+  rating_count: number
   created_at: string
 }
 
 // Restaurant
+export type RestaurantCategory = 'Pizza' | 'Burgers' | 'Sushi' | 'Postres' | 'Bebidas' | 'Asados'
+
 export interface Restaurant {
   id: string
   owner_id: string
@@ -28,6 +32,9 @@ export interface Restaurant {
   phone: string
   status: 'open' | 'closed'
   approved: boolean
+  category: RestaurantCategory
+  rating_avg: number
+  rating_count: number
   created_at: string
 }
 
@@ -130,5 +137,18 @@ export interface AppNotification {
   type: string
   order_id?: string | null
   read: boolean
+  created_at: string
+}
+
+// Rating (calificación del cliente al restaurante y, opcionalmente, al domiciliario)
+export interface OrderRating {
+  id: string
+  order_id: string
+  client_id: string
+  restaurant_id: string
+  delivery_person_id?: string | null
+  restaurant_rating: number
+  delivery_rating?: number | null
+  comment?: string | null
   created_at: string
 }
