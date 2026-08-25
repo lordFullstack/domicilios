@@ -65,6 +65,9 @@ const AdminOrdersPage = lazy(() =>
 const AdminPromotionsPage = lazy(() =>
   import('@/features/admin/pages/PromotionsPage').then((m) => ({ default: m.AdminPromotionsPage }))
 )
+const CategoryResultsPage = lazy(() =>
+  import('@/features/client/pages/CategoryResultsPage').then((m) => ({ default: m.CategoryResultsPage }))
+)
 
 const PageLoader = () => (
   <div className="min-h-screen bg-white flex items-center justify-center">
@@ -135,6 +138,14 @@ export const Router = () => {
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
               <OrderDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.CLIENT_CATEGORY}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
+              <CategoryResultsPage />
             </ProtectedRoute>
           }
         />

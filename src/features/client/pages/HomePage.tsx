@@ -7,7 +7,7 @@ import { ROUTES } from '@/config/constants'
 
 export const HomePage = () => {
   const navigate = useNavigate()
-  const { restaurants, loading } = useRestaurants()
+  const { restaurants, loading } = useRestaurants({ approvedOnly: true })
 
   return (
     <div className="min-h-screen bg-gray-50">

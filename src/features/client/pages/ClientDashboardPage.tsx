@@ -4,20 +4,14 @@ import { useRestaurants } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
-import { ROUTES } from '@/config/constants'
-
-const CATEGORIES = [
-  { label: 'Pizza', emoji: '🍕' },
-  { label: 'Burgers', emoji: '🍔' },
-  { label: 'Sushi', emoji: '🍣' },
-  { label: 'Postres', emoji: '🍰' },
-  { label: 'Bebidas', emoji: '🥤' },
-]
+import { PromoBanner } from '../components/PromoBanner'
+import { FeaturedSection } from '../components/FeaturedSection'
+import { ROUTES, RESTAURANT_CATEGORIES } from '@/config/constants'
 
 export const ClientDashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { restaurants, loading } = useRestaurants()
+  const { restaurants, loading } = useRestaurants({ approvedOnly: true })
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
@@ -40,10 +34,14 @@ export const ClientDashboardPage = () => {
         </div>
       </div>
 
-      {/* Categorías */}
+      {/* Categorías — búsqueda rápida por palabra clave */}
       <div className="flex gap-3 px-5 pb-4 overflow-x-auto scrollbar-hide">
-        {CATEGORIES.map((c) => (
-          <button key={c.label} className="flex flex-col items-center gap-1 flex-shrink-0">
+        {RESTAURANT_CATEGORIES.map((c) => (
+          <button
+            key={c.value}
+            onClick={() => navigate(ROUTES.CLIENT_CATEGORY.replace(':category', c.value))}
+            className="flex flex-col items-center gap-1 flex-shrink-0 active:scale-95 transition-transform"
+          >
             <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center text-2xl">
               {c.emoji}
             </div>
@@ -52,14 +50,12 @@ export const ClientDashboardPage = () => {
         ))}
       </div>
 
-      {/* Banner promo */}
-      <div className="mx-5 mb-6 rounded-2xl p-4 flex items-center justify-between bg-primary/10">
-        <div>
-          <p className="font-display font-bold text-sm text-primary">Envío gratis hoy</p>
-          <p className="text-xs text-gray-500">En pedidos mayores a $40.000</p>
-        </div>
-        <span className="text-3xl">🎉</span>
-      </div>
+      {/* Banner promo — gestionado por Admin, no se muestra si no hay banners activos */}
+      <PromoBanner />
+
+      {/* Destacados — gestionado por Admin */}
+      <FeaturedSection type="featured_restaurant" title="Recomendados para ti" />
+      <FeaturedSection type="featured_product" title="Platos que te pueden gustar" />
 
       {/* Lista de restaurantes */}
       <div className="px-5">
@@ -96,7 +92,7 @@ export const ClientDashboardPage = () => {
                   <div className="flex items-center gap-3 text-xs text-gray-500">
                     <span className="flex items-center gap-1">
                       <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                      4.8
+                      {restaurant.rating_count > 0 ? restaurant.rating_avg : 'Nuevo'}
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />

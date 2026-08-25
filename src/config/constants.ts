@@ -14,6 +14,7 @@ export const ROUTES = {
   CLIENT_CHECKOUT: '/app/checkout',
   CLIENT_ORDERS: '/app/orders',
   CLIENT_ORDER: '/app/order/:id',
+  CLIENT_CATEGORY: '/app/category/:category',
   
   // Restaurant
   RESTAURANT_DASHBOARD: '/restaurant/dashboard',
@@ -33,6 +34,15 @@ export const ROUTES = {
   ADMIN_ORDERS: '/admin/orders',
   ADMIN_PROMOTIONS: '/admin/promotions',
 } as const
+
+export const RESTAURANT_CATEGORIES = [
+  { value: 'Pizza', label: 'Pizza', emoji: '🍕' },
+  { value: 'Burgers', label: 'Burgers', emoji: '🍔' },
+  { value: 'Sushi', label: 'Sushi', emoji: '🍣' },
+  { value: 'Postres', label: 'Postres', emoji: '🍰' },
+  { value: 'Bebidas', label: 'Bebidas', emoji: '🥤' },
+  { value: 'Asados', label: 'Asados', emoji: '🍗' },
+] as const
 
 export const USER_ROLES = {
   CLIENT: 'client',

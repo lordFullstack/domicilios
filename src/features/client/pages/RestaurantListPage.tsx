@@ -6,7 +6,7 @@ import { ROUTES } from '@/config/constants'
 
 export const RestaurantListPage = () => {
   const navigate = useNavigate()
-  const { restaurants, loading } = useRestaurants()
+  const { restaurants, loading } = useRestaurants({ approvedOnly: true })
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">

@@ -1,10 +1,18 @@
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ChevronLeft, XCircle, Phone, Bike } from 'lucide-react'
+import { ChevronLeft, XCircle, Phone, Bike, Star } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
-import { useOrders, useRestaurantById, useOrderLocation, useDeliveryPersonProfile } from '@/hooks/useLocalData'
+import {
+  useOrders,
+  useRestaurantById,
+  useOrderLocation,
+  useDeliveryPersonProfile,
+  useOrderRating,
+} from '@/hooks/useLocalData'
 import { OrderStatusIcon } from '@/shared/constants/icons'
 import { DeliveryLiveMap } from '@/shared/components/DeliveryLiveMap'
 import { OrderItemsList } from '@/shared/components/OrderItemsList'
+import { RatingModal } from '../components/RatingModal'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 
 const TRACKER_STEPS = [
@@ -24,8 +32,11 @@ export const OrderDetailPage = () => {
   const order = orders.find((o) => o.id === id)
   const { restaurant } = useRestaurantById(order?.restaurant_id || '')
   const isInDelivery = order?.status === ORDER_STATUS.IN_DELIVERY
+  const isDelivered = order?.status === ORDER_STATUS.DELIVERED
   const liveLocation = useOrderLocation(isInDelivery ? order?.id : undefined)
   const deliveryPerson = useDeliveryPersonProfile(isInDelivery ? order?.delivery_person_id : undefined)
+  const { rating, loading: ratingLoading, submitting, submitRating } = useOrderRating(order)
+  const [showRatingModal, setShowRatingModal] = useState(false)
 
   if (loading) {
     return (
@@ -219,7 +230,38 @@ export const OrderDetailPage = () => {
             ${order.total.toLocaleString('es-CO')}
           </span>
         </div>
+
+        {/* Calificación */}
+        {isDelivered && !ratingLoading && (
+          <div className="mt-4">
+            {rating ? (
+              <div className="border border-gray-100 rounded-2xl p-4 flex items-center gap-2">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 flex-shrink-0" />
+                <p className="text-sm text-gray-500">
+                  Calificaste este pedido con {rating.restaurant_rating}/5 al restaurante
+                  {rating.delivery_rating ? ` y ${rating.delivery_rating}/5 al domiciliario` : ''}. ¡Gracias!
+                </p>
+              </div>
+            ) : (
+              <Button onClick={() => setShowRatingModal(true)} fullWidth>
+                Calificar este pedido
+              </Button>
+            )}
+          </div>
+        )}
       </div>
+
+      <RatingModal
+        open={showRatingModal}
+        restaurantName={restaurant?.name || 'el restaurante'}
+        hasDeliveryPerson={!!order.delivery_person_id}
+        submitting={submitting}
+        onClose={() => setShowRatingModal(false)}
+        onSubmit={async (restaurantRating, deliveryRating, comment) => {
+          const ok = await submitRating(restaurantRating, deliveryRating, comment)
+          if (ok) setShowRatingModal(false)
+        }}
+      />
     </div>
   )
 }

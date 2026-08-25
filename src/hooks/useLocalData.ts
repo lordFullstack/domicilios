@@ -12,7 +12,7 @@ import { supabase } from '@/shared/utils/supabase'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { playNotificationSound, showBrowserNotification } from '@/shared/utils/notificationSound'
-import { Restaurant, Product, Order, AppNotification } from '@/shared/types'
+import { Restaurant, Product, Order, AppNotification, OrderRating } from '@/shared/types'
 
 // ============================================
 // HOOK: useOrderItems
@@ -186,17 +186,28 @@ export const useNotifications = () => {
 // HOOK: useRestaurants
 // ============================================
 
-export const useRestaurants = () => {
+// approvedOnly: usado por las vistas de Cliente para que un restaurante
+// suspendido por Admin (restaurants.approved = false) desaparezca del
+// home/listado, mientras que el dueño del restaurante sigue pudiendo
+// entrar a su propio panel sin este filtro (por eso es opcional).
+export const useRestaurants = (options?: { approvedOnly?: boolean }) => {
+  const approvedOnly = options?.approvedOnly ?? false
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const reload = useCallback(async () => {
     setLoading(true)
-    const { data, error } = await supabase
-      .from('restaurants')
-      .select('*')
-      .order('name')
+    let query = supabase.from('restaurants').select('*')
+
+    if (approvedOnly) {
+      // Mejor calificados primero; luego alfabético para restaurantes nuevos sin calificar
+      query = query.eq('approved', true).order('rating_avg', { ascending: false }).order('name')
+    } else {
+      query = query.order('name')
+    }
+
+    const { data, error } = await query
 
     if (error) {
       setError('Error cargando restaurantes')
@@ -205,13 +216,57 @@ export const useRestaurants = () => {
       setRestaurants(data || [])
     }
     setLoading(false)
-  }, [])
+  }, [approvedOnly])
 
   useEffect(() => {
     reload()
   }, [reload])
 
   return { restaurants, loading, error, reload }
+}
+
+// ============================================
+// HOOK: useProductsByCategory
+// ============================================
+// Búsqueda rápida por categoría (botones de emoji del home del cliente).
+// Trae productos disponibles de restaurantes aprobados cuya categoría
+// principal coincide, junto con el nombre del restaurante al que pertenecen
+// (necesario porque un mismo botón puede mostrar productos de varios
+// restaurantes una vez la plataforma tenga más de uno).
+
+export interface ProductWithRestaurant extends Product {
+  restaurant: Pick<Restaurant, 'id' | 'name' | 'image_url' | 'status'>
+}
+
+export const useProductsByCategory = (category: string) => {
+  const [items, setItems] = useState<ProductWithRestaurant[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const reload = useCallback(async () => {
+    setLoading(true)
+    const { data, error } = await supabase
+      .from('products')
+      .select('*, restaurant:restaurants!inner(id,name,image_url,status)')
+      .eq('restaurant.category', category)
+      .eq('restaurant.approved', true)
+      .eq('available', true)
+      .order('name')
+
+    if (error) {
+      setError('Error cargando productos')
+      console.error(error)
+    } else {
+      setItems((data as unknown as ProductWithRestaurant[]) || [])
+    }
+    setLoading(false)
+  }, [category])
+
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  return { items, loading, error, reload }
 }
 
 // ============================================
@@ -842,4 +897,75 @@ export const useFavorites = () => {
   const isFavorite = (restaurantId: string) => favorites.includes(restaurantId)
 
   return { favorites, loading, toggleFavorite, isFavorite }
+}
+
+// ============================================
+// HOOK: useOrderRating
+// ============================================
+// Calificación del cliente al restaurante (obligatoria) y al domiciliario
+// (opcional, solo si el pedido tuvo uno asignado). Una calificación por
+// pedido — la RLS en `order_ratings` también lo obliga a nivel de base de
+// datos (client_id debe ser el dueño del pedido, y el pedido debe estar
+// 'delivered').
+
+export const useOrderRating = (order?: Order) => {
+  const { user } = useAuth()
+  const [rating, setRating] = useState<OrderRating | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+
+  const reload = useCallback(async () => {
+    if (!order) {
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    const { data, error } = await supabase
+      .from('order_ratings')
+      .select('*')
+      .eq('order_id', order.id)
+      .maybeSingle()
+
+    if (error) {
+      console.error('Error cargando calificación:', error)
+    } else {
+      setRating(data)
+    }
+    setLoading(false)
+  }, [order])
+
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  const submitRating = async (restaurantRating: number, deliveryRating?: number, comment?: string) => {
+    if (!order || !user) return false
+    setSubmitting(true)
+    try {
+      const { data, error } = await supabase
+        .from('order_ratings')
+        .insert({
+          order_id: order.id,
+          client_id: user.id,
+          restaurant_id: order.restaurant_id,
+          delivery_person_id: order.delivery_person_id || null,
+          restaurant_rating: restaurantRating,
+          delivery_rating: order.delivery_person_id ? deliveryRating ?? null : null,
+          comment: comment || null,
+        })
+        .select()
+        .single()
+
+      if (error) {
+        console.error('Error guardando calificación:', error)
+        return false
+      }
+      setRating(data)
+      return true
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return { rating, loading, submitting, submitRating }
 }
