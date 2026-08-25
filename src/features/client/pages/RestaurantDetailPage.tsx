@@ -49,6 +49,23 @@ export const RestaurantDetailPage = () => {
     )
   }
 
+  // Un restaurante suspendido por Admin no debe poder recibir pedidos,
+  // aunque el cliente tenga el link directo (favoritos, historial, etc.)
+  if (!restaurant.approved) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center px-6">
+        <div className="text-center">
+          <p className="text-4xl mb-3">⛔</p>
+          <p className="font-display font-bold text-secondary mb-1">Restaurante no disponible</p>
+          <p className="text-gray-400 text-sm mb-4">
+            Este restaurante está temporalmente suspendido y no puede recibir pedidos.
+          </p>
+          <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-28 relative">
       {/* Hero */}
@@ -77,7 +94,7 @@ export const RestaurantDetailPage = () => {
         <div className="flex items-center gap-3 text-xs text-gray-500 mt-1 mb-1">
           <span className="flex items-center gap-1">
             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-            4.8
+            {restaurant.rating_count > 0 ? restaurant.rating_avg : 'Nuevo'}
           </span>
           <span className="flex items-center gap-1">
             <Clock className="w-3 h-3" />
