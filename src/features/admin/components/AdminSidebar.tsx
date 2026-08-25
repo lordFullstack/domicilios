@@ -66,7 +66,7 @@ export const AdminMobileNav = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="md:hidden flex items-center justify-between bg-secondary text-white px-4 py-3">
+    <div className="md:hidden flex items-center justify-between bg-secondary text-white px-4 pb-3 safe-top">
       <span className="font-display font-bold text-sm">🚀 Admin</span>
       <select
         onChange={(e) => navigate(e.target.value)}

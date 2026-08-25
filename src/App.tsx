@@ -3,6 +3,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from '@/features/auth/AuthContext'
 import { Router } from '@/router'
 import { unlockNotificationAudio } from '@/shared/utils/notificationSound'
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
+import { ConnectionBanner } from '@/shared/components/ConnectionBanner'
+import { UpdatePrompt } from '@/shared/components/UpdatePrompt'
 import '@/styles.css'
 
 const queryClient = new QueryClient({
@@ -33,10 +36,14 @@ export const App = () => {
   }, [])
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Router />
-      </AuthProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <ConnectionBanner />
+          <UpdatePrompt />
+          <Router />
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   )
 }

@@ -27,6 +27,22 @@ body {
   color: #1f2937;
 }
 
+/* Safe areas — notch superior y barra de navegación Android/iOS inferior.
+   Se usan en elementos con position: fixed que tocan los bordes de la
+   pantalla (BottomNav, AdminMobileNav, ConnectionBanner). */
+.safe-top {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+.safe-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+.safe-right {
+  padding-right: env(safe-area-inset-right);
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;

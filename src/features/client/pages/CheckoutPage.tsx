@@ -5,6 +5,7 @@ import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { useCart, useOrders, useRestaurantById, useProductById } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
+import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
 import { ROUTES, ORDER_STATUS, PAYMENT_METHOD } from '@/config/constants'
 import { PaymentMethod } from '@/shared/types'
 
@@ -13,6 +14,8 @@ export const CheckoutPage = () => {
   const { user } = useAuth()
   const { cart, clear, getTotal } = useCart()
   const { createOrder } = useOrders()
+  const connectionStatus = useOnlineStatus()
+  const isOffline = connectionStatus === 'offline'
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -49,6 +52,11 @@ export const CheckoutPage = () => {
     setError(null)
 
     try {
+      if (isOffline) {
+        throw new Error(
+          '🔴 Sin conexión. No podemos enviar tu pedido al restaurante hasta que vuelva el internet.'
+        )
+      }
       if (!formData.deliveryAddress.trim()) {
         throw new Error('La dirección de entrega es requerida')
       }
@@ -212,8 +220,26 @@ export const CheckoutPage = () => {
             />
           </div>
 
-          <Button type="submit" fullWidth size="lg" loading={loading} disabled={loading || !checkoutInfoReady}>
-            {!checkoutInfoReady ? 'Cargando...' : loading ? 'Creando orden...' : 'Confirmar Pedido'}
+          {isOffline && (
+            <div className="bg-red-50 text-red-600 text-sm rounded-2xl p-3 text-center">
+              🔴 Sin conexión. No puedes confirmar el pedido hasta que vuelva el internet.
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            fullWidth
+            size="lg"
+            loading={loading}
+            disabled={loading || !checkoutInfoReady || isOffline}
+          >
+            {isOffline
+              ? 'Sin conexión'
+              : !checkoutInfoReady
+                ? 'Cargando...'
+                : loading
+                  ? 'Creando orden...'
+                  : 'Confirmar Pedido'}
           </Button>
         </form>
 

@@ -56,7 +56,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
     <>
       {/* Barra inferior — siempre en celular; en restaurante, solo hasta md */}
       <div
-        className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-2 py-2 z-40 ${
+        className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-2 pt-2 safe-bottom z-40 ${
           isSidebarCapable ? 'md:hidden' : ''
         }`}
       >
