@@ -5,13 +5,14 @@ import { useOrders } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { OrderCard } from '../components/OrderCard'
+import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
 import { ROUTES } from '@/config/constants'
 
 export const OrdersPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { user } = useAuth()
-  const { orders, loading } = useOrders(user?.id)
+  const { orders, loading, fromCache } = useOrders(user?.id)
 
   const successMessage = (location.state as any)?.message
 
@@ -35,6 +36,8 @@ export const OrdersPage = () => {
             {successMessage}
           </div>
         )}
+
+        {fromCache && <OfflineDataBadge />}
 
         {loading ? (
           <p className="text-gray-400 text-sm text-center py-8">Cargando órdenes...</p>

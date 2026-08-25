@@ -10,6 +10,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/shared/utils/supabase'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
+import { offlineCache } from '@/services/offlineCache.service'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { playNotificationSound, showBrowserNotification } from '@/shared/utils/notificationSound'
 import { Restaurant, Product, Order, AppNotification, OrderRating } from '@/shared/types'
@@ -317,6 +318,7 @@ export const useRestaurantById = (id: string) => {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [fromCache, setFromCache] = useState(false)
 
   useEffect(() => {
     if (!id) {
@@ -333,11 +335,23 @@ export const useRestaurantById = (id: string) => {
         .maybeSingle()
 
       if (cancelled) return
+
       if (error) {
-        setError('Error cargando restaurante')
-        console.error(error)
+        // Sin internet (u otro fallo de red): intenta mostrar la última
+        // versión de este restaurante que el cliente ya vio.
+        const cached = await offlineCache.getRestaurant(id)
+        if (cached) {
+          setRestaurant(cached.data)
+          setFromCache(true)
+          setError(null)
+        } else {
+          setError('Error cargando restaurante')
+          console.error(error)
+        }
       } else {
         setRestaurant(data)
+        setFromCache(false)
+        if (data) offlineCache.saveRestaurant(data)
       }
       setLoading(false)
     }
@@ -347,7 +361,7 @@ export const useRestaurantById = (id: string) => {
     }
   }, [id])
 
-  return { restaurant, loading, error }
+  return { restaurant, loading, error, fromCache }
 }
 
 // ============================================
@@ -358,6 +372,7 @@ export const useProducts = (restaurantId?: string) => {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [fromCache, setFromCache] = useState(false)
 
   const reload = useCallback(async () => {
     setLoading(true)
@@ -368,10 +383,21 @@ export const useProducts = (restaurantId?: string) => {
     const { data, error } = await query
 
     if (error) {
-      setError('Error cargando productos')
-      console.error(error)
+      // Sin internet: si este es el menú de un restaurante puntual, intenta
+      // mostrar la última versión que el cliente ya vio de ese menú.
+      const cached = restaurantId ? await offlineCache.getProducts(restaurantId) : null
+      if (cached) {
+        setProducts(cached.data)
+        setFromCache(true)
+        setError(null)
+      } else {
+        setError('Error cargando productos')
+        console.error(error)
+      }
     } else {
       setProducts(data || [])
+      setFromCache(false)
+      if (restaurantId && data) offlineCache.saveProducts(restaurantId, data)
     }
     setLoading(false)
   }, [restaurantId])
@@ -430,6 +456,7 @@ export const useProducts = (restaurantId?: string) => {
     products,
     loading,
     error,
+    fromCache,
     createProduct,
     updateProduct,
     deleteProduct,
@@ -594,6 +621,7 @@ export const useOrders = (userId?: string) => {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [fromCache, setFromCache] = useState(false)
 
   const reload = useCallback(async () => {
     setLoading(true)
@@ -604,10 +632,21 @@ export const useOrders = (userId?: string) => {
     const { data, error } = await query
 
     if (error) {
-      setError('Error cargando órdenes')
-      console.error(error)
+      // Sin internet: solo tiene sentido cachear "mis pedidos" (con
+      // userId) — la lista completa de Admin no se guarda offline.
+      const cached = userId ? await offlineCache.getOrders(userId) : null
+      if (cached) {
+        setOrders(cached.data)
+        setFromCache(true)
+        setError(null)
+      } else {
+        setError('Error cargando órdenes')
+        console.error(error)
+      }
     } else {
       setOrders(data || [])
+      setFromCache(false)
+      if (userId && data) offlineCache.saveOrders(userId, data)
     }
     setLoading(false)
   }, [userId])
@@ -693,6 +732,7 @@ export const useOrders = (userId?: string) => {
     orders,
     loading,
     error,
+    fromCache,
     createOrder,
     updateOrder,
     getOrdersByRestaurant,

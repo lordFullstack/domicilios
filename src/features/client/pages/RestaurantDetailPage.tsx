@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { ChevronLeft, Star, Clock, Plus } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { ProductImage } from '@/shared/components/ProductImage'
+import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
 import { useRestaurantById, useProducts, useCart } from '@/hooks/useLocalData'
 import { ROUTES, PRODUCT_CATEGORIES } from '@/config/constants'
 
@@ -10,8 +11,8 @@ export const RestaurantDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  const { restaurant, loading: restaurantLoading } = useRestaurantById(id || '')
-  const { products, loading: productsLoading } = useProducts(id)
+  const { restaurant, loading: restaurantLoading, fromCache: restaurantFromCache } = useRestaurantById(id || '')
+  const { products, loading: productsLoading, fromCache: productsFromCache } = useProducts(id)
   const { cart, addItem, getTotal } = useCart()
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
@@ -105,6 +106,7 @@ export const RestaurantDetailPage = () => {
           </span>
         </div>
         <p className="text-xs text-gray-400 mb-4">{restaurant.description}</p>
+        {(restaurantFromCache || productsFromCache) && <OfflineDataBadge />}
       </div>
 
       {/* Menú */}
