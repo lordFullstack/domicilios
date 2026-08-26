@@ -8,6 +8,7 @@ import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
+import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
 import { OrderItemsList } from '@/shared/components/OrderItemsList'
 import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
@@ -137,6 +138,8 @@ export const RestaurantDashboard = () => {
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24 md:max-w-none md:mx-0 md:pl-60 md:pb-10">
+      <NotificationPermissionCard />
+
       {/* Hero del restaurante */}
       <div
         className="mx-5 mt-5 mb-4 rounded-3xl p-5 relative overflow-hidden bg-secondary bg-cover bg-center md:max-w-4xl md:mx-auto md:mt-8"

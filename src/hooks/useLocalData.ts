@@ -11,9 +11,11 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/shared/utils/supabase'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 import { offlineCache } from '@/services/offlineCache.service'
+import { triggerOrderPushNotification } from '@/services/pushNotifications.service'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { playNotificationSound, showBrowserNotification } from '@/shared/utils/notificationSound'
 import { Restaurant, Product, Order, AppNotification, OrderRating } from '@/shared/types'
+import { ORDER_STATUS } from '@/config/constants'
 
 // ============================================
 // HOOK: useOrderItems
@@ -705,17 +707,53 @@ export const useOrders = (userId?: string) => {
       }
     }
 
+    // Avisa al restaurante que tiene un pedido nuevo por aceptar. No se
+    // espera esta llamada ni se deja que un fallo aquí rompa la creación
+    // del pedido — el pedido ya quedó guardado, la notificación es un plus.
+    supabase
+      .from('restaurants')
+      .select('owner_id')
+      .eq('id', order.restaurant_id)
+      .maybeSingle()
+      .then(({ data: restaurantRow }) => {
+        if (restaurantRow?.owner_id) {
+          triggerOrderPushNotification(restaurantRow.owner_id, 'new_order', newOrder.id)
+        }
+      })
+
     await reload()
     return true
   }
 
   const updateOrder = async (orderId: string, updates: Partial<Order>) => {
+    const previous = orders.find((o) => o.id === orderId)
+
     const { error } = await supabase.from('orders').update(updates).eq('id', orderId)
     if (error) {
       console.error('Error updating order:', error)
       setError('Error al actualizar orden')
       return false
     }
+
+    // Decide a quién avisar según qué cambió. Se compara contra el pedido
+    // que ya teníamos en memoria porque `updates` solo trae los campos que
+    // cambiaron, no el pedido completo.
+    if (previous) {
+      const newDeliveryPersonId = updates.delivery_person_id ?? previous.delivery_person_id
+      if (updates.delivery_person_id && updates.delivery_person_id !== previous.delivery_person_id) {
+        triggerOrderPushNotification(updates.delivery_person_id, 'assigned', orderId)
+      }
+      if (updates.status === ORDER_STATUS.READY && newDeliveryPersonId) {
+        triggerOrderPushNotification(newDeliveryPersonId, 'ready', orderId)
+      }
+      if (updates.status === ORDER_STATUS.IN_DELIVERY) {
+        triggerOrderPushNotification(previous.user_id, 'in_delivery', orderId)
+      }
+      if (updates.status === ORDER_STATUS.DELIVERED) {
+        triggerOrderPushNotification(previous.user_id, 'delivered', orderId)
+      }
+    }
+
     await reload()
     return true
   }

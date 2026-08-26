@@ -6,6 +6,7 @@ import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { OrderCard } from '../components/OrderCard'
 import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
+import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
 import { ROUTES } from '@/config/constants'
 
 export const OrdersPage = () => {
@@ -38,6 +39,7 @@ export const OrdersPage = () => {
         )}
 
         {fromCache && <OfflineDataBadge />}
+        <NotificationPermissionCard />
 
         {loading ? (
           <p className="text-gray-400 text-sm text-center py-8">Cargando órdenes...</p>

@@ -5,6 +5,7 @@ import { useOrders, useRestaurantById, updateOrderLocation } from '@/hooks/useLo
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
+import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
 import { OrderItemsList } from '@/shared/components/OrderItemsList'
 import { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/config/constants'
 import { Order } from '@/shared/types'
@@ -98,6 +99,8 @@ export const DeliveryDashboard = () => {
         </div>
         <NotificationBell />
       </div>
+
+      <NotificationPermissionCard />
 
       {/* Estadísticas */}
       <div className="grid grid-cols-2 gap-3 px-5 mb-6">
