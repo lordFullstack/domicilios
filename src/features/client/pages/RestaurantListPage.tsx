@@ -1,74 +1,110 @@
-import { useRestaurants } from '@/hooks/useLocalData'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Star, Clock } from 'lucide-react'
+import { ChevronLeft, Search as SearchIcon } from 'lucide-react'
+import { useRestaurants } from '@/hooks/useLocalData'
+import { AppShell } from '@/shared/components/AppShell'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { RestaurantCardsSkeleton } from '@/shared/components/RestaurantCardsSkeleton'
+import { EmptyState } from '@/shared/components/EmptyState'
+import { Button } from '@/shared/components/Button'
 import { ROUTES } from '@/config/constants'
+import { ExploreSearchInput } from '../components/ExploreSearchInput'
+import { ExploreFilterChips } from '../components/ExploreFilterChips'
+import { ExploreFilterSheet } from '../components/ExploreFilterSheet'
+import { RestaurantGridCard } from '../components/RestaurantGridCard'
+import { CartFloatingBar } from '../components/CartFloatingBar'
+import { DEFAULT_FILTERS, countActiveFilters, filterAndSortRestaurants } from '../utils/filters'
 
+// "Explorar" — búsqueda + filtros sobre la lista de restaurantes.
+// Todo el filtrado/orden es client-side (ver utils/filters.ts): useRestaurants
+// ya trae la lista completa a memoria, así que no hace falta debounce ni
+// una query nueva por cada tecla o cada filtro tocado.
 export const RestaurantListPage = () => {
   const navigate = useNavigate()
-  const { restaurants, loading } = useRestaurants({ approvedOnly: true })
+  const { restaurants, loading, error, reload } = useRestaurants({ approvedOnly: true })
+
+  const [search, setSearch] = useState('')
+  const [filters, setFilters] = useState(DEFAULT_FILTERS)
+  const [sheetOpen, setSheetOpen] = useState(false)
+
+  const results = useMemo(
+    () => filterAndSortRestaurants(restaurants, search, filters),
+    [restaurants, search, filters]
+  )
+
+  const hasActiveSearchOrFilters = search.trim().length > 0 || countActiveFilters(filters) > 0
+
+  const clearAll = () => {
+    setSearch('')
+    setFilters(DEFAULT_FILTERS)
+  }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
-      {/* Header */}
-      <div className="px-5 pt-6 flex items-center gap-3 mb-4">
+    <AppShell>
+      {/* Header compacto */}
+      <div className="px-5 pt-6 flex items-center gap-3 mb-1">
         <button
           onClick={() => navigate(ROUTES.CLIENT_HOME)}
-          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"
+          aria-label="Volver al inicio"
+          className="touch-target focus-ring w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center active:scale-90 transition-transform"
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
         <h1 className="font-display text-lg font-bold text-secondary">Restaurantes</h1>
       </div>
 
-      {/* Contenido */}
-      <div className="px-5">
-        {loading ? (
-          <p className="text-gray-400 text-sm text-center py-8">Cargando restaurantes...</p>
-        ) : restaurants.length > 0 ? (
-          <div className="flex flex-col gap-4">
-            {restaurants.map((restaurant) => (
-              <button
-                key={restaurant.id}
-                onClick={() => navigate(ROUTES.CLIENT_RESTAURANT.replace(':id', restaurant.id))}
-                className="text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
-              >
-                <div className="h-28 bg-primary/10 overflow-hidden">
-                  {restaurant.cover_url ? (
-                    <img src={restaurant.cover_url} alt={restaurant.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="h-full flex items-center justify-center text-5xl">
-                      {restaurant.image_url}
-                    </div>
-                  )}
-                </div>
-                <div className="p-3">
-                  <p className="font-display font-bold text-sm text-secondary mb-1">
-                    {restaurant.name}
-                  </p>
-                  <div className="flex items-center gap-3 text-xs text-gray-500">
-                    <span className="flex items-center gap-1">
-                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                      4.8
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      25-35 min
-                    </span>
-                    <span className={restaurant.status === 'open' ? 'text-green-600' : 'text-red-500'}>
-                      {restaurant.status === 'open' ? 'Abierto' : 'Cerrado'}
-                    </span>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-400 text-sm text-center py-8">No hay restaurantes disponibles</p>
-        )}
-      </div>
+      <ExploreSearchInput value={search} onChange={setSearch} />
+      <ExploreFilterChips
+        filters={filters}
+        onChange={setFilters}
+        onOpenSheet={() => setSheetOpen(true)}
+      />
 
+      <h2 className="font-display font-bold text-sm text-gray-700 mb-3 px-5">
+        {search.trim() ? `Resultados para "${search.trim()}"` : 'Cerca de ti'}
+      </h2>
+
+      {loading ? (
+        <RestaurantCardsSkeleton />
+      ) : error ? (
+        <EmptyState
+          icon={SearchIcon}
+          title="No pudimos completar la búsqueda"
+          description="Revisa tu conexión e intenta de nuevo."
+          action={<Button variant="outline" onClick={reload}>Intentar nuevamente</Button>}
+        />
+      ) : results.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 px-5">
+          {results.map((restaurant) => (
+            <RestaurantGridCard key={restaurant.id} restaurant={restaurant} />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          icon={SearchIcon}
+          title="No encontramos resultados"
+          description={
+            hasActiveSearchOrFilters
+              ? 'Prueba con otro término o cambia los filtros.'
+              : 'Todavía no hay restaurantes disponibles.'
+          }
+          action={
+            hasActiveSearchOrFilters ? (
+              <Button variant="outline" onClick={clearAll}>Limpiar filtros</Button>
+            ) : undefined
+          }
+        />
+      )}
+
+      <ExploreFilterSheet
+        open={sheetOpen}
+        filters={filters}
+        onClose={() => setSheetOpen(false)}
+        onApply={setFilters}
+      />
+
+      <CartFloatingBar />
       <BottomNav />
-    </div>
+    </AppShell>
   )
 }
