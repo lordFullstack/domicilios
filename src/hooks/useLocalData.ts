@@ -684,7 +684,7 @@ export const useOrders = (userId?: string) => {
       payment_method?: string
     },
     items: { product_id: string; quantity: number; unit_price: number }[]
-  ) => {
+  ): Promise<Order | null> => {
     const { data: newOrder, error: orderError } = await supabase
       .from('orders')
       .insert(order)
@@ -694,7 +694,7 @@ export const useOrders = (userId?: string) => {
     if (orderError || !newOrder) {
       console.error('Error creating order:', orderError)
       setError('Error al crear orden')
-      return false
+      return null
     }
 
     if (items.length > 0) {
@@ -722,8 +722,9 @@ export const useOrders = (userId?: string) => {
       })
 
     await reload()
-    return true
+    return newOrder
   }
+
 
   const updateOrder = async (orderId: string, updates: Partial<Order>) => {
     const previous = orders.find((o) => o.id === orderId)

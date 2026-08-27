@@ -245,6 +245,7 @@ export const STORAGE_KEYS = {
 
   // Carrito
   CART: 'cart',
+  LAST_DELIVERY_ADDRESS: 'last_delivery_address',
 
   // Órdenes (IndexedDB)
   ORDERS: 'orders',
