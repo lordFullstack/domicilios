@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom'
 interface BottomSheetProps {
   open: boolean
   onClose: () => void
-  title: string
+  title?: string
   children: ReactNode
 }
 
@@ -48,16 +48,18 @@ export const BottomSheet = ({ open, onClose, title, children }: BottomSheetProps
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={title}
+        aria-label={title || 'Detalle'}
         className="relative w-full max-w-md bg-white rounded-t-3xl shadow-bottom-sheet safe-bottom max-h-[85vh] overflow-y-auto animate-fade-slide-up"
       >
         <div className="flex justify-center pt-3">
           <div className="w-10 h-1.5 rounded-full bg-gray-200" />
         </div>
-        <div className="px-5 pt-3 pb-2">
-          <h2 className="font-display font-bold text-lg text-secondary">{title}</h2>
-        </div>
-        <div className="px-5 pb-6">{children}</div>
+        {title && (
+          <div className="px-5 pt-3 pb-2">
+            <h2 className="font-display font-bold text-lg text-secondary">{title}</h2>
+          </div>
+        )}
+        <div className="px-5 pt-3 pb-6">{children}</div>
       </div>
     </div>,
     document.body
