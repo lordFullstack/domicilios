@@ -18,19 +18,21 @@ export const Button = ({
   disabled,
   ...props
 }: ButtonProps) => {
-  const baseStyles = 'font-display font-semibold rounded-full transition-all duration-200 flex items-center justify-center gap-2'
+  const baseStyles = 'font-display font-semibold rounded-full transition-all duration-150 flex items-center justify-center gap-2 focus-ring'
 
   const variants = {
-    primary: 'bg-primary text-white hover:bg-primary-dark active:scale-[0.98] disabled:bg-gray-300',
-    secondary: 'bg-secondary text-white hover:bg-secondary/90 active:scale-[0.98] disabled:bg-gray-300',
-    outline: 'border-2 border-primary text-primary hover:bg-primary/5 disabled:border-gray-300 disabled:text-gray-400',
-    ghost: 'text-primary hover:bg-primary/5 disabled:text-gray-400',
+    primary: 'bg-primary text-white hover:bg-primary-dark active:scale-[0.97] disabled:bg-gray-300',
+    secondary: 'bg-secondary text-white hover:bg-secondary/90 active:scale-[0.97] disabled:bg-gray-300',
+    outline: 'border-2 border-primary text-primary hover:bg-primary/5 active:scale-[0.97] disabled:border-gray-300 disabled:text-gray-400',
+    ghost: 'text-primary hover:bg-primary/5 active:scale-[0.97] disabled:text-gray-400',
   }
 
+  // min-h-[48px] en md/lg para respetar el área táctil mínima (~48px);
+  // sm se reserva para contextos compactos (chips, acciones secundarias).
   const sizes = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+    sm: 'px-3 py-2 text-sm min-h-[40px]',
+    md: 'px-4 py-2 text-base min-h-[48px]',
+    lg: 'px-6 py-3 text-lg min-h-[48px]',
   }
 
   return (

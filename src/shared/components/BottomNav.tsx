@@ -54,20 +54,23 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
 
   return (
     <>
-      {/* Barra inferior — siempre en celular; en restaurante, solo hasta md */}
+      {/* Barra inferior — siempre en celular; en restaurante, solo hasta md.
+          Glassmorphism sutil + safe-bottom + touch targets de 48px. */}
       <div
-        className={`fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-2 pt-2 safe-bottom z-40 ${
+        className={`fixed bottom-0 left-0 right-0 glass shadow-bottom-sheet px-2 pt-1 safe-bottom z-40 ${
           isSidebarCapable ? 'md:hidden' : ''
         }`}
       >
-        <div className="max-w-md mx-auto flex items-center justify-between px-4">
+        <div className="max-w-md mx-auto flex items-center justify-between px-2">
           {items.map(({ icon: Icon, label, path, cartBadge }) => {
             const isActive = location.pathname === path
             return (
               <button
                 key={path}
                 onClick={() => navigate(path)}
-                className="flex flex-col items-center gap-1 py-1 px-3 relative"
+                aria-label={label}
+                aria-current={isActive ? 'page' : undefined}
+                className="touch-target focus-ring flex flex-col items-center justify-center gap-0.5 px-3 relative rounded-2xl transition-transform duration-150 active:scale-[0.94]"
               >
                 <Icon
                   className="w-5 h-5"
@@ -82,7 +85,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
                   {label}
                 </span>
                 {cartBadge && cartCount > 0 && (
-                  <span className="absolute -top-0.5 right-1 bg-primary text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute top-0 right-1 bg-primary text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}

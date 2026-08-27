@@ -77,3 +77,46 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ============================================================
+   DESIGN SYSTEM — LOOP 01 (App Shell + Design tokens)
+   Utilidades añadidas para el nuevo sistema de UI. No se tocó
+   nada de lo anterior en este archivo (Leaflet, safe-areas,
+   scrollbar).
+   ============================================================ */
+
+/* Glassmorphism moderado — usar solo donde aporte jerarquía
+   (BottomNav, GlassCard, sheets flotantes). */
+.glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Área táctil mínima recomendada (~48x48px) para elementos
+   interactivos importantes: botones, icon buttons, nav, controles. */
+.touch-target {
+  min-width: 48px;
+  min-height: 48px;
+}
+
+/* Foco visible consistente para accesibilidad de teclado,
+   sin alterar el look en interacción táctil/mouse. */
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid #2F5EFF;
+  outline-offset: 2px;
+}
+
+/* Reduced motion — respeta la preferencia del sistema operativo. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
