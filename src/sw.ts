@@ -8,6 +8,29 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 declare let self: ServiceWorkerGlobalScope
 
 // ============================================
+// Activación del Service Worker nuevo
+// ============================================
+// Con `strategies: 'injectManifest'`, Workbox NO agrega esta lógica solo
+// (a diferencia de `generateSW`) — hay que escribirla a mano. Sin esto,
+// el botón "Actualizar" del UpdatePrompt (que llama a
+// updateServiceWorker(true), y este a su vez le manda un postMessage
+// SKIP_WAITING al SW en espera) no tenía quién escuchara ese mensaje: el
+// SW nuevo se quedaba esperando para siempre y el aviso de actualización
+// nunca desaparecía (o volvía a aparecer después de recargar).
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting()
+  }
+})
+
+// Una vez que el SW nuevo se activa, toma el control de las pestañas ya
+// abiertas de inmediato (si no, seguirían controladas por el SW viejo
+// hasta que se cerraran y volvieran a abrir).
+self.addEventListener('activate', () => {
+  self.clients.claim()
+})
+
+// ============================================
 // Precaché de los assets propios de la app (JS/CSS/HTML del build) —
 // generado automáticamente por Vite en cada build.
 // ============================================
