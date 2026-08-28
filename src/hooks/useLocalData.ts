@@ -726,6 +726,39 @@ export const useOrders = (userId?: string) => {
   }
 
 
+  // A diferencia de updateOrder (que sobrescribe sin condición), esta
+  // función solo asigna el pedido si SIGUE sin domiciliario asignado en
+  // el momento exacto del UPDATE. Sin esto, si dos domiciliarios tocan
+  // "Aceptar" casi al mismo tiempo, el segundo pisaría silenciosamente
+  // la asignación del primero (last-write-wins) — un pedido terminaría
+  // con delivery_person_id de quien tocó último, no de quien lo aceptó
+  // primero, y ambos verían la app como si "lo tuvieran".
+  const acceptOrder = async (
+    orderId: string,
+    deliveryPersonId: string
+  ): Promise<{ ok: boolean; reason?: 'taken' | 'error' }> => {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ status: ORDER_STATUS.IN_DELIVERY, delivery_person_id: deliveryPersonId })
+      .eq('id', orderId)
+      .is('delivery_person_id', null) // condición de carrera: solo si sigue libre
+      .select()
+      .maybeSingle()
+
+    if (error) {
+      console.error('Error accepting order:', error)
+      return { ok: false, reason: 'error' }
+    }
+    if (!data) {
+      // El UPDATE no afectó ninguna fila: otro domiciliario ya lo había tomado.
+      await reload()
+      return { ok: false, reason: 'taken' }
+    }
+
+    await reload()
+    return { ok: true }
+  }
+
   const updateOrder = async (orderId: string, updates: Partial<Order>) => {
     const previous = orders.find((o) => o.id === orderId)
 
@@ -774,6 +807,7 @@ export const useOrders = (userId?: string) => {
     fromCache,
     createOrder,
     updateOrder,
+    acceptOrder,
     getOrdersByRestaurant,
     getOrdersByDelivery,
   }
