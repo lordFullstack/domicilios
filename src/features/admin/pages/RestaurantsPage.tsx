@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { AdminSidebar, AdminMobileNav } from '../components/AdminSidebar'
 import { ConfirmDialog } from '../components/ConfirmDialog'
-import { RestaurantEditModal } from '../components/RestaurantEditModal'
+import { RestaurantSidePanel } from '../components/RestaurantSidePanel'
+import { RestaurantFilters, ApprovalFilter, StatusFilter } from '../components/RestaurantFilters'
+import { RestaurantsTable } from '../components/RestaurantsTable'
+import { RestaurantsCardList } from '../components/RestaurantsCardList'
 import { useAdminRestaurants } from '../hooks/useAdminRestaurants'
-import { Card } from '@/shared/components/Card'
-import { Button } from '@/shared/components/Button'
 import { Restaurant } from '@/shared/types'
 
 export const AdminRestaurantsPage = () => {
@@ -12,6 +13,23 @@ export const AdminRestaurantsPage = () => {
   const [editingRestaurant, setEditingRestaurant] = useState<Restaurant | null>(null)
   const [confirmTarget, setConfirmTarget] = useState<Restaurant | null>(null)
   const [toggling, setToggling] = useState(false)
+
+  const [search, setSearch] = useState('')
+  const [category, setCategory] = useState('all')
+  const [status, setStatus] = useState<StatusFilter>('all')
+  const [approval, setApproval] = useState<ApprovalFilter>('all')
+
+  const filteredRestaurants = useMemo(() => {
+    const term = search.trim().toLowerCase()
+    return restaurants.filter((r) => {
+      if (term && !r.name.toLowerCase().includes(term)) return false
+      if (category !== 'all' && r.category !== category) return false
+      if (status !== 'all' && r.status !== status) return false
+      if (approval === 'approved' && !r.approved) return false
+      if (approval === 'suspended' && r.approved) return false
+      return true
+    })
+  }, [restaurants, search, category, status, approval])
 
   const handleToggleConfirm = async () => {
     if (!confirmTarget) return
@@ -29,65 +47,58 @@ export const AdminRestaurantsPage = () => {
       <AdminMobileNav />
       <AdminSidebar />
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
         <h1 className="font-display text-2xl font-bold text-secondary mb-1">Restaurantes</h1>
         <p className="text-sm text-gray-500 mb-6">
-          {restaurants.length} restaurante(s) asociados a la plataforma
+          {filteredRestaurants.length} de {restaurants.length} restaurante(s)
         </p>
 
         {loading && <p className="text-gray-400 text-sm">Cargando restaurantes...</p>}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && (
-          <div className="grid gap-4 md:grid-cols-2">
-            {restaurants.map((r) => (
-              <Card key={r.id}>
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <p className="font-display font-bold text-secondary">{r.name}</p>
-                    <p className="text-xs text-gray-400">{r.address}</p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        r.status === 'open' ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'
-                      }`}
-                    >
-                      {r.status === 'open' ? '🟢 Abierto' : '🔴 Cerrado'}
-                    </span>
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                        r.approved ? 'bg-primary/10 text-primary' : 'bg-danger/10 text-danger'
-                      }`}
-                    >
-                      {r.approved ? 'Aprobado' : 'Suspendido'}
-                    </span>
-                  </div>
-                </div>
+          <>
+            <RestaurantFilters
+              search={search}
+              onSearchChange={setSearch}
+              category={category}
+              onCategoryChange={setCategory}
+              status={status}
+              onStatusChange={setStatus}
+              approval={approval}
+              onApprovalChange={setApproval}
+            />
 
-                {r.description && <p className="text-sm text-gray-500 mb-3">{r.description}</p>}
-
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" fullWidth onClick={() => setEditingRestaurant(r)}>
-                    Editar
-                  </Button>
-                  <Button variant="outline" size="sm" fullWidth onClick={() => setConfirmTarget(r)}>
-                    {r.approved ? 'Suspender' : 'Aprobar'}
-                  </Button>
-                </div>
-              </Card>
-            ))}
-            {restaurants.length === 0 && (
-              <p className="text-gray-400 text-sm col-span-2 text-center py-8">
-                No hay restaurantes registrados todavía.
+            {filteredRestaurants.length === 0 ? (
+              <p className="text-gray-400 text-sm text-center py-12 border border-gray-100 rounded-2xl">
+                {restaurants.length === 0
+                  ? 'No hay restaurantes registrados todavía.'
+                  : 'Ningún restaurante coincide con estos filtros.'}
               </p>
+            ) : (
+              <>
+                <div className="hidden md:block border border-gray-100 rounded-2xl overflow-hidden px-4">
+                  <RestaurantsTable
+                    restaurants={filteredRestaurants}
+                    onEdit={setEditingRestaurant}
+                    onToggleApproval={setConfirmTarget}
+                  />
+                </div>
+                <div className="md:hidden">
+                  <RestaurantsCardList
+                    restaurants={filteredRestaurants}
+                    onEdit={setEditingRestaurant}
+                    onToggleApproval={setConfirmTarget}
+                  />
+                </div>
+              </>
             )}
-          </div>
+          </>
         )}
       </div>
 
       {editingRestaurant && (
-        <RestaurantEditModal
+        <RestaurantSidePanel
           restaurant={editingRestaurant}
           onClose={() => setEditingRestaurant(null)}
           onSave={(updates) => editRestaurant(editingRestaurant.id, updates)}
