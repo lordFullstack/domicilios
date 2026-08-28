@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
-import { Banknote, MapPin, MapPinOff } from 'lucide-react'
+import { MapPin, MapPinOff, Wifi, WifiOff } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders, useRestaurantById, updateOrderLocation } from '@/hooks/useLocalData'
-import { Button } from '@/shared/components/Button'
+import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
-import { OrderItemsList } from '@/shared/components/OrderItemsList'
+import { Toast } from '@/shared/components/Toast'
+import { DeliveryStatsGrid } from '../components/DeliveryStatsGrid'
+import { DeliveryOrderCard } from '../components/DeliveryOrderCard'
+import { DeliveryOrderDetailSheet } from '../components/DeliveryOrderDetailSheet'
+import { ActiveDeliveryBar } from '../components/ActiveDeliveryBar'
 import { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/config/constants'
 import { Order } from '@/shared/types'
+import { formatCOP } from '@/shared/utils/money'
 
 // Cada cuántos milisegundos se manda la ubicación al servidor mientras
 // hay una entrega activa. No hace falta mandarla en cada pulso del GPS.
@@ -16,10 +21,24 @@ const LOCATION_UPDATE_INTERVAL_MS = 10000
 
 export const DeliveryDashboard = () => {
   const { user } = useAuth()
-  const { orders, updateOrder, getOrdersByDelivery } = useOrders()
+  const { orders, updateOrder, acceptOrder, getOrdersByDelivery } = useOrders()
+  const connectionStatus = useOnlineStatus()
+  const isOffline = connectionStatus === 'offline'
+
   const [locationError, setLocationError] = useState<string | null>(null)
   const [sharingLocation, setSharingLocation] = useState(false)
   const lastSentAtRef = useRef(0)
+
+  const [detailOrder, setDetailOrder] = useState<Order | null>(null)
+  // Evita doble-tap: mientras se procesa una acción sobre un pedido puntual,
+  // se deshabilita esa acción (no toda la pantalla).
+  const [processingOrderId, setProcessingOrderId] = useState<string | null>(null)
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+
+  const showToast = (message: string) => {
+    setToastMessage(message)
+    setTimeout(() => setToastMessage(null), 2500)
+  }
 
   const availableOrders = orders.filter(
     (o) => o.status === ORDER_STATUS.READY && !o.delivery_person_id
@@ -28,12 +47,13 @@ export const DeliveryDashboard = () => {
   const myDeliveries = user ? getOrdersByDelivery(user.id) : []
   const activeDeliveries = myDeliveries.filter((o) => o.status === ORDER_STATUS.IN_DELIVERY)
   const completedDeliveries = myDeliveries.filter((o) => o.status === ORDER_STATUS.DELIVERED)
-  const activeOrderId = activeDeliveries[0]?.id
+  const activeOrder = activeDeliveries[0]
+  const { restaurant: activeRestaurant } = useRestaurantById(activeOrder?.restaurant_id || '')
 
   // Mientras haya una entrega activa, comparte la ubicación del celular
   // para que el cliente pueda ver en un mapa por dónde va su pedido.
   useEffect(() => {
-    if (!activeOrderId || !('geolocation' in navigator)) {
+    if (!activeOrder || !('geolocation' in navigator)) {
       setSharingLocation(false)
       return
     }
@@ -46,7 +66,7 @@ export const DeliveryDashboard = () => {
         const now = Date.now()
         if (now - lastSentAtRef.current < LOCATION_UPDATE_INTERVAL_MS) return
         lastSentAtRef.current = now
-        updateOrderLocation(activeOrderId, position.coords.latitude, position.coords.longitude)
+        updateOrderLocation(activeOrder.id, position.coords.latitude, position.coords.longitude)
       },
       (err) => {
         setSharingLocation(false)
@@ -63,35 +83,62 @@ export const DeliveryDashboard = () => {
       navigator.geolocation.clearWatch(watchId)
       setSharingLocation(false)
     }
-  }, [activeOrderId])
+  }, [activeOrder])
 
   const todayCompleted = completedDeliveries.filter((o) => {
     const today = new Date().toDateString()
     return new Date(o.updated_at).toDateString() === today
   })
-  const earningsToday = todayCompleted.reduce((sum, o) => sum + o.total * 0.1, 0)
 
-  const handleAcceptOrder = (order: Order) => {
-    if (!user) return
-    updateOrder(order.id, {
-      status: ORDER_STATUS.IN_DELIVERY as any,
-      delivery_person_id: user.id,
-    })
+  const handleAcceptOrder = async (order: Order) => {
+    if (!user || processingOrderId) return
+    setProcessingOrderId(order.id)
+    const result = await acceptOrder(order.id, user.id)
+    setProcessingOrderId(null)
+
+    if (result.ok) {
+      setDetailOrder(null)
+      showToast('✓ Pedido aceptado — dirígete al restaurante')
+    } else if (result.reason === 'taken') {
+      setDetailOrder(null)
+      showToast('Este pedido ya fue tomado por otro domiciliario')
+    } else {
+      showToast('No pudimos aceptar el pedido. Intenta de nuevo.')
+    }
   }
 
-  const handleCompleteDelivery = (order: Order) => {
-    const updates: Partial<Order> = { status: ORDER_STATUS.DELIVERED as any }
+  const handleCompleteDelivery = async (order: Order) => {
+    if (processingOrderId) return
+    setProcessingOrderId(order.id)
+    const updates: Partial<Order> = { status: ORDER_STATUS.DELIVERED }
     // Si es efectivo/datáfono, el domiciliario cobra al entregar → marcar pagado
     if (order.payment_method === PAYMENT_METHOD.CASH_ON_DELIVERY) {
-      updates.payment_status = PAYMENT_STATUS.PAID as any
+      updates.payment_status = PAYMENT_STATUS.PAID
     }
-    updateOrder(order.id, updates)
+    const ok = await updateOrder(order.id, updates)
+    setProcessingOrderId(null)
+
+    if (ok) {
+      setDetailOrder(null)
+      showToast('✓ Entrega completada')
+    } else {
+      showToast('No pudimos marcar la entrega. Intenta de nuevo.')
+    }
   }
+
+  // El sheet de detalle sirve tanto para pedidos disponibles (acción:
+  // aceptar) como para la entrega activa (acción: marcar entregada).
+  const detailIsActive = detailOrder?.status === ORDER_STATUS.IN_DELIVERY
+  const detailActionLabel = detailIsActive ? 'Marcar como entregada' : 'Aceptar entrega'
+  const detailActionDisabled =
+    isOffline || !!processingOrderId || (!detailIsActive && activeDeliveries.length > 0)
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
+      <Toast message={toastMessage} />
+
       {/* Header */}
-      <div className="flex items-start justify-between px-5 pt-6 pb-4">
+      <div className="flex items-start justify-between px-5 pt-6 pb-1">
         <div>
           <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
           <h1 className="font-display text-xl font-bold text-secondary">🚴 Panel de Domiciliario</h1>
@@ -100,29 +147,29 @@ export const DeliveryDashboard = () => {
         <NotificationBell />
       </div>
 
-      <NotificationPermissionCard />
-
-      {/* Estadísticas */}
-      <div className="grid grid-cols-2 gap-3 px-5 mb-6">
-        <div className="border border-gray-100 rounded-2xl text-center py-4">
-          <p className="text-2xl font-display font-bold text-primary">{availableOrders.length}</p>
-          <p className="text-gray-400 text-xs mt-1">Disponibles</p>
-        </div>
-        <div className="border border-gray-100 rounded-2xl text-center py-4">
-          <p className="text-2xl font-display font-bold text-warning">{activeDeliveries.length}</p>
-          <p className="text-gray-400 text-xs mt-1">En camino</p>
-        </div>
-        <div className="border border-gray-100 rounded-2xl text-center py-4">
-          <p className="text-2xl font-display font-bold text-success">{todayCompleted.length}</p>
-          <p className="text-gray-400 text-xs mt-1">Entregadas hoy</p>
-        </div>
-        <div className="border border-gray-100 rounded-2xl text-center py-4">
-          <p className="text-lg font-display font-bold text-primary">
-            ${earningsToday.toLocaleString('es-CO', { maximumFractionDigits: 0 })}
+      <div className="px-5 pb-3">
+        {isOffline ? (
+          <p className="flex items-center gap-1.5 text-xs text-gray-400">
+            <WifiOff className="w-3 h-3" />
+            Sin conexión — no podés aceptar ni completar entregas ahora
           </p>
-          <p className="text-gray-400 text-xs mt-1">Ganancias hoy</p>
-        </div>
+        ) : (
+          <p className="flex items-center gap-1.5 text-xs text-gray-400">
+            <Wifi className="w-3 h-3 text-success" />
+            Conectado en tiempo real
+          </p>
+        )}
       </div>
+
+      <div className="px-5">
+        <NotificationPermissionCard />
+      </div>
+
+      <DeliveryStatsGrid
+        availableCount={availableOrders.length}
+        activeCount={activeDeliveries.length}
+        completedToday={todayCompleted}
+      />
 
       {/* Entrega activa */}
       {activeDeliveries.length > 0 && (
@@ -143,15 +190,7 @@ export const DeliveryDashboard = () => {
 
           <div className="flex flex-col gap-3">
             {activeDeliveries.map((order) => (
-              <DeliveryOrderCard
-                key={order.id}
-                order={order}
-                action={
-                  <Button variant="primary" fullWidth onClick={() => handleCompleteDelivery(order)}>
-                    Marcar como Entregada
-                  </Button>
-                }
-              />
+              <DeliveryOrderCard key={order.id} order={order} onOpenDetail={setDetailOrder} />
             ))}
           </div>
         </div>
@@ -166,20 +205,7 @@ export const DeliveryDashboard = () => {
         ) : (
           <div className="flex flex-col gap-3">
             {availableOrders.map((order) => (
-              <DeliveryOrderCard
-                key={order.id}
-                order={order}
-                action={
-                  <Button
-                    variant="primary"
-                    fullWidth
-                    onClick={() => handleAcceptOrder(order)}
-                    disabled={activeDeliveries.length > 0}
-                  >
-                    Aceptar Entrega
-                  </Button>
-                }
-              />
+              <DeliveryOrderCard key={order.id} order={order} onOpenDetail={setDetailOrder} />
             ))}
           </div>
         )}
@@ -200,9 +226,7 @@ export const DeliveryDashboard = () => {
                 </div>
                 <div className="text-right flex-shrink-0 ml-2">
                   <p className="text-success font-semibold text-xs">Entregada</p>
-                  <p className="text-xs text-gray-500">
-                    +${(order.total * 0.1).toLocaleString('es-CO', { maximumFractionDigits: 0 })}
-                  </p>
+                  <p className="text-xs text-gray-500">{formatCOP(order.total)}</p>
                 </div>
               </div>
             ))}
@@ -210,48 +234,31 @@ export const DeliveryDashboard = () => {
         </div>
       )}
 
+      <DeliveryOrderDetailSheet
+        order={detailOrder}
+        open={!!detailOrder}
+        onClose={() => setDetailOrder(null)}
+        actionLabel={detailActionLabel}
+        actionLoading={processingOrderId === detailOrder?.id}
+        actionDisabled={detailActionDisabled}
+        onAction={() => {
+          if (!detailOrder) return
+          detailIsActive ? handleCompleteDelivery(detailOrder) : handleAcceptOrder(detailOrder)
+        }}
+      />
+
+      {/* CTA sticky de la entrega activa — accesible con el pulgar sin
+          tener que scrollear ni abrir el sheet. */}
+      {activeOrder && !detailOrder && (
+        <ActiveDeliveryBar
+          restaurantName={activeRestaurant?.name}
+          loading={processingOrderId === activeOrder.id}
+          disabled={isOffline || !!processingOrderId}
+          onComplete={() => handleCompleteDelivery(activeOrder)}
+        />
+      )}
+
       <BottomNav role="delivery" />
-    </div>
-  )
-}
-
-// Componente auxiliar para tarjeta de orden con info de restaurante
-const DeliveryOrderCard = ({
-  order,
-  action,
-}: {
-  order: Order
-  action: React.ReactNode
-}) => {
-  const { restaurant } = useRestaurantById(order.restaurant_id)
-
-  return (
-    <div className="border border-gray-100 rounded-2xl p-3">
-      <div className="flex gap-3 mb-3">
-        <div className="text-3xl flex-shrink-0">{restaurant?.image_url || '🏪'}</div>
-        <div className="min-w-0 flex-1">
-          <p className="font-semibold text-sm text-secondary truncate">{restaurant?.name}</p>
-          <p className="text-xs text-gray-400 truncate">Recoger: {restaurant?.address}</p>
-          <p className="text-xs text-gray-400 truncate">Entregar: {order.delivery_address}</p>
-
-          <div className="bg-gray-50 rounded-xl p-2 my-2">
-            <OrderItemsList orderId={order.id} />
-          </div>
-
-          <div className="flex items-center justify-between mt-1">
-            <p className="text-base font-display font-bold text-primary">
-              ${order.total.toLocaleString('es-CO')}
-            </p>
-            {order.payment_method === 'cash_on_delivery' && (
-              <span className="flex items-center gap-1 bg-primary/10 text-primary text-xs font-semibold px-2 py-0.5 rounded-full">
-                <Banknote className="w-3 h-3" />
-                Cobrar al entregar
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-      {action}
     </div>
   )
 }
