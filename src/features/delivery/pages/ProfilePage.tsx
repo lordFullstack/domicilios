@@ -7,6 +7,7 @@ import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { LogoutConfirmSheet } from '@/shared/components/LogoutConfirmSheet'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { supabase } from '@/shared/utils/supabase'
 
@@ -22,6 +23,7 @@ export const DeliveryProfilePage = () => {
   const [saving, setSaving] = useState(false)
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const [message, setMessage] = useState('')
+  const [logoutSheetOpen, setLogoutSheetOpen] = useState(false)
   const [error, setError] = useState('')
 
   const myDeliveries = user ? getOrdersByDelivery(user.id) : []
@@ -188,13 +190,19 @@ export const DeliveryProfilePage = () => {
 
       <div className="px-5 mt-6">
         <button
-          onClick={handleLogout}
+          onClick={() => setLogoutSheetOpen(true)}
           className="w-full flex items-center justify-center gap-2 text-danger text-sm font-semibold py-3"
         >
           <LogOut className="w-4 h-4" />
           Cerrar sesión
         </button>
       </div>
+
+      <LogoutConfirmSheet
+        open={logoutSheetOpen}
+        onClose={() => setLogoutSheetOpen(false)}
+        onConfirm={handleLogout}
+      />
 
       <BottomNav role="delivery" />
     </div>

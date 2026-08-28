@@ -1,6 +1,8 @@
 import { createContext, useState, useEffect, ReactNode } from 'react'
 import { User } from '@/shared/types'
 import { supabase, getAuthUser, getCurrentUserProfile } from '@/shared/utils/supabase'
+import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
+import { offlineCache } from '@/services/offlineCache.service'
 
 interface AuthContextType {
   user: User | null
@@ -122,6 +124,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       setUser(null)
+      // El dispositivo puede ser compartido (ej. tablet del restaurante,
+      // celular prestado) — no debe quedar carrito, dirección guardada
+      // ni caché offline del usuario anterior disponibles.
+      localStorageService.remove(STORAGE_KEYS.CART)
+      localStorageService.remove(STORAGE_KEYS.LAST_DELIVERY_ADDRESS)
+      await offlineCache.clearAll()
     } catch (error) {
       console.error('Logout error:', error)
       throw error

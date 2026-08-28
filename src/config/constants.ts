@@ -15,11 +15,13 @@ export const ROUTES = {
   CLIENT_ORDERS: '/app/orders',
   CLIENT_ORDER: '/app/order/:id',
   CLIENT_CATEGORY: '/app/category/:category',
+  CLIENT_ACCOUNT: '/app/account',
   
   // Restaurant
   RESTAURANT_DASHBOARD: '/restaurant/dashboard',
   RESTAURANT_ORDERS: '/restaurant/orders',
   RESTAURANT_PRODUCTS: '/restaurant/products',
+  RESTAURANT_ACCOUNT: '/restaurant/account',
   
   // Delivery
   DELIVERY_DASHBOARD: '/delivery/dashboard',

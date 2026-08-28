@@ -110,4 +110,20 @@ export const offlineCache = {
       return null
     }
   },
+
+  // Se llama al cerrar sesión: este dispositivo puede ser compartido
+  // (ej. una tablet del restaurante), así que no debe quedar nada del
+  // usuario anterior disponible para quien inicie sesión después.
+  async clearAll() {
+    try {
+      const db = await getDB()
+      await Promise.all([
+        db.clear('restaurants'),
+        db.clear('products'),
+        db.clear('orders'),
+      ])
+    } catch (e) {
+      console.error('offlineCache: error limpiando caché', e)
+    }
+  },
 }

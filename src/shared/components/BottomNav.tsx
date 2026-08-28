@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Home, UtensilsCrossed, ShoppingCart, ClipboardList, User, Rocket, LucideIcon } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useCart } from '@/hooks/useLocalData'
 import { ROUTES } from '@/config/constants'
+import { LogoutConfirmSheet } from './LogoutConfirmSheet'
 
 interface NavItem {
   icon: LucideIcon
@@ -16,12 +18,14 @@ const CLIENT_ITEMS: NavItem[] = [
   { icon: UtensilsCrossed, label: 'Restaurantes', path: ROUTES.CLIENT_RESTAURANTS },
   { icon: ShoppingCart, label: 'Carrito', path: ROUTES.CLIENT_CART, cartBadge: true },
   { icon: ClipboardList, label: 'Pedidos', path: ROUTES.CLIENT_ORDERS },
+  { icon: User, label: 'Cuenta', path: ROUTES.CLIENT_ACCOUNT },
 ]
 
 const RESTAURANT_ITEMS: NavItem[] = [
   { icon: Home, label: 'Panel', path: ROUTES.RESTAURANT_DASHBOARD },
   { icon: ClipboardList, label: 'Órdenes', path: ROUTES.RESTAURANT_ORDERS },
   { icon: UtensilsCrossed, label: 'Menú', path: ROUTES.RESTAURANT_PRODUCTS },
+  { icon: User, label: 'Cuenta', path: ROUTES.RESTAURANT_ACCOUNT },
 ]
 
 const DELIVERY_ITEMS: NavItem[] = [
@@ -39,6 +43,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
   const { user, logout } = useAuth()
   const { cart } = useCart()
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
+  const [logoutSheetOpen, setLogoutSheetOpen] = useState(false)
 
   const items = role === 'restaurant' ? RESTAURANT_ITEMS : role === 'delivery' ? DELIVERY_ITEMS : CLIENT_ITEMS
 
@@ -129,7 +134,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
               <p className="text-xs text-gray-400 truncate">{user?.email}</p>
             </div>
             <button
-              onClick={handleLogout}
+              onClick={() => setLogoutSheetOpen(true)}
               className="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-danger hover:bg-red-50 transition-colors"
             >
               Cerrar sesión
@@ -137,6 +142,12 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
           </div>
         </div>
       )}
+
+      <LogoutConfirmSheet
+        open={logoutSheetOpen}
+        onClose={() => setLogoutSheetOpen(false)}
+        onConfirm={handleLogout}
+      />
     </>
   )
 }

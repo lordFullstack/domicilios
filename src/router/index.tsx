@@ -68,6 +68,12 @@ const AdminPromotionsPage = lazy(() =>
 const CategoryResultsPage = lazy(() =>
   import('@/features/client/pages/CategoryResultsPage').then((m) => ({ default: m.CategoryResultsPage }))
 )
+const ClientAccountPage = lazy(() =>
+  import('@/features/client/pages/ClientAccountPage').then((m) => ({ default: m.ClientAccountPage }))
+)
+const RestaurantAccountPage = lazy(() =>
+  import('@/features/restaurant/pages/AccountPage').then((m) => ({ default: m.RestaurantAccountPage }))
+)
 
 const PageLoader = () => (
   <div className="min-h-screen bg-white flex items-center justify-center">
@@ -149,6 +155,14 @@ export const Router = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path={ROUTES.CLIENT_ACCOUNT}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
+              <ClientAccountPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Restaurant */}
         <Route
@@ -172,6 +186,14 @@ export const Router = () => {
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.RESTAURANT]}>
               <MenuManagementPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.RESTAURANT_ACCOUNT}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.RESTAURANT]}>
+              <RestaurantAccountPage />
             </ProtectedRoute>
           }
         />
