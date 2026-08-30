@@ -32,6 +32,7 @@ export const ROUTES = {
   // Admin
   ADMIN_DASHBOARD: '/admin/dashboard',
   ADMIN_USERS: '/admin/users',
+  ADMIN_CLIENTS: '/admin/clients',
   ADMIN_RESTAURANTS: '/admin/restaurants',
   ADMIN_PRODUCTS: '/admin/products',
   ADMIN_ORDERS: '/admin/orders',

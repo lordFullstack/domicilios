@@ -56,6 +56,9 @@ const AdminDashboard = lazy(() =>
 const AdminUsersPage = lazy(() =>
   import('@/features/admin/pages/UsersPage').then((m) => ({ default: m.AdminUsersPage }))
 )
+const AdminClientsPage = lazy(() =>
+  import('@/features/admin/pages/ClientsPage').then((m) => ({ default: m.AdminClientsPage }))
+)
 const AdminRestaurantsPage = lazy(() =>
   import('@/features/admin/pages/RestaurantsPage').then((m) => ({ default: m.AdminRestaurantsPage }))
 )
@@ -233,6 +236,14 @@ export const Router = () => {
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
               <AdminUsersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.ADMIN_CLIENTS}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.ADMIN]}>
+              <AdminClientsPage />
             </ProtectedRoute>
           }
         />
