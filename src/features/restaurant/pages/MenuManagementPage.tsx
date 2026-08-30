@@ -24,9 +24,11 @@ export const MenuManagementPage = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState('')
+  const [isErrorMessage, setIsErrorMessage] = useState(false)
 
-  const showSuccess = (msg: string) => {
+  const showSuccess = (msg: string, isError = false) => {
     setSuccessMessage(msg)
+    setIsErrorMessage(isError)
     setTimeout(() => setSuccessMessage(''), 3000)
   }
 
@@ -66,9 +68,13 @@ export const MenuManagementPage = () => {
   }
 
   const handleDelete = async (productId: string) => {
-    deleteProduct(productId)
+    const ok = await deleteProduct(productId)
     setDeleteConfirmId(null)
-    showSuccess('Producto eliminado')
+    if (ok) {
+      showSuccess('Producto eliminado')
+    } else {
+      showSuccess('No se pudo eliminar: este producto ya tiene pedidos asociados. Desactívalo en su lugar.', true)
+    }
   }
 
   if (!myRestaurant) {
@@ -93,7 +99,11 @@ export const MenuManagementPage = () => {
 
       <div className="px-5 md:max-w-4xl md:mx-auto md:px-0">
         {successMessage && (
-          <div className="mb-4 bg-green-50 text-green-700 text-sm font-semibold rounded-2xl p-3">
+          <div
+            className={`mb-4 text-sm font-semibold rounded-2xl p-3 ${
+              isErrorMessage ? 'bg-red-50 text-danger' : 'bg-green-50 text-green-700'
+            }`}
+          >
             {successMessage}
           </div>
         )}

@@ -13,7 +13,7 @@ import { ROUTES } from '@/config/constants'
 export const RestaurantAccountPage = () => {
   const { user, updateProfile, logout } = useAuth()
   const navigate = useNavigate()
-  const { restaurants } = useRestaurants()
+  const { restaurants, loading: loadingRestaurants } = useRestaurants()
   const myRestaurant = restaurants.find((r) => r.owner_id === user?.id)
 
   const [name, setName] = useState(user?.name || '')
@@ -80,12 +80,14 @@ export const RestaurantAccountPage = () => {
           </div>
           <div className="flex-1 text-left min-w-0">
             <p className="text-sm font-semibold text-secondary truncate">
-              {myRestaurant?.name || 'Configurar negocio'}
+              {loadingRestaurants ? 'Cargando...' : myRestaurant?.name || 'Configurar negocio'}
             </p>
             <p className="text-xs text-gray-400">
-              {myRestaurant
-                ? `${myRestaurant.category} · ${myRestaurant.status === 'open' ? 'Abierto' : 'Cerrado'}`
-                : 'Editar portada, horario y datos'}
+              {loadingRestaurants
+                ? ''
+                : myRestaurant
+                  ? `${myRestaurant.category} · ${myRestaurant.status === 'open' ? 'Abierto' : 'Cerrado'}`
+                  : 'Editar portada, horario y datos'}
             </p>
           </div>
           <ChevronRight className="w-4 h-4 text-gray-300 flex-shrink-0" />

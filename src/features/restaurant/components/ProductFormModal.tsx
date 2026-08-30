@@ -3,6 +3,7 @@ import { Camera, Loader2 } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { ProductImage } from '@/shared/components/ProductImage'
+import { ProductEmojiPicker } from './ProductEmojiPicker'
 import { Product, ProductCategory } from '@/shared/types'
 import { PRODUCT_CATEGORIES } from '@/config/constants'
 import { supabase } from '@/shared/utils/supabase'
@@ -20,12 +21,15 @@ interface ProductFormModalProps {
   }) => void
   product?: Product | null
   restaurantId: string
+  /**
+   * Admin no tiene permiso en Storage para subir archivos al bucket
+   * product-images (esa política sigue siendo exclusiva del dueño) —
+   * cuando se usa este formulario desde el panel de Admin, se oculta el
+   * botón "Subir foto" y se deja un input de URL en su lugar. Los emojis
+   * rápidos sí funcionan igual para todos, porque no tocan Storage.
+   */
+  allowPhotoUpload?: boolean
 }
-
-const EMOJI_OPTIONS = [
-  '🍕', '🍔', '🍣', '🍗', '🍟', '🌮', '🍝', '🥗',
-  '🍰', '🥤', '🍺', '☕', '🍦', '🥪', '🍤', '🍜',
-]
 
 export const ProductFormModal = ({
   isOpen,
@@ -33,6 +37,7 @@ export const ProductFormModal = ({
   onSave,
   product,
   restaurantId,
+  allowPhotoUpload = true,
 }: ProductFormModalProps) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -155,38 +160,39 @@ export const ProductFormModal = ({
                     <ProductImage imageUrl={imageUrl} alt={name || 'Producto'} />
                   )}
                 </div>
-                <label className="flex-1">
-                  <div className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-2xl px-4 py-3 text-sm font-semibold text-gray-500 active:scale-[0.98] transition-transform cursor-pointer">
-                    <Camera className="w-4 h-4" />
-                    Subir foto
-                  </div>
+                {allowPhotoUpload ? (
+                  <label className="flex-1">
+                    <div className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-2xl px-4 py-3 text-sm font-semibold text-gray-500 active:scale-[0.98] transition-transform cursor-pointer">
+                      <Camera className="w-4 h-4" />
+                      Subir foto
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      className="hidden"
+                      onChange={handlePhotoChange}
+                      disabled={uploading}
+                    />
+                  </label>
+                ) : (
                   <input
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp"
-                    className="hidden"
-                    onChange={handlePhotoChange}
-                    disabled={uploading}
+                    type="text"
+                    placeholder="URL de imagen (https://...)"
+                    value={imageUrl.startsWith('http') ? imageUrl : ''}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    className="flex-1 px-3 py-3 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                   />
-                </label>
+                )}
               </div>
 
+              {!allowPhotoUpload && (
+                <p className="text-xs text-gray-400 mb-2">
+                  La subida de fotos solo la puede hacer el dueño del restaurante — acá se puede pegar un link o elegir un emoji.
+                </p>
+              )}
+
               <p className="text-xs text-gray-400 mb-2">O elige un icono rápido:</p>
-              <div className="flex flex-wrap gap-2">
-                {EMOJI_OPTIONS.map((emoji) => (
-                  <button
-                    key={emoji}
-                    type="button"
-                    onClick={() => setImageUrl(emoji)}
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl border-2 transition-all active:scale-90 ${
-                      imageUrl === emoji
-                        ? 'border-primary bg-primary/10'
-                        : 'border-gray-100 hover:border-gray-200'
-                    }`}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
+              <ProductEmojiPicker value={imageUrl} onChange={setImageUrl} />
             </div>
 
             {/* Nombre */}

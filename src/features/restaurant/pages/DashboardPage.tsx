@@ -44,7 +44,7 @@ const NEXT_ACTION_LABELS: Record<string, string> = {
 export const RestaurantDashboard = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { restaurants, reload: reloadRestaurants } = useRestaurants()
+  const { restaurants, loading: loadingRestaurants, reload: reloadRestaurants } = useRestaurants()
   const { updateOrder, getOrdersByRestaurant } = useOrders()
 
   const myRestaurant = restaurants.find((r) => r.owner_id === user?.id)
@@ -130,6 +130,14 @@ export const RestaurantDashboard = () => {
     } finally {
       setUploadingCover(false)
     }
+  }
+
+  if (loadingRestaurants) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="w-6 h-6 text-primary animate-spin" />
+      </div>
+    )
   }
 
   if (!myRestaurant) {

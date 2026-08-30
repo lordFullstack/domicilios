@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Users, Store, ClipboardList, Megaphone, LogOut } from 'lucide-react'
+import { LayoutDashboard, Users, Store, UtensilsCrossed, ClipboardList, Megaphone, LogOut } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { ROUTES } from '@/config/constants'
 
@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { icon: LayoutDashboard, label: 'Dashboard', path: ROUTES.ADMIN_DASHBOARD },
   { icon: Users, label: 'Usuarios', path: ROUTES.ADMIN_USERS },
   { icon: Store, label: 'Restaurantes', path: ROUTES.ADMIN_RESTAURANTS },
+  { icon: UtensilsCrossed, label: 'Menú', path: ROUTES.ADMIN_PRODUCTS },
   { icon: ClipboardList, label: 'Órdenes', path: ROUTES.ADMIN_ORDERS },
   { icon: Megaphone, label: 'Promociones', path: ROUTES.ADMIN_PROMOTIONS },
 ]
