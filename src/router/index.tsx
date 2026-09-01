@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 import { ProtectedRoute } from './ProtectedRoute'
+import { RocketSpinner } from '@/components/ui/RocketSpinner'
 
 // Auth Pages (eager: son el punto de entrada, no vale la pena diferirlas)
 import { LoginPage } from '@/features/auth/pages/LoginPage'
@@ -86,7 +87,7 @@ const RestaurantAccountPage = lazy(() =>
 
 const PageLoader = () => (
   <div className="min-h-screen bg-white flex items-center justify-center">
-    <div className="w-8 h-8 border-2 border-gray-200 border-t-primary rounded-full animate-spin" />
+    <RocketSpinner size="md" />
   </div>
 )
 
