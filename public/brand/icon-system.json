@@ -1,0 +1,23 @@
+{
+  "family": "Rocket Minimal",
+  "variants": [
+    "premium-5A",
+    "tech-5B",
+    "bold-5C"
+  ],
+  "format": "PNG RGBA",
+  "sizes": [
+    16,
+    24,
+    32,
+    48,
+    64,
+    128,
+    256,
+    512
+  ],
+  "app_icons": [
+    192,
+    512
+  ]
+}
