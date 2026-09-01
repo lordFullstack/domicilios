@@ -1,18 +1,18 @@
 import { motion } from "motion/react"
-import { RocketIcon } from "../icons/RocketIcon"
+import { RocketIcon, type RocketSize } from "./RocketIcon"
 
 interface RocketSpinnerProps {
-  size?: string // clases de tamaño Tailwind, ej: "w-8 h-8"
+  size?: RocketSize // "xs" | "sm" | "md" | "lg" | "xl"
 }
 
-export function RocketSpinner({ size = "w-8 h-8" }: RocketSpinnerProps) {
+export function RocketSpinner({ size = "md" }: RocketSpinnerProps) {
   return (
     <motion.div
       animate={{ rotate: 360 }}
       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-      className={size}
+      style={{ display: "inline-flex" }}
     >
-      <RocketIcon variant="tech" className="w-full h-full text-[#2F5EFF]" />
+      <RocketIcon variant="tech" size={size} alt="Cargando" />
     </motion.div>
   )
 }
