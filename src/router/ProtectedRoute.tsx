@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom'
 import { ReactNode } from 'react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { ROUTES, USER_ROLES } from '@/config/constants'
+import { RocketSpinner } from '@/components/ui/RocketSpinner'
 
 const ROUTE_BY_ROLE: Record<string, string> = {
   [USER_ROLES.CLIENT]: ROUTES.CLIENT_HOME,
@@ -25,8 +26,8 @@ export const ProtectedRoute = ({
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <div className="animate-spin text-4xl mb-4">⏳</div>
-          <p>Cargando...</p>
+          <RocketSpinner size="lg" />
+          <p className="mt-4">Cargando...</p>
         </div>
       </div>
     )
@@ -42,3 +43,4 @@ export const ProtectedRoute = ({
 
   return <>{children}</>
 }
+
