@@ -11,6 +11,9 @@ import { RegisterPage } from '@/features/auth/pages/RegisterPage'
 const ClientDashboardPage = lazy(() =>
   import('@/features/client/pages/ClientDashboardPage').then((m) => ({ default: m.ClientDashboardPage }))
 )
+const NotificationsPage = lazy(() =>
+  import('@/shared/pages/NotificationsPage').then((m) => ({ default: m.NotificationsPage }))
+)
 const RestaurantListPage = lazy(() =>
   import('@/features/client/pages/RestaurantListPage').then((m) => ({ default: m.RestaurantListPage }))
 )
@@ -101,6 +104,16 @@ export const Router = () => {
         {/* Public */}
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+
+        {/* Compartida entre los 4 roles */}
+        <Route
+          path={ROUTES.NOTIFICATIONS}
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Client */}
         <Route

@@ -153,7 +153,10 @@ export const useNotifications = () => {
         { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
         (payload) => {
           const notif = payload.new as AppNotification
-          setNotifications((prev) => [notif, ...prev])
+          setNotifications((prev) => {
+            if (prev.some((n) => n.id === notif.id)) return prev // ya estaba (carrera con el fetch inicial)
+            return [notif, ...prev]
+          })
           playNotificationSound()
           showBrowserNotification(notif.title, notif.body)
         }

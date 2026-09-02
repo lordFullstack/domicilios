@@ -4,7 +4,8 @@ import { Bell, Check } from 'lucide-react'
 import { useNotifications } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { requestNotificationPermission } from '@/shared/utils/notificationSound'
-import { ROUTES, USER_ROLES } from '@/config/constants'
+import { getNotificationTarget } from '@/shared/utils/notificationLinks'
+import { ROUTES } from '@/config/constants'
 
 const timeAgo = (dateStr: string) => {
   const minutes = Math.max(0, Math.round((Date.now() - new Date(dateStr).getTime()) / 60000))
@@ -40,15 +41,9 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
   const handleNotificationClick = async (id: string, orderId?: string | null) => {
     await markAsRead(id)
     setOpen(false)
-    if (!orderId || !user) return
-
-    if (user.role === USER_ROLES.CLIENT) {
-      navigate(ROUTES.CLIENT_ORDER.replace(':id', orderId))
-    } else if (user.role === USER_ROLES.RESTAURANT) {
-      navigate(ROUTES.RESTAURANT_ORDERS)
-    } else if (user.role === USER_ROLES.DELIVERY) {
-      navigate(ROUTES.DELIVERY_DASHBOARD)
-    }
+    if (!user) return
+    const target = getNotificationTarget(user.role, orderId)
+    if (target) navigate(target)
   }
 
   const iconColor = variant === 'light' ? 'text-white' : 'text-secondary'
@@ -93,7 +88,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
                 No tienes notificaciones todavía
               </p>
             ) : (
-              notifications.map((n) => (
+              notifications.slice(0, 8).map((n) => (
                 <button
                   key={n.id}
                   onClick={() => handleNotificationClick(n.id, n.order_id)}
@@ -113,6 +108,16 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
               ))
             )}
           </div>
+
+          <button
+            onClick={() => {
+              setOpen(false)
+              navigate(ROUTES.NOTIFICATIONS)
+            }}
+            className="w-full text-center py-3 text-xs font-semibold text-primary border-t border-gray-50"
+          >
+            Ver todas
+          </button>
         </div>
       )}
     </div>

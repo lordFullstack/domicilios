@@ -5,6 +5,9 @@ export const ROUTES = {
   // Public
   LOGIN: '/login',
   REGISTER: '/register',
+
+  // Shared (todos los roles)
+  NOTIFICATIONS: '/notifications',
   
   // Client
   CLIENT_HOME: '/app/home',
