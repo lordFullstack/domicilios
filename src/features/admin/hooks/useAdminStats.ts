@@ -54,15 +54,20 @@ export const useAdminStats = (users: User[], restaurants: Restaurant[], orders: 
     })
 
     // Pedidos por día (últimos 7 días reales, con conteo en 0 si no hubo
-    // ninguno — no se inventan datos entre medio).
+    // ninguno — no se inventan datos entre medio). `revenue` solo cuenta
+    // pedidos entregados, igual criterio que totalRevenue.
     const ordersByDay = Array.from({ length: 7 }).map((_, i) => {
       const day = new Date()
       day.setDate(day.getDate() - (6 - i))
       const dayKey = day.toDateString()
-      const count = orders.filter((o) => new Date(o.created_at).toDateString() === dayKey).length
+      const dayOrders = orders.filter((o) => new Date(o.created_at).toDateString() === dayKey)
+      const revenue = dayOrders
+        .filter((o) => o.status === ORDER_STATUS.DELIVERED)
+        .reduce((sum, o) => sum + Number(o.total), 0)
       return {
         label: day.toLocaleDateString('es-CO', { weekday: 'short' }),
-        count,
+        count: dayOrders.length,
+        revenue,
       }
     })
 
