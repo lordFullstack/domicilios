@@ -76,7 +76,13 @@ export const LoginPage = () => {
         </Button>
       </form>
 
-      <p className="text-center text-sm text-gray-400 mt-6">
+      <p className="text-center text-sm mt-4">
+        <a href={ROUTES.FORGOT_PASSWORD} className="text-gray-400">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </p>
+
+      <p className="text-center text-sm text-gray-400 mt-2">
         ¿No tienes cuenta?{' '}
         <a href={ROUTES.REGISTER} className="text-primary font-semibold">
           Regístrate aquí

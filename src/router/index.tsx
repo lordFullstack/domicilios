@@ -6,6 +6,8 @@ import { ProtectedRoute } from './ProtectedRoute'
 // Auth Pages (eager: son el punto de entrada, no vale la pena diferirlas)
 import { LoginPage } from '@/features/auth/pages/LoginPage'
 import { RegisterPage } from '@/features/auth/pages/RegisterPage'
+import { ForgotPasswordPage } from '@/features/auth/pages/ForgotPasswordPage'
+import { ResetPasswordPage } from '@/features/auth/pages/ResetPasswordPage'
 
 // Client Pages (lazy: se cargan solo cuando se visitan)
 const ClientDashboardPage = lazy(() =>
@@ -104,6 +106,8 @@ export const Router = () => {
         {/* Public */}
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
 
         {/* Compartida entre los 4 roles */}
         <Route
