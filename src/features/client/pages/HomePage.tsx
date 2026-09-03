@@ -4,7 +4,6 @@ import { Button } from '@/shared/components/Button'
 import { useRestaurants } from '@/hooks/useLocalData'
 import { RestaurantCard } from '../components/RestaurantCard'
 import { ROUTES } from '@/config/constants'
-import { HeroRocket } from '@/components/ui/HeroRocket'
 
 export const HomePage = () => {
   const navigate = useNavigate()
@@ -17,7 +16,6 @@ export const HomePage = () => {
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-display font-bold text-secondary mb-2">🍕 Domicilios Riohacha</h1>
           <p className="text-lg text-gray-500">Comida deliciosa entregada rápido</p>
-          <HeroRocket />
         </div>
       </div>
 

@@ -30,8 +30,14 @@ export const RestaurantDetailPage = () => {
     loading: restaurantLoading,
     error: restaurantError,
     fromCache: restaurantFromCache,
+    cachedAt: restaurantCachedAt,
   } = useRestaurantById(id || '')
-  const { products, loading: productsLoading, fromCache: productsFromCache } = useProducts(id)
+  const {
+    products,
+    loading: productsLoading,
+    fromCache: productsFromCache,
+    cachedAt: productsCachedAt,
+  } = useProducts(id)
   const { cart, addItem, clear } = useCart()
   const { isFavorite, toggleFavorite } = useFavorites()
   const [favPending, setFavPending] = useState(false)
@@ -201,7 +207,9 @@ export const RestaurantDetailPage = () => {
           </Badge>
         </div>
         <p className="text-xs text-gray-400 mb-4">{restaurant.description}</p>
-        {(restaurantFromCache || productsFromCache) && <OfflineDataBadge />}
+        {(restaurantFromCache || productsFromCache) && (
+          <OfflineDataBadge cachedAt={Math.max(restaurantCachedAt || 0, productsCachedAt || 0) || null} />
+        )}
       </div>
 
       {/* Menú */}

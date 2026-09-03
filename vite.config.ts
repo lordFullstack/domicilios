@@ -12,10 +12,15 @@ export default defineConfig({
       filename: 'sw.ts',
       registerType: 'prompt',
       injectRegister: 'auto',
-      includeAssets: ['brand/rocket-app-icon.png', 'brand/rocket-app-icon-192.png'],
+      includeAssets: [
+        'brand/rocket-app-icon.png',
+        'brand/rocket-app-icon-192.png',
+        'brand/rocket-app-icon-maskable.png',
+        'brand/rocket-icon-64.png',
+      ],
       manifest: {
-        name: 'pa comer express',
-        short_name: 'pa comer',
+        name: 'Domicilios Riohacha',
+        short_name: 'Domicilios',
         description: 'Pide a domicilio en Riohacha — rápido, fácil y sin filas.',
         theme_color: '#2F5EFF',
         background_color: '#FFFFFF',
@@ -35,7 +40,7 @@ export default defineConfig({
             type: 'image/png',
           },
           {
-            src: '/brand/rocket-app-icon.png',
+            src: '/brand/rocket-app-icon-maskable.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',

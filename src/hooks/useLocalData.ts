@@ -324,6 +324,7 @@ export const useRestaurantById = (id: string) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [fromCache, setFromCache] = useState(false)
+  const [cachedAt, setCachedAt] = useState<number | null>(null)
 
   useEffect(() => {
     if (!id) {
@@ -348,6 +349,7 @@ export const useRestaurantById = (id: string) => {
         if (cached) {
           setRestaurant(cached.data)
           setFromCache(true)
+          setCachedAt(cached.cachedAt)
           setError(null)
         } else {
           setError('Error cargando restaurante')
@@ -356,6 +358,7 @@ export const useRestaurantById = (id: string) => {
       } else {
         setRestaurant(data)
         setFromCache(false)
+        setCachedAt(null)
         if (data) offlineCache.saveRestaurant(data)
       }
       setLoading(false)
@@ -366,7 +369,7 @@ export const useRestaurantById = (id: string) => {
     }
   }, [id])
 
-  return { restaurant, loading, error, fromCache }
+  return { restaurant, loading, error, fromCache, cachedAt }
 }
 
 // ============================================
@@ -378,6 +381,7 @@ export const useProducts = (restaurantId?: string) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [fromCache, setFromCache] = useState(false)
+  const [cachedAt, setCachedAt] = useState<number | null>(null)
 
   const reload = useCallback(async () => {
     setLoading(true)
@@ -394,6 +398,7 @@ export const useProducts = (restaurantId?: string) => {
       if (cached) {
         setProducts(cached.data)
         setFromCache(true)
+        setCachedAt(cached.cachedAt)
         setError(null)
       } else {
         setError('Error cargando productos')
@@ -402,6 +407,7 @@ export const useProducts = (restaurantId?: string) => {
     } else {
       setProducts(data || [])
       setFromCache(false)
+      setCachedAt(null)
       if (restaurantId && data) offlineCache.saveProducts(restaurantId, data)
     }
     setLoading(false)
@@ -462,6 +468,7 @@ export const useProducts = (restaurantId?: string) => {
     loading,
     error,
     fromCache,
+    cachedAt,
     createProduct,
     updateProduct,
     deleteProduct,
@@ -627,6 +634,7 @@ export const useOrders = (userId?: string) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [fromCache, setFromCache] = useState(false)
+  const [cachedAt, setCachedAt] = useState<number | null>(null)
 
   const reload = useCallback(async () => {
     setLoading(true)
@@ -643,6 +651,7 @@ export const useOrders = (userId?: string) => {
       if (cached) {
         setOrders(cached.data)
         setFromCache(true)
+        setCachedAt(cached.cachedAt)
         setError(null)
       } else {
         setError('Error cargando órdenes')
@@ -651,6 +660,7 @@ export const useOrders = (userId?: string) => {
     } else {
       setOrders(data || [])
       setFromCache(false)
+      setCachedAt(null)
       if (userId && data) offlineCache.saveOrders(userId, data)
     }
     setLoading(false)
@@ -808,6 +818,7 @@ export const useOrders = (userId?: string) => {
     loading,
     error,
     fromCache,
+    cachedAt,
     createOrder,
     updateOrder,
     acceptOrder,

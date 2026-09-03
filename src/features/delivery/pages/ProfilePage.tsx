@@ -7,6 +7,7 @@ import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { InstallAppCard } from '@/shared/components/InstallAppCard'
 import { LogoutConfirmSheet } from '@/shared/components/LogoutConfirmSheet'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { supabase } from '@/shared/utils/supabase'
@@ -187,6 +188,10 @@ export const DeliveryProfilePage = () => {
           Guardar cambios
         </Button>
       </form>
+
+      <div className="px-5 mt-6">
+        <InstallAppCard />
+      </div>
 
       <div className="px-5 mt-6">
         <button

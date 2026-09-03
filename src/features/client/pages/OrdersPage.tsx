@@ -13,7 +13,7 @@ export const OrdersPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { user } = useAuth()
-  const { orders, loading, fromCache } = useOrders(user?.id)
+  const { orders, loading, fromCache, cachedAt } = useOrders(user?.id)
 
   const successMessage = (location.state as any)?.message
 
@@ -38,7 +38,7 @@ export const OrdersPage = () => {
           </div>
         )}
 
-        {fromCache && <OfflineDataBadge />}
+        {fromCache && <OfflineDataBadge cachedAt={cachedAt} />}
         <NotificationPermissionCard />
 
         {loading ? (

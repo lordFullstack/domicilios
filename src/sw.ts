@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
-import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
-import { registerRoute } from 'workbox-routing'
+import { precacheAndRoute, cleanupOutdatedCaches, createHandlerBoundToURL } from 'workbox-precaching'
+import { registerRoute, NavigationRoute } from 'workbox-routing'
 import { CacheFirst, NetworkOnly, StaleWhileRevalidate } from 'workbox-strategies'
 import { ExpirationPlugin } from 'workbox-expiration'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
@@ -36,6 +36,18 @@ self.addEventListener('activate', () => {
 // ============================================
 cleanupOutdatedCaches()
 precacheAndRoute(self.__WB_MANIFEST)
+
+// ============================================
+// Fallback de navegación offline
+// ============================================
+// Es una SPA: React Router decide qué mostrar según la URL, pero eso
+// pasa DESPUÉS de que cargue index.html. Sin esto, recargar la página (o
+// abrir un link directo a, por ejemplo, /app/order/xyz) estando sin
+// internet mostraba el error nativo del navegador ("No hay conexión"),
+// porque esa URL exacta nunca estuvo en el precache. Con esto, cualquier
+// navegación cae al shell de la app ya cacheado, y React Router toma el
+// control desde ahí normalmente.
+registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')))
 
 // ============================================
 // Estrategias de caché para todo lo demás (igual que en la Fase A, pero

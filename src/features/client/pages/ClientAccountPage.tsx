@@ -6,6 +6,7 @@ import { AppShell } from '@/shared/components/AppShell'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { LogoutConfirmSheet } from '@/shared/components/LogoutConfirmSheet'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
+import { InstallAppCard } from '@/shared/components/InstallAppCard'
 import { Input } from '@/shared/components/Input'
 import { Button } from '@/shared/components/Button'
 import { ROUTES } from '@/config/constants'
@@ -67,6 +68,7 @@ export const ClientAccountPage = () => {
       {/* Configuración */}
       <div className="px-5 mb-6">
         <h2 className="text-xs font-bold text-gray-400 tracking-wide mb-2">CONFIGURACIÓN</h2>
+        <InstallAppCard />
         <NotificationPermissionCard />
 
         <button
