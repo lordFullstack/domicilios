@@ -42,7 +42,7 @@ export const AdminAlerts = ({ restaurants, cancellationRate, totalOrders }: Admi
         <button
           key={i}
           onClick={alert.onClick}
-          className="flex items-center gap-2 bg-warning/10 text-warning text-sm font-semibold rounded-2xl p-3 text-left hover:bg-warning/20 transition-colors"
+          className="focus-ring flex items-center gap-2 bg-warning/10 text-warning text-sm font-semibold rounded-2xl p-3 text-left hover:bg-warning/20 transition-colors"
         >
           <AlertTriangle className="w-4 h-4 flex-shrink-0" />
           {alert.text}

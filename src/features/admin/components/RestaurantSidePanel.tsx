@@ -57,7 +57,7 @@ export const RestaurantSidePanel = ({ restaurant, onClose, onSave }: RestaurantS
           <button
             onClick={onClose}
             aria-label="Cerrar"
-            className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center"
+            className="focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center"
           >
             <X className="w-4 h-4 text-secondary" />
           </button>

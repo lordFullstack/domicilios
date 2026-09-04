@@ -46,7 +46,7 @@ export const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
           </div>
           <button
             onClick={handleFavorite}
-            className={`text-2xl ${isFav ? 'text-danger' : 'text-gray-300'} transition-colors`}
+            className={`focus-ring text-2xl ${isFav ? 'text-danger' : 'text-gray-300'} transition-colors`}
           >
             {isFav ? '❤️' : '🤍'}
           </button>

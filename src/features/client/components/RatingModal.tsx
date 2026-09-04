@@ -14,7 +14,7 @@ interface RatingModalProps {
 const StarPicker = ({ value, onChange }: { value: number; onChange: (v: number) => void }) => (
   <div className="flex gap-1">
     {[1, 2, 3, 4, 5].map((n) => (
-      <button key={n} type="button" onClick={() => onChange(n)} className="p-0.5">
+      <button key={n} type="button" onClick={() => onChange(n)} className="focus-ring p-0.5">
         <Star
           className={`w-7 h-7 ${n <= value ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}`}
         />

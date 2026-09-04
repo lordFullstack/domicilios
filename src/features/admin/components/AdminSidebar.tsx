@@ -42,7 +42,7 @@ export const AdminSidebar = () => {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+              className={`focus-ring w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 active ? 'bg-primary text-white' : 'text-gray-300 hover:bg-white/5'
               }`}
             >
@@ -55,7 +55,7 @@ export const AdminSidebar = () => {
 
       <button
         onClick={handleLogout}
-        className="flex items-center gap-3 px-3 py-2.5 mx-3 mb-6 rounded-xl text-sm font-medium text-gray-300 hover:bg-white/5 transition-colors"
+        className="focus-ring flex items-center gap-3 px-3 py-2.5 mx-3 mb-6 rounded-xl text-sm font-medium text-gray-300 hover:bg-white/5 transition-colors"
       >
         <LogOut className="w-4 h-4" />
         Cerrar sesión

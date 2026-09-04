@@ -136,7 +136,7 @@ export const ProductFormModal = ({
             </h2>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 active:scale-90 transition-transform"
+              className="focus-ring w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 active:scale-90 transition-transform"
             >
               &times;
             </button>
@@ -212,7 +212,7 @@ export const ProductFormModal = ({
                     key={cat}
                     type="button"
                     onClick={() => setCategory(cat)}
-                    className={`px-3 py-2 rounded-xl text-xs font-semibold border-2 transition-all active:scale-95 ${
+                    className={`focus-ring px-3 py-2 rounded-xl text-xs font-semibold border-2 transition-all active:scale-95 ${
                       category === cat
                         ? 'border-primary bg-primary/10 text-primary'
                         : 'border-gray-100 text-gray-500'
@@ -251,7 +251,7 @@ export const ProductFormModal = ({
             <button
               type="button"
               onClick={() => setAvailable(!available)}
-              className="w-full flex items-center justify-between bg-gray-50 rounded-2xl px-4 py-3"
+              className="focus-ring w-full flex items-center justify-between bg-gray-50 rounded-2xl px-4 py-3"
             >
               <span className="text-sm font-semibold text-secondary">Disponible para la venta</span>
               <span

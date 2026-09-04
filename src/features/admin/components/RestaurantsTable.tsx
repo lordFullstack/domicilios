@@ -47,13 +47,13 @@ export const RestaurantsTable = ({ restaurants, onEdit, onToggleApproval }: Rest
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => onEdit(r)}
-                className="text-xs font-semibold text-primary hover:underline"
+                className="focus-ring text-xs font-semibold text-primary hover:underline"
               >
                 Editar
               </button>
               <button
                 onClick={() => onToggleApproval(r)}
-                className="text-xs font-semibold text-gray-500 hover:underline"
+                className="focus-ring text-xs font-semibold text-gray-500 hover:underline"
               >
                 {r.approved ? 'Suspender' : 'Aprobar'}
               </button>

@@ -161,7 +161,7 @@ export const AdminProductsPage = () => {
                               <div className="flex items-center justify-between">
                                 <button
                                   onClick={() => toggleAvailability(product.id)}
-                                  className={`relative w-9 h-5 rounded-full transition-colors ${
+                                  className={`focus-ring relative w-9 h-5 rounded-full transition-colors ${
                                     product.available ? 'bg-success' : 'bg-gray-300'
                                   }`}
                                 >
@@ -177,21 +177,21 @@ export const AdminProductsPage = () => {
                                       setEditingProduct(product)
                                       setIsModalOpen(true)
                                     }}
-                                    className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                    className="focus-ring w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
                                   >
                                     <Pencil className="w-3 h-3 text-gray-500" />
                                   </button>
                                   {deleteConfirmId === product.id ? (
                                     <button
                                       onClick={() => handleDelete(product.id)}
-                                      className="text-xs font-semibold text-white bg-danger px-2 rounded-full"
+                                      className="focus-ring text-xs font-semibold text-white bg-danger px-2 rounded-full"
                                     >
                                       Confirmar
                                     </button>
                                   ) : (
                                     <button
                                       onClick={() => setDeleteConfirmId(product.id)}
-                                      className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                      className="focus-ring w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
                                     >
                                       <Trash2 className="w-3 h-3 text-gray-500" />
                                     </button>

@@ -196,7 +196,7 @@ export const RestaurantDashboard = () => {
         <button
           onClick={handleToggleStatus}
           disabled={togglingStatus}
-          className="relative w-full flex items-center justify-between bg-white/10 rounded-2xl px-4 py-3 mt-4 active:scale-[0.98] transition-transform disabled:opacity-60"
+          className="focus-ring relative w-full flex items-center justify-between bg-white/10 rounded-2xl px-4 py-3 mt-4 active:scale-[0.98] transition-transform disabled:opacity-60"
         >
           <span className="flex items-center gap-2 text-sm font-semibold text-white">
             <span

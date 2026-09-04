@@ -90,7 +90,7 @@ export const OrderDetailPanel = ({
               Actualizado: {new Date(order.updated_at).toLocaleString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
             </p>
           </div>
-          <button onClick={onClose} aria-label="Cerrar" className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center">
+          <button onClick={onClose} aria-label="Cerrar" className="focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center">
             <X className="w-4 h-4 text-secondary" />
           </button>
         </div>

@@ -21,7 +21,7 @@ export const CategoryResultsPage = () => {
       <div className="px-5 pt-6 pb-4 flex items-center gap-3">
         <button
           onClick={() => navigate(ROUTES.CLIENT_HOME)}
-          className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0"
+          className="focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0"
         >
           <ChevronLeft className="w-5 h-5 text-gray-600" />
         </button>
@@ -39,7 +39,7 @@ export const CategoryResultsPage = () => {
               <button
                 key={product.id}
                 onClick={() => navigate(ROUTES.CLIENT_RESTAURANT.replace(':id', product.restaurant.id))}
-                className="flex items-center gap-3 text-left rounded-2xl border border-gray-100 shadow-card p-3 active:scale-[0.98] transition-transform"
+                className="focus-ring flex items-center gap-3 text-left rounded-2xl border border-gray-100 shadow-card p-3 active:scale-[0.98] transition-transform"
               >
                 <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                   {product.image_url ? (

@@ -61,7 +61,8 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
     <>
       {/* Barra inferior — siempre en celular; en restaurante, solo hasta md.
           Glassmorphism sutil + safe-bottom + touch targets de 48px. */}
-      <div
+      <nav
+        aria-label="Navegación principal"
         className={`fixed bottom-0 left-0 right-0 glass shadow-bottom-sheet px-2 pt-1 safe-bottom z-40 ${
           isSidebarCapable ? 'md:hidden' : ''
         }`}
@@ -98,7 +99,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
             )
           })}
         </div>
-      </div>
+      </nav>
 
       {/* Barra lateral — solo restaurante, solo desde md hacia arriba */}
       {isSidebarCapable && (
@@ -117,7 +118,8 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
                 <button
                   key={path}
                   onClick={() => navigate(path)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold mb-1 transition-colors ${
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`focus-ring w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold mb-1 transition-colors ${
                     isActive ? 'bg-primary/10 text-primary' : 'text-gray-500 hover:bg-gray-50'
                   }`}
                 >
@@ -135,7 +137,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
             </div>
             <button
               onClick={() => setLogoutSheetOpen(true)}
-              className="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-danger hover:bg-red-50 transition-colors"
+              className="focus-ring w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-danger hover:bg-red-50 transition-colors"
             >
               Cerrar sesión
             </button>

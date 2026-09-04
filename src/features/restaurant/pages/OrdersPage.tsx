@@ -37,7 +37,7 @@ export const RestaurantOrdersPage = () => {
       <div className="px-5 pt-6 pb-4 flex items-center gap-3 md:max-w-4xl md:mx-auto md:px-0 md:pt-8">
         <button
           onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}
-          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center md:hidden"
+          className="focus-ring w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center md:hidden"
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
@@ -53,7 +53,7 @@ export const RestaurantOrdersPage = () => {
               <div key={order.id} className="border border-gray-100 rounded-2xl p-3">
                 <button
                   onClick={() => setExpandedId(expandedId === order.id ? null : order.id)}
-                  className="w-full flex justify-between items-center text-left"
+                  className="focus-ring w-full flex justify-between items-center text-left"
                 >
                   <div className="min-w-0">
                     <p className="font-semibold text-sm text-secondary">

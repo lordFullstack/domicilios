@@ -67,7 +67,7 @@ export const DeliveryPersonDetailPanel = ({
               <p className="text-xs text-gray-400 truncate">{deliveryPerson.email}</p>
             </div>
           </div>
-          <button onClick={onClose} aria-label="Cerrar" className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
+          <button onClick={onClose} aria-label="Cerrar" className="focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
             <X className="w-4 h-4 text-secondary" />
           </button>
         </div>

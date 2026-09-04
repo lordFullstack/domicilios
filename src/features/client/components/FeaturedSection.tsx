@@ -31,7 +31,7 @@ export const FeaturedSection = ({ type, title }: FeaturedSectionProps) => {
             key={promo.id}
             onClick={() => handleClick(promo.restaurant_id)}
             disabled={!promo.restaurant_id}
-            className="flex-shrink-0 w-64 text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
+            className="focus-ring flex-shrink-0 w-64 text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
           >
             <div className="h-28 bg-primary/10 overflow-hidden flex items-center justify-center">
               {promo.image_url ? (

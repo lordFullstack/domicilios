@@ -55,7 +55,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
           setOpen((v) => !v)
           requestNotificationPermission()
         }}
-        className={`relative w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition-transform ${
+        className={`focus-ring relative w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition-transform ${
           variant === 'light' ? 'bg-white/10' : 'bg-gray-50'
         }`}
       >
@@ -74,7 +74,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="flex items-center gap-1 text-xs font-semibold text-primary"
+                className="focus-ring flex items-center gap-1 text-xs font-semibold text-primary"
               >
                 <Check className="w-3 h-3" />
                 Marcar leídas
@@ -92,7 +92,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
                 <button
                   key={n.id}
                   onClick={() => handleNotificationClick(n.id, n.order_id)}
-                  className={`w-full text-left px-4 py-3 border-b border-gray-50 last:border-0 transition-colors ${
+                  className={`focus-ring w-full text-left px-4 py-3 border-b border-gray-50 last:border-0 transition-colors ${
                     n.read ? 'bg-white' : 'bg-primary/5'
                   }`}
                 >
@@ -114,7 +114,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
               setOpen(false)
               navigate(ROUTES.NOTIFICATIONS)
             }}
-            className="w-full text-center py-3 text-xs font-semibold text-primary border-t border-gray-50"
+            className="focus-ring w-full text-center py-3 text-xs font-semibold text-primary border-t border-gray-50"
           >
             Ver todas
           </button>

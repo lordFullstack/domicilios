@@ -91,7 +91,7 @@ export const DeliveryProfilePage = () => {
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
       <div className="flex items-center gap-3 px-5 pt-6 pb-4">
-        <button onClick={() => navigate(ROUTES.DELIVERY_DASHBOARD)}>
+        <button onClick={() => navigate(ROUTES.DELIVERY_DASHBOARD)} className="focus-ring rounded-lg">
           <ChevronLeft className="w-6 h-6 text-secondary" />
         </button>
         <h1 className="font-display text-lg font-bold text-secondary">Mi Perfil</h1>
@@ -164,7 +164,7 @@ export const DeliveryProfilePage = () => {
                 key={type}
                 type="button"
                 onClick={() => setVehicleType(type)}
-                className={`flex-1 flex items-center justify-center gap-2 rounded-2xl border-2 py-3 text-sm font-semibold capitalize transition-all active:scale-95 ${
+                className={`focus-ring flex-1 flex items-center justify-center gap-2 rounded-2xl border-2 py-3 text-sm font-semibold capitalize transition-all active:scale-95 ${
                   vehicleType === type
                     ? 'border-primary bg-primary/10 text-primary'
                     : 'border-gray-100 text-gray-500'
@@ -196,7 +196,7 @@ export const DeliveryProfilePage = () => {
       <div className="px-5 mt-6">
         <button
           onClick={() => setLogoutSheetOpen(true)}
-          className="w-full flex items-center justify-center gap-2 text-danger text-sm font-semibold py-3"
+          className="focus-ring w-full flex items-center justify-center gap-2 text-danger text-sm font-semibold py-3"
         >
           <LogOut className="w-4 h-4" />
           Cerrar sesión

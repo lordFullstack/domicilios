@@ -23,7 +23,7 @@ export const OrdersPage = () => {
       <div className="px-5 pt-6 flex items-center gap-3 mb-4">
         <button
           onClick={() => navigate(ROUTES.CLIENT_HOME)}
-          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"
+          className="focus-ring w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>

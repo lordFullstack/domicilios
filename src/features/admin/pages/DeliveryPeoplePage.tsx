@@ -96,7 +96,7 @@ export const AdminDeliveryPeoplePage = () => {
               <button
                 key={opt.value}
                 onClick={() => setQuickFilter(opt.value)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                className={`focus-ring px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
                   quickFilter === opt.value ? 'bg-white text-secondary shadow-card' : 'text-gray-500'
                 }`}
               >

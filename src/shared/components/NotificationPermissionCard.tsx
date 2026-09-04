@@ -18,7 +18,7 @@ export const NotificationPermissionCard = () => {
       <button
         onClick={activate}
         disabled={subscribing}
-        className="text-sm font-semibold text-primary active:opacity-70"
+        className="focus-ring text-sm font-semibold text-primary active:opacity-70"
       >
         {subscribing ? 'Activando...' : 'Activar notificaciones'}
       </button>

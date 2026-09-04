@@ -30,7 +30,7 @@ export const RecentOrdersList = ({ orders }: RecentOrdersListProps) => {
         <h2 className="text-lg font-bold text-secondary">🕐 Actividad reciente</h2>
         <button
           onClick={() => navigate(ROUTES.ADMIN_ORDERS)}
-          className="text-sm font-semibold text-primary"
+          className="focus-ring text-sm font-semibold text-primary"
         >
           Ver todas →
         </button>
@@ -48,7 +48,7 @@ export const RecentOrdersList = ({ orders }: RecentOrdersListProps) => {
               <button
                 key={order.id}
                 onClick={() => navigate(ROUTES.ADMIN_ORDERS)}
-                className="border border-gray-100 rounded-2xl p-3 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
+                className="focus-ring border border-gray-100 rounded-2xl p-3 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
               >
                 <div className="min-w-0">
                   <p className="font-semibold text-sm text-secondary">

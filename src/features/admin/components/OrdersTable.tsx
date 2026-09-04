@@ -45,7 +45,7 @@ export const OrdersTable = ({ orders, usersById, restaurantsById, onOpenDetail }
             <td className="py-3 px-2 text-right">
               <button
                 onClick={() => onOpenDetail(order)}
-                className="text-xs font-semibold text-primary hover:underline"
+                className="focus-ring text-xs font-semibold text-primary hover:underline"
               >
                 Ver detalle
               </button>
