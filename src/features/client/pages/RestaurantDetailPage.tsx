@@ -18,6 +18,7 @@ import { ROUTES, PRODUCT_CATEGORIES } from '@/config/constants'
 import { Product } from '@/shared/types'
 import { RestaurantDetailSkeleton } from '../components/RestaurantDetailSkeleton'
 import { MenuProductCard } from '../components/MenuProductCard'
+import { FeaturedProductStrip } from '../components/FeaturedProductStrip'
 import { ProductDetailSheet } from '../components/ProductDetailSheet'
 import { CartFloatingBar } from '../components/CartFloatingBar'
 
@@ -38,7 +39,7 @@ export const RestaurantDetailPage = () => {
     fromCache: productsFromCache,
     cachedAt: productsCachedAt,
   } = useProducts(id)
-  const { cart, addItem, clear } = useCart()
+  const { cart, addItem, removeItem, updateQuantity, clear } = useCart()
   const { isFavorite, toggleFavorite } = useFavorites()
   const [favPending, setFavPending] = useState(false)
 
@@ -73,6 +74,13 @@ export const RestaurantDetailPage = () => {
   const filteredProducts = products.filter((p) => p.category === activeCategory)
   const restaurantIsOpen = restaurant?.status === 'open'
 
+  // No presentamos esto como "los más vendidos": el modelo actual no
+  // tiene una métrica de ventas. Por eso la etiqueta visual es "Recomendados".
+  const featuredProducts = useMemo(
+    () => products.filter((product) => product.available).slice(0, 3),
+    [products]
+  )
+
   const actuallyAdd = (product: Product, quantity: number) => {
     addItem(product.id, product.price, quantity)
     setDetailProduct(null)
@@ -90,6 +98,24 @@ export const RestaurantDetailPage = () => {
   }
 
   const handleQuickAdd = (product: Product) => handleAdd(product, 1)
+
+  const getProductQuantity = (productId: string) =>
+    cart.find((item) => item.productId === productId)?.quantity ?? 0
+
+  const handleIncrement = (product: Product) => {
+    handleAdd(product, 1)
+  }
+
+  const handleDecrement = (product: Product) => {
+    const currentQuantity = getProductQuantity(product.id)
+
+    if (currentQuantity <= 1) {
+      removeItem(product.id)
+      return
+    }
+
+    updateQuantity(product.id, currentQuantity - 1)
+  }
 
   const confirmSwitch = () => {
     clear()
@@ -214,44 +240,77 @@ export const RestaurantDetailPage = () => {
 
       {/* Menú */}
       <div className="px-5">
-        <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Menú</h2>
+        <div className="mb-4">
+          <h2 className="font-display text-lg font-bold text-secondary">
+            Menú
+          </h2>
+          <p className="mt-1 text-xs text-gray-500">
+            Elige tus favoritos y agrégalos directamente
+          </p>
+        </div>
 
         {productsLoading ? (
           <div className="flex flex-col gap-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-20 bg-gray-100 rounded-2xl animate-pulse" />
+              <div
+                key={i}
+                className="h-28 rounded-2xl bg-gray-100 animate-pulse"
+              />
             ))}
           </div>
         ) : products.length > 0 ? (
           <>
-            {/* Pestañas de categoría */}
-            <div className="flex gap-2 overflow-x-auto pb-3 mb-2 -mx-1 px-1 no-scrollbar">
-              {availableCategories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`focus-ring flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors min-h-[40px] ${
-                    activeCategory === cat
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-50 text-gray-500'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+            {/* Recomendados */}
+            <FeaturedProductStrip
+              products={featuredProducts}
+              restaurantIsOpen={restaurantIsOpen}
+              onOpenDetail={setDetailProduct}
+              onQuickAdd={handleQuickAdd}
+            />
+
+            {/* Categorías */}
+            <div className="sticky top-0 z-20 -mx-5 mb-5 bg-white/95 px-5 py-2 backdrop-blur">
+              <div className="no-scrollbar flex gap-2 overflow-x-auto">
+                {availableCategories.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setActiveCategory(cat)}
+                    className={`focus-ring min-h-10 flex-shrink-0 rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all ${
+                      activeCategory === cat
+                        ? 'bg-primary text-white shadow-sm'
+                        : 'bg-gray-50 text-gray-500'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              {filteredProducts.map((product) => (
-                <MenuProductCard
-                  key={product.id}
-                  product={product}
-                  restaurantIsOpen={restaurantIsOpen}
-                  onOpenDetail={setDetailProduct}
-                  onQuickAdd={handleQuickAdd}
-                />
-              ))}
-            </div>
+            {/* Productos */}
+            <section aria-labelledby="active-category-title">
+              <h3
+                id="active-category-title"
+                className="mb-3 font-display text-base font-bold text-secondary"
+              >
+                {activeCategory}
+              </h3>
+
+              <div className="flex flex-col gap-3">
+                {filteredProducts.map((product) => (
+                  <MenuProductCard
+                    key={product.id}
+                    product={product}
+                    restaurantIsOpen={restaurantIsOpen}
+                    quantity={getProductQuantity(product.id)}
+                    onOpenDetail={setDetailProduct}
+                    onIncrement={handleIncrement}
+                    onDecrement={handleDecrement}
+                  />
+                ))}
+              </div>
+            </section>
           </>
         ) : (
           <EmptyState
