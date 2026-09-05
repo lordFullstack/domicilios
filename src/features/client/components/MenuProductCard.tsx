@@ -30,7 +30,7 @@ export const MenuProductCard = ({
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
-        <p className="text-xs text-gray-400 truncate">{product.description}</p>
+        <p className="text-xs text-gray-500 truncate">{product.description}</p>
         <p className="text-sm font-bold text-primary mt-1">{formatCOP(product.price)}</p>
       </div>
       {canAdd ? (
@@ -53,7 +53,7 @@ export const MenuProductCard = ({
           <Plus className="w-4 h-4" />
         </span>
       ) : (
-        <span className="text-xs text-gray-400 flex-shrink-0">
+        <span className="text-xs text-gray-500 flex-shrink-0">
           {!product.available ? 'Agotado' : 'Cerrado'}
         </span>
       )}

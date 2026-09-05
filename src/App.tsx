@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from '@/features/auth/AuthContext'
-import { CartProvider } from '@/features/client/CartContext'
 import { Router } from '@/router'
 import { unlockNotificationAudio } from '@/shared/utils/notificationSound'
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
@@ -40,11 +39,9 @@ export const App = () => {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <CartProvider>
-            <ConnectionBanner />
-            <UpdatePrompt />
-            <Router />
-          </CartProvider>
+          <ConnectionBanner />
+          <UpdatePrompt />
+          <Router />
         </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>

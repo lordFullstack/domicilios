@@ -14,7 +14,7 @@ export const CancelOrderSheet = ({ open, cancelling, error, onClose, onConfirm }
     <p className="text-sm text-gray-500 mb-4">Esta acción no se puede deshacer.</p>
 
     {error && (
-      <div className="bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3 mb-4">{error}</div>
+      <div className="bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3 mb-4" role="alert">{error}</div>
     )}
 
     <div className="flex gap-3">

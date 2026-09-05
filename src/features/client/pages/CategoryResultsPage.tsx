@@ -21,7 +21,7 @@ export const CategoryResultsPage = () => {
       <div className="px-5 pt-6 pb-4 flex items-center gap-3">
         <button
           onClick={() => navigate(ROUTES.CLIENT_HOME)}
-          className="focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0"
+          className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0"
         >
           <ChevronLeft className="w-5 h-5 text-gray-600" />
         </button>
@@ -32,14 +32,14 @@ export const CategoryResultsPage = () => {
 
       <div className="px-5">
         {loading ? (
-          <p className="text-gray-400 text-sm text-center py-8">Buscando productos...</p>
+          <p className="text-gray-500 text-sm text-center py-8">Buscando productos...</p>
         ) : items.length > 0 ? (
           <div className="flex flex-col gap-3">
             {items.map((product) => (
               <button
                 key={product.id}
                 onClick={() => navigate(ROUTES.CLIENT_RESTAURANT.replace(':id', product.restaurant.id))}
-                className="focus-ring flex items-center gap-3 text-left rounded-2xl border border-gray-100 shadow-card p-3 active:scale-[0.98] transition-transform"
+                className="flex items-center gap-3 text-left rounded-2xl border border-gray-100 shadow-card p-3 active:scale-[0.98] transition-transform"
               >
                 <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                   {product.image_url ? (
@@ -50,7 +50,7 @@ export const CategoryResultsPage = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
-                  <p className="text-xs text-gray-400 truncate">{product.restaurant.name}</p>
+                  <p className="text-xs text-gray-500 truncate">{product.restaurant.name}</p>
                   <p className="text-sm font-bold text-primary mt-0.5">
                     ${product.price.toLocaleString('es-CO')}
                   </p>
@@ -66,7 +66,7 @@ export const CategoryResultsPage = () => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-400 text-sm text-center py-8">
+          <p className="text-gray-500 text-sm text-center py-8">
             No hay productos de {categoryInfo?.label.toLowerCase()} disponibles todavía
           </p>
         )}

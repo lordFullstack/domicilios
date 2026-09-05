@@ -78,11 +78,11 @@ export const AdminClientsPage = () => {
           className="w-full max-w-sm border border-gray-200 rounded-xl px-4 py-2 text-sm mb-6"
         />
 
-        {loading && <p className="text-gray-400 text-sm">Cargando clientes...</p>}
+        {loading && <p className="text-gray-500 text-sm">Cargando clientes...</p>}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && filteredClients.length === 0 && (
-          <p className="text-gray-400 text-sm text-center py-12 border border-gray-100 rounded-2xl bg-white">
+          <p className="text-gray-500 text-sm text-center py-12 border border-gray-100 rounded-2xl bg-white">
             {clients.length === 0 ? 'Todavía no hay clientes registrados.' : 'Ningún cliente coincide con esta búsqueda.'}
           </p>
         )}
@@ -106,7 +106,7 @@ export const AdminClientsPage = () => {
                       </div>
                       <div className="min-w-0">
                         <p className="font-semibold text-secondary truncate">{client.name}</p>
-                        <p className="text-xs text-gray-400 truncate">{client.email}</p>
+                        <p className="text-xs text-gray-500 truncate">{client.email}</p>
                       </div>
                     </div>
                     <div className="text-right flex-shrink-0">

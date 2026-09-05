@@ -20,7 +20,7 @@ export const DeliveryOrderCard = ({ order, onOpenDetail }: DeliveryOrderCardProp
       <span className="text-2xl flex-shrink-0">{restaurant?.image_url || '🏪'}</span>
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-sm text-secondary truncate">{restaurant?.name}</p>
-        <p className="text-xs text-gray-400 truncate">Entregar: {order.delivery_address}</p>
+        <p className="text-xs text-gray-500 truncate">Entregar: {order.delivery_address}</p>
       </div>
       <div className="text-right flex-shrink-0">
         <p className="font-display font-bold text-sm text-primary">{formatCOP(order.total)}</p>

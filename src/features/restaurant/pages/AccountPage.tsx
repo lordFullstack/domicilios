@@ -52,10 +52,10 @@ export const RestaurantAccountPage = () => {
 
       {/* Mi perfil (personal) — separado a propósito de los datos del negocio */}
       <div className="px-5 md:px-0 mb-6">
-        <h2 className="text-xs font-bold text-gray-400 tracking-wide mb-2">MI PERFIL</h2>
+        <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">MI PERFIL</h2>
         <div className="border border-gray-100 rounded-2xl p-4">
           <Input label="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
-          <p className="text-xs text-gray-400 mt-2">{user?.email}</p>
+          <p className="text-xs text-gray-500 mt-2">{user?.email}</p>
 
           {error && <p className="text-danger text-xs mt-2">{error}</p>}
 
@@ -71,7 +71,7 @@ export const RestaurantAccountPage = () => {
           viviendo en el Dashboard; acá solo hay un acceso directo con una
           vista previa real, para no duplicar esa lógica. */}
       <div className="px-5 md:px-0 mb-6">
-        <h2 className="text-xs font-bold text-gray-400 tracking-wide mb-2">MI NEGOCIO</h2>
+        <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">MI NEGOCIO</h2>
         <button
           onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}
           className="focus-ring w-full flex items-center gap-3 border border-gray-100 rounded-2xl p-4"
@@ -83,7 +83,7 @@ export const RestaurantAccountPage = () => {
             <p className="text-sm font-semibold text-secondary truncate">
               {loadingRestaurants ? 'Cargando...' : myRestaurant?.name || 'Configurar negocio'}
             </p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-500">
               {loadingRestaurants
                 ? ''
                 : myRestaurant
@@ -97,7 +97,7 @@ export const RestaurantAccountPage = () => {
 
       {/* Configuración */}
       <div className="px-5 md:px-0 mb-6">
-        <h2 className="text-xs font-bold text-gray-400 tracking-wide mb-2">CONFIGURACIÓN</h2>
+        <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">CONFIGURACIÓN</h2>
         <InstallAppCard />
         <NotificationPermissionCard />
       </div>

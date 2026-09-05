@@ -61,8 +61,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
     <>
       {/* Barra inferior — siempre en celular; en restaurante, solo hasta md.
           Glassmorphism sutil + safe-bottom + touch targets de 48px. */}
-      <nav
-        aria-label="Navegación principal"
+      <div
         className={`fixed bottom-0 left-0 right-0 glass shadow-bottom-sheet px-2 pt-1 safe-bottom z-40 ${
           isSidebarCapable ? 'md:hidden' : ''
         }`}
@@ -85,7 +84,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
                 />
                 <span
                   className={`text-xs font-medium ${
-                    isActive ? 'text-primary' : 'text-gray-400'
+                    isActive ? 'text-primary' : 'text-gray-500'
                   }`}
                 >
                   {label}
@@ -99,7 +98,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
             )
           })}
         </div>
-      </nav>
+      </div>
 
       {/* Barra lateral — solo restaurante, solo desde md hacia arriba */}
       {isSidebarCapable && (
@@ -118,8 +117,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
                 <button
                   key={path}
                   onClick={() => navigate(path)}
-                  aria-current={isActive ? 'page' : undefined}
-                  className={`focus-ring w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold mb-1 transition-colors ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold mb-1 transition-colors ${
                     isActive ? 'bg-primary/10 text-primary' : 'text-gray-500 hover:bg-gray-50'
                   }`}
                 >
@@ -133,11 +131,11 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
           <div className="px-3 pb-6">
             <div className="px-3 py-2 mb-1">
               <p className="text-xs font-semibold text-secondary truncate">{user?.name}</p>
-              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
             </div>
             <button
               onClick={() => setLogoutSheetOpen(true)}
-              className="focus-ring w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-danger hover:bg-red-50 transition-colors"
+              className="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-danger hover:bg-red-50 transition-colors"
             >
               Cerrar sesión
             </button>

@@ -67,7 +67,7 @@ export const OrderDetailPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-gray-400 text-sm">Cargando orden...</p>
+        <p className="text-gray-500 text-sm">Cargando orden...</p>
       </div>
     )
   }
@@ -75,7 +75,7 @@ export const OrderDetailPage = () => {
   if (!order) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8 text-center">
-        <p className="text-gray-400 text-sm mb-4">Orden no encontrada</p>
+        <p className="text-gray-500 text-sm mb-4">Orden no encontrada</p>
         <Button onClick={() => navigate(ROUTES.CLIENT_ORDERS)}>Volver a mis órdenes</Button>
       </div>
     )
@@ -160,7 +160,7 @@ export const OrderDetailPage = () => {
           <h1 className="font-display text-lg font-bold text-secondary">
             #{order.id.substring(0, 8).toUpperCase()}
           </h1>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-500">
             {formattedDate} · {formattedTime}
           </p>
         </div>
@@ -169,12 +169,12 @@ export const OrderDetailPage = () => {
       {/* Indicador de conexión — honesto: nunca simula tiempo real */}
       <div className="px-5 pb-1">
         {isOffline ? (
-          <p className="flex items-center gap-1.5 text-xs text-gray-400">
+          <p className="flex items-center gap-1.5 text-xs text-gray-500">
             <WifiOff className="w-3 h-3" />
             Sin conexión · mostrando el último estado conocido ({lastUpdateTime})
           </p>
         ) : (
-          <p className="flex items-center gap-1.5 text-xs text-gray-400">
+          <p className="flex items-center gap-1.5 text-xs text-gray-500">
             <Wifi className="w-3 h-3 text-success" />
             Actualizado en tiempo real
           </p>
@@ -186,7 +186,7 @@ export const OrderDetailPage = () => {
 
         {/* Tracker de estado */}
         {isCancelled ? (
-          <div className="bg-red-50 rounded-2xl p-6 text-center mb-4">
+          <div className="bg-red-50 rounded-2xl p-6 text-center mb-4" role="alert">
             <XCircle className="w-10 h-10 text-danger mx-auto mb-2" />
             <p className="font-display font-bold text-danger">Esta orden fue cancelada</p>
           </div>

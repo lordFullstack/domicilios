@@ -62,19 +62,19 @@ export const ClientDetailPanel = ({
             </div>
             <div className="min-w-0">
               <h3 className="font-display font-bold text-secondary truncate">{client.name}</h3>
-              <p className="text-xs text-gray-400 truncate">{client.email}</p>
+              <p className="text-xs text-gray-500 truncate">{client.email}</p>
             </div>
           </div>
-          <button onClick={onClose} aria-label="Cerrar" className="focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
+          <button onClick={onClose} aria-label="Cerrar" className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
             <X className="w-4 h-4 text-secondary" />
           </button>
         </div>
 
         <div className="p-6 space-y-5">
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">PERFIL</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">PERFIL</p>
             <p className="text-sm text-secondary">{client.phone || 'Sin teléfono registrado'}</p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-500">
               Miembro desde{' '}
               {new Date(client.created_at).toLocaleDateString('es-CO', { month: 'long', year: 'numeric' })}
             </p>
@@ -88,23 +88,23 @@ export const ClientDetailPanel = ({
           </div>
 
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-2">ACTIVIDAD</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">ACTIVIDAD</p>
             <div className="grid grid-cols-3 gap-2">
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-secondary">{stats.totalOrders}</p>
-                <p className="text-[11px] text-gray-400">Pedidos</p>
+                <p className="text-[11px] text-gray-500">Pedidos</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-secondary">{stats.delivered}</p>
-                <p className="text-[11px] text-gray-400">Entregados</p>
+                <p className="text-[11px] text-gray-500">Entregados</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-primary text-sm">{formatCOP(stats.totalSpent)}</p>
-                <p className="text-[11px] text-gray-400">Total gastado</p>
+                <p className="text-[11px] text-gray-500">Total gastado</p>
               </div>
             </div>
             {stats.lastOrder && (
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-gray-500 mt-2">
                 Último pedido: {new Date(stats.lastOrder.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' })}
               </p>
             )}
@@ -112,7 +112,7 @@ export const ClientDetailPanel = ({
 
           {stats.addresses.length > 0 && (
             <div>
-              <p className="text-xs font-bold text-gray-400 tracking-wide mb-2">
+              <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">
                 DIRECCIONES USADAS EN PEDIDOS
               </p>
               <div className="flex flex-col gap-1.5">
@@ -127,9 +127,9 @@ export const ClientDetailPanel = ({
           )}
 
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-2">PEDIDOS RECIENTES</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">PEDIDOS RECIENTES</p>
             {orders.length === 0 ? (
-              <p className="text-sm text-gray-400">Este cliente todavía no ha hecho pedidos.</p>
+              <p className="text-sm text-gray-500">Este cliente todavía no ha hecho pedidos.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {orders.slice(0, 8).map((order) => (
@@ -138,7 +138,7 @@ export const ClientDetailPanel = ({
                       <p className="text-xs font-semibold text-secondary">
                         #{order.id.substring(0, 8).toUpperCase()}
                       </p>
-                      <p className="text-xs text-gray-400 truncate">
+                      <p className="text-xs text-gray-500 truncate">
                         {restaurantsById.get(order.restaurant_id)?.name || 'Restaurante'}
                       </p>
                     </div>

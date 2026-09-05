@@ -14,7 +14,7 @@ interface RatingModalProps {
 const StarPicker = ({ value, onChange }: { value: number; onChange: (v: number) => void }) => (
   <div className="flex gap-1">
     {[1, 2, 3, 4, 5].map((n) => (
-      <button key={n} type="button" onClick={() => onChange(n)} className="focus-ring p-0.5">
+      <button key={n} type="button" onClick={() => onChange(n)} className="p-0.5">
         <Star
           className={`w-7 h-7 ${n <= value ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}`}
         />
@@ -46,7 +46,7 @@ export const RatingModal = ({
     <div className="fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center">
       <div className="bg-white rounded-t-3xl sm:rounded-2xl p-6 max-w-sm w-full">
         <h3 className="font-display font-bold text-lg text-secondary mb-1">¿Cómo estuvo tu pedido?</h3>
-        <p className="text-sm text-gray-400 mb-5">Tu opinión ayuda a otros clientes</p>
+        <p className="text-sm text-gray-500 mb-5">Tu opinión ayuda a otros clientes</p>
 
         <div className="mb-5">
           <p className="text-sm font-semibold text-secondary mb-2">{restaurantName}</p>

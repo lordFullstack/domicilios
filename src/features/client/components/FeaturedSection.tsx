@@ -31,7 +31,7 @@ export const FeaturedSection = ({ type, title }: FeaturedSectionProps) => {
             key={promo.id}
             onClick={() => handleClick(promo.restaurant_id)}
             disabled={!promo.restaurant_id}
-            className="focus-ring flex-shrink-0 w-64 text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
+            className="flex-shrink-0 w-64 text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
           >
             <div className="h-28 bg-primary/10 overflow-hidden flex items-center justify-center">
               {promo.image_url ? (
@@ -43,7 +43,7 @@ export const FeaturedSection = ({ type, title }: FeaturedSectionProps) => {
             <div className="p-3">
               <p className="font-semibold text-sm text-secondary truncate">{promo.title}</p>
               {promo.subtitle && (
-                <p className="text-xs text-gray-400 truncate mt-0.5">{promo.subtitle}</p>
+                <p className="text-xs text-gray-500 truncate mt-0.5">{promo.subtitle}</p>
               )}
             </div>
           </button>

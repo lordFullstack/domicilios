@@ -23,7 +23,7 @@ export const OrdersPage = () => {
       <div className="px-5 pt-6 flex items-center gap-3 mb-4">
         <button
           onClick={() => navigate(ROUTES.CLIENT_HOME)}
-          className="focus-ring w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"
+          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
@@ -42,7 +42,7 @@ export const OrdersPage = () => {
         <NotificationPermissionCard />
 
         {loading ? (
-          <p className="text-gray-400 text-sm text-center py-8">Cargando órdenes...</p>
+          <p className="text-gray-500 text-sm text-center py-8">Cargando órdenes...</p>
         ) : orders.length > 0 ? (
           <div className="flex flex-col gap-3">
             {orders.map((order) => (
@@ -57,7 +57,7 @@ export const OrdersPage = () => {
           <div className="text-center py-16">
             <p className="text-5xl mb-4">📭</p>
             <p className="font-display font-bold mb-1 text-secondary">No tienes órdenes</p>
-            <p className="text-sm text-gray-400 mb-6">Realiza tu primera orden ahora</p>
+            <p className="text-sm text-gray-500 mb-6">Realiza tu primera orden ahora</p>
             <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>
           </div>
         )}

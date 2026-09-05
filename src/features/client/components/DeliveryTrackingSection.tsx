@@ -39,7 +39,7 @@ export const DeliveryTrackingSection = ({ deliveryPerson, liveLocation }: Delive
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm text-secondary truncate">{deliveryPerson.name}</p>
           {deliveryPerson.vehicle_type && (
-            <p className="flex items-center gap-1 text-xs text-gray-400 capitalize">
+            <p className="flex items-center gap-1 text-xs text-gray-500 capitalize">
               <Bike className="w-3 h-3" />
               {deliveryPerson.vehicle_type}
               {deliveryPerson.vehicle_plate && ` · ${deliveryPerson.vehicle_plate}`}
@@ -62,7 +62,7 @@ export const DeliveryTrackingSection = ({ deliveryPerson, liveLocation }: Delive
       <DeliveryLiveMap lat={liveLocation.lat} lng={liveLocation.lng} updatedAt={liveLocation.updatedAt} />
     ) : (
       <div className="bg-gray-50 rounded-2xl p-6 text-center">
-        <p className="text-gray-400 text-xs">Esperando la ubicación del domiciliario...</p>
+        <p className="text-gray-500 text-xs">Esperando la ubicación del domiciliario...</p>
       </div>
     )}
   </div>

@@ -86,11 +86,11 @@ export const OrderDetailPanel = ({
             <h3 className="font-display font-bold text-lg text-secondary">
               #{order.id.substring(0, 8).toUpperCase()}
             </h3>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-500">
               Actualizado: {new Date(order.updated_at).toLocaleString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
             </p>
           </div>
-          <button onClick={onClose} aria-label="Cerrar" className="focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center">
+          <button onClick={onClose} aria-label="Cerrar" className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center">
             <X className="w-4 h-4 text-secondary" />
           </button>
         </div>
@@ -98,6 +98,7 @@ export const OrderDetailPanel = ({
         <div className="p-6 space-y-5">
           {message && (
             <div
+              role={message.error ? 'alert' : 'status'}
               className={`text-sm font-semibold rounded-2xl p-3 flex items-start gap-2 ${
                 message.error ? 'bg-red-50 text-danger' : 'bg-green-50 text-green-700'
               }`}
@@ -108,26 +109,26 @@ export const OrderDetailPanel = ({
           )}
 
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">RESTAURANTE</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">RESTAURANTE</p>
             <p className="text-sm font-semibold text-secondary">{restaurantName}</p>
           </div>
 
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">CLIENTE</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">CLIENTE</p>
             <p className="text-sm font-semibold text-secondary">{client?.name || 'Desconocido'}</p>
-            <p className="text-xs text-gray-400">{client?.email}</p>
+            <p className="text-xs text-gray-500">{client?.email}</p>
           </div>
 
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">ENTREGA</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">ENTREGA</p>
             <p className="text-sm text-secondary">{order.delivery_address}</p>
             {order.special_instructions && (
-              <p className="text-xs text-gray-400 italic mt-1">"{order.special_instructions}"</p>
+              <p className="text-xs text-gray-500 italic mt-1">"{order.special_instructions}"</p>
             )}
           </div>
 
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-2">PRODUCTOS</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">PRODUCTOS</p>
             <OrderItemsList orderId={order.id} />
             <div className="flex justify-between font-display font-bold text-secondary mt-2 pt-2 border-t border-gray-100">
               <span>Total</span>
@@ -136,7 +137,7 @@ export const OrderDetailPanel = ({
           </div>
 
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">PAGO</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">PAGO</p>
             <p className="text-sm text-secondary">
               {order.payment_method === PAYMENT_METHOD.CASH_ON_DELIVERY ? 'Efectivo/datáfono' : 'En línea'}
               {' · '}
@@ -145,7 +146,7 @@ export const OrderDetailPanel = ({
           </div>
 
           <div className="border-t border-gray-100 pt-5">
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-2">
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">
               INTERVENCIÓN MANUAL (ADMIN)
             </p>
 
@@ -178,7 +179,7 @@ export const OrderDetailPanel = ({
           </div>
 
           {confirmCancel ? (
-            <div className="bg-red-50 rounded-2xl p-4">
+            <div className="bg-red-50 rounded-2xl p-4" role="alert">
               <p className="text-sm font-semibold text-danger mb-3">
                 ¿Cancelar este pedido? Esta acción no se puede deshacer.
               </p>

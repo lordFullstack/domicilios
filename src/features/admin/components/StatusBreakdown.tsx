@@ -28,7 +28,7 @@ export const StatusBreakdown = ({ orders }: StatusBreakdownProps) => {
       <h2 className="text-lg font-bold text-secondary mb-4">📊 Pedidos por estado</h2>
       <div className="border border-gray-100 rounded-2xl p-5 space-y-3">
         {total === 0 ? (
-          <p className="text-sm text-gray-400 text-center">Todavía no hay pedidos en este rango.</p>
+          <p className="text-sm text-gray-500 text-center">Todavía no hay pedidos en este rango.</p>
         ) : (
           counts.map(({ status, count }) => {
             const meta = STATUS_META[status]

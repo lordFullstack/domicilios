@@ -136,14 +136,14 @@ export const ProductFormModal = ({
             </h2>
             <button
               onClick={onClose}
-              className="focus-ring w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 active:scale-90 transition-transform"
+              className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 active:scale-90 transition-transform"
             >
               &times;
             </button>
           </div>
 
           {error && (
-            <div className="mb-4 bg-red-50 rounded-2xl p-3">
+            <div className="mb-4 bg-red-50 rounded-2xl p-3" role="alert">
               <p className="text-danger text-sm font-semibold">{error}</p>
             </div>
           )}
@@ -186,12 +186,12 @@ export const ProductFormModal = ({
               </div>
 
               {!allowPhotoUpload && (
-                <p className="text-xs text-gray-400 mb-2">
+                <p className="text-xs text-gray-500 mb-2">
                   La subida de fotos solo la puede hacer el dueño del restaurante — acá se puede pegar un link o elegir un emoji.
                 </p>
               )}
 
-              <p className="text-xs text-gray-400 mb-2">O elige un icono rápido:</p>
+              <p className="text-xs text-gray-500 mb-2">O elige un icono rápido:</p>
               <ProductEmojiPicker value={imageUrl} onChange={setImageUrl} />
             </div>
 
@@ -212,7 +212,7 @@ export const ProductFormModal = ({
                     key={cat}
                     type="button"
                     onClick={() => setCategory(cat)}
-                    className={`focus-ring px-3 py-2 rounded-xl text-xs font-semibold border-2 transition-all active:scale-95 ${
+                    className={`px-3 py-2 rounded-xl text-xs font-semibold border-2 transition-all active:scale-95 ${
                       category === cat
                         ? 'border-primary bg-primary/10 text-primary'
                         : 'border-gray-100 text-gray-500'
@@ -251,7 +251,7 @@ export const ProductFormModal = ({
             <button
               type="button"
               onClick={() => setAvailable(!available)}
-              className="focus-ring w-full flex items-center justify-between bg-gray-50 rounded-2xl px-4 py-3"
+              className="w-full flex items-center justify-between bg-gray-50 rounded-2xl px-4 py-3"
             >
               <span className="text-sm font-semibold text-secondary">Disponible para la venta</span>
               <span

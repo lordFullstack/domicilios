@@ -54,7 +54,7 @@ export const AdminDashboard = () => {
         </div>
 
         {loading ? (
-          <p className="text-gray-400 text-sm text-center py-12">Cargando estadísticas...</p>
+          <p className="text-gray-500 text-sm text-center py-12">Cargando estadísticas...</p>
         ) : (
           <>
             <DashboardFilters

@@ -37,7 +37,7 @@ export const RestaurantOrdersPage = () => {
       <div className="px-5 pt-6 pb-4 flex items-center gap-3 md:max-w-4xl md:mx-auto md:px-0 md:pt-8">
         <button
           onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}
-          className="focus-ring w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center md:hidden"
+          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center md:hidden"
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
@@ -46,20 +46,20 @@ export const RestaurantOrdersPage = () => {
 
       <div className="px-5 md:max-w-4xl md:mx-auto md:px-0">
         {myOrders.length === 0 ? (
-          <p className="text-gray-400 text-sm text-center py-16">Aún no hay órdenes registradas</p>
+          <p className="text-gray-500 text-sm text-center py-16">Aún no hay órdenes registradas</p>
         ) : (
           <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
             {myOrders.map((order) => (
               <div key={order.id} className="border border-gray-100 rounded-2xl p-3">
                 <button
                   onClick={() => setExpandedId(expandedId === order.id ? null : order.id)}
-                  className="focus-ring w-full flex justify-between items-center text-left"
+                  className="w-full flex justify-between items-center text-left"
                 >
                   <div className="min-w-0">
                     <p className="font-semibold text-sm text-secondary">
                       #{order.id.substring(0, 8).toUpperCase()}
                     </p>
-                    <p className="text-xs text-gray-400 truncate">{order.delivery_address}</p>
+                    <p className="text-xs text-gray-500 truncate">{order.delivery_address}</p>
                     <p className="text-xs text-gray-300">
                       {new Date(order.created_at).toLocaleDateString('es-CO', {
                         day: 'numeric',

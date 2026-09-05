@@ -71,7 +71,7 @@ export const AdminPromotionsPage = () => {
           Banners y destacados que ven los clientes en Inicio
         </p>
 
-        {loading && <p className="text-gray-400 text-sm">Cargando promociones...</p>}
+        {loading && <p className="text-gray-500 text-sm">Cargando promociones...</p>}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && (
@@ -83,7 +83,7 @@ export const AdminPromotionsPage = () => {
                     <span className="text-xs font-semibold text-primary">{TYPE_LABELS[promo.type]}</span>
                     <p className="font-display font-bold text-secondary truncate">{promo.title}</p>
                     {promo.subtitle && (
-                      <p className="text-xs text-gray-400 truncate">{promo.subtitle}</p>
+                      <p className="text-xs text-gray-500 truncate">{promo.subtitle}</p>
                     )}
                   </div>
                   <span
@@ -106,7 +106,7 @@ export const AdminPromotionsPage = () => {
                 )}
 
                 {(promo.starts_at || promo.ends_at) && (
-                  <p className="text-xs text-gray-400 mb-3">
+                  <p className="text-xs text-gray-500 mb-3">
                     {promo.starts_at && `Desde ${new Date(promo.starts_at).toLocaleDateString('es-CO')}`}
                     {promo.starts_at && promo.ends_at && ' · '}
                     {promo.ends_at && `Hasta ${new Date(promo.ends_at).toLocaleDateString('es-CO')}`}
@@ -132,7 +132,7 @@ export const AdminPromotionsPage = () => {
               </Card>
             ))}
             {promotions.length === 0 && (
-              <p className="text-gray-400 text-sm col-span-2 text-center py-8">
+              <p className="text-gray-500 text-sm col-span-2 text-center py-8">
                 No hay promociones todavía. Crea la primera con "+ Nueva promoción".
               </p>
             )}

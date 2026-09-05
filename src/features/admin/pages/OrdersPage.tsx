@@ -59,7 +59,7 @@ export const AdminOrdersPage = () => {
           </p>
         )}
 
-        {loading && <p className="text-gray-400 text-sm">Cargando pedidos...</p>}
+        {loading && <p className="text-gray-500 text-sm">Cargando pedidos...</p>}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && (
@@ -77,7 +77,7 @@ export const AdminOrdersPage = () => {
             />
 
             {orders.length === 0 ? (
-              <p className="text-gray-400 text-sm text-center py-12 border border-gray-100 rounded-2xl bg-white">
+              <p className="text-gray-500 text-sm text-center py-12 border border-gray-100 rounded-2xl bg-white">
                 {allOrders.length === 0 ? 'Todavía no hay pedidos.' : 'Ningún pedido coincide con estos filtros.'}
               </p>
             ) : (

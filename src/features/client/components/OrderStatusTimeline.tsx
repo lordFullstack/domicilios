@@ -34,7 +34,7 @@ export const OrderStatusTimeline = ({ status }: OrderStatusTimelineProps) => {
                 >
                   <OrderStatusIcon
                     status={step.status}
-                    className={`w-4 h-4 ${isCompleted ? 'text-white' : 'text-gray-400'}`}
+                    className={`w-4 h-4 ${isCompleted ? 'text-white' : 'text-gray-500'}`}
                   />
                 </div>
                 {!isLast && (
@@ -47,7 +47,7 @@ export const OrderStatusTimeline = ({ status }: OrderStatusTimelineProps) => {
               </div>
               <p
                 className={`text-sm pb-5 ${
-                  isCompleted ? 'font-semibold text-secondary' : 'text-gray-400'
+                  isCompleted ? 'font-semibold text-secondary' : 'text-gray-500'
                 }`}
               >
                 {step.label}

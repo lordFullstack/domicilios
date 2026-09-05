@@ -71,7 +71,7 @@ export const AdminReportsPage = () => {
         </div>
 
         {loading ? (
-          <p className="text-gray-400 text-sm text-center py-12">Cargando reportes...</p>
+          <p className="text-gray-500 text-sm text-center py-12">Cargando reportes...</p>
         ) : (
           <>
             <DashboardFilters
@@ -111,7 +111,7 @@ export const AdminReportsPage = () => {
               </div>
             </div>
 
-            <div className="mt-8 text-xs text-gray-400 space-y-1">
+            <div className="mt-8 text-xs text-gray-500 space-y-1">
               <p>
                 <strong className="text-gray-500">No disponibles</strong> — no existen en el backend, no se
                 fabricaron: descuentos aplicados, comisión de plataforma, costo de domicilio.

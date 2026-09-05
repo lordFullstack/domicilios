@@ -36,7 +36,7 @@ export const PromoBanner = () => {
       <button
         onClick={handleClick}
         disabled={!current.restaurant_id}
-        className="focus-ring w-full text-left rounded-2xl overflow-hidden relative bg-primary/10 active:scale-[0.98] transition-transform"
+        className="w-full text-left rounded-2xl overflow-hidden relative bg-primary/10 active:scale-[0.98] transition-transform"
       >
         {current.image_url ? (
           <div className="h-28 bg-cover bg-center" style={{ backgroundImage: `url(${current.image_url})` }}>

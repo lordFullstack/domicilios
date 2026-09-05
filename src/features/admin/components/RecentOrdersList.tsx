@@ -30,14 +30,14 @@ export const RecentOrdersList = ({ orders }: RecentOrdersListProps) => {
         <h2 className="text-lg font-bold text-secondary">🕐 Actividad reciente</h2>
         <button
           onClick={() => navigate(ROUTES.ADMIN_ORDERS)}
-          className="focus-ring text-sm font-semibold text-primary"
+          className="text-sm font-semibold text-primary"
         >
           Ver todas →
         </button>
       </div>
 
       {recent.length === 0 ? (
-        <p className="text-gray-400 text-sm text-center py-8 border border-gray-100 rounded-2xl">
+        <p className="text-gray-500 text-sm text-center py-8 border border-gray-100 rounded-2xl">
           Todavía no hay pedidos.
         </p>
       ) : (
@@ -48,13 +48,13 @@ export const RecentOrdersList = ({ orders }: RecentOrdersListProps) => {
               <button
                 key={order.id}
                 onClick={() => navigate(ROUTES.ADMIN_ORDERS)}
-                className="focus-ring border border-gray-100 rounded-2xl p-3 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
+                className="border border-gray-100 rounded-2xl p-3 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
               >
                 <div className="min-w-0">
                   <p className="font-semibold text-sm text-secondary">
                     #{order.id.substring(0, 8).toUpperCase()}
                   </p>
-                  <p className="text-xs text-gray-400 truncate">{order.delivery_address}</p>
+                  <p className="text-xs text-gray-500 truncate">{order.delivery_address}</p>
                 </div>
                 <div className="text-right flex-shrink-0 ml-2">
                   <p className="font-semibold text-sm text-secondary">{formatCOP(order.total)}</p>

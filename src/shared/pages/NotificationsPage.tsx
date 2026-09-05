@@ -74,9 +74,9 @@ export const NotificationsPage = () => {
       </div>
 
       {loading ? (
-        <p className="text-center text-gray-400 text-sm py-12">Cargando...</p>
+        <p className="text-center text-gray-500 text-sm py-12">Cargando...</p>
       ) : visible.length === 0 ? (
-        <p className="text-center text-gray-400 text-sm py-12 px-5">
+        <p className="text-center text-gray-500 text-sm py-12 px-5">
           {tab === 'unread' ? 'No tienes notificaciones sin leer.' : 'Todavía no tienes notificaciones.'}
         </p>
       ) : (

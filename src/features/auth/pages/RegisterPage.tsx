@@ -6,6 +6,7 @@ import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 import { UserRole } from '@/shared/types'
+import { getAuthErrorMessage } from '../utils/authErrors'
 
 const ROUTE_BY_ROLE: Record<string, string> = {
   [USER_ROLES.CLIENT]: ROUTES.CLIENT_HOME,
@@ -35,8 +36,8 @@ export const RegisterPage = () => {
     try {
       await register(email, password, name, role)
       navigate(ROUTE_BY_ROLE[role] || ROUTES.CLIENT_HOME)
-    } catch (err: any) {
-      setError(err.message || 'Error al registrarse')
+    } catch (err) {
+      setError(getAuthErrorMessage(err, 'No pudimos crear tu cuenta. Intenta de nuevo.'))
     } finally {
       setLoading(false)
     }
@@ -51,11 +52,11 @@ export const RegisterPage = () => {
         <h1 className="font-display text-2xl font-bold text-secondary text-center">
           Crea tu cuenta
         </h1>
-        <p className="text-gray-400 text-sm mt-1">Únete a Domicilios Riohacha</p>
+        <p className="text-gray-500 text-sm mt-1">Únete a Domicilios Riohacha</p>
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-2xl mb-4">
+        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-2xl mb-4" role="alert">
           {error}
         </div>
       )}
@@ -86,10 +87,11 @@ export const RegisterPage = () => {
         />
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="register-role" className="block text-sm font-medium text-gray-700 mb-2">
             Tipo de cuenta
           </label>
           <select
+            id="register-role"
             value={role}
             onChange={(e) => setRole(e.target.value as UserRole)}
             className="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-primary"
@@ -105,7 +107,7 @@ export const RegisterPage = () => {
         </Button>
       </form>
 
-      <p className="text-center text-sm text-gray-400 mt-6">
+      <p className="text-center text-sm text-gray-500 mt-6">
         ¿Ya tienes cuenta?{' '}
         <a href={ROUTES.LOGIN} className="text-primary font-semibold">
           Inicia sesión

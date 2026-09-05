@@ -5,6 +5,7 @@ import { useAuth } from '@/shared/hooks/useAuth'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
 import { ROUTES, USER_ROLES } from '@/config/constants'
+import { getAuthErrorMessage } from '../utils/authErrors'
 
 const ROUTE_BY_ROLE: Record<string, string> = {
   [USER_ROLES.CLIENT]: ROUTES.CLIENT_HOME,
@@ -29,8 +30,8 @@ export const LoginPage = () => {
     try {
       const profile = await login(email, password)
       navigate(ROUTE_BY_ROLE[profile?.role || ''] || ROUTES.CLIENT_HOME)
-    } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión')
+    } catch (err) {
+      setError(getAuthErrorMessage(err, 'No pudimos iniciar sesión. Intenta de nuevo.'))
     } finally {
       setLoading(false)
     }
@@ -45,11 +46,11 @@ export const LoginPage = () => {
         <h1 className="font-display text-2xl font-bold text-secondary text-center">
           Domicilios Riohacha
         </h1>
-        <p className="text-gray-400 text-sm mt-1">Tu comida favorita, en minutos</p>
+        <p className="text-gray-500 text-sm mt-1">Tu comida favorita, en minutos</p>
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-2xl mb-4">
+        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-2xl mb-4" role="alert">
           {error}
         </div>
       )}
@@ -71,18 +72,17 @@ export const LoginPage = () => {
           placeholder="••••••••"
           required
         />
+        <div className="text-right -mt-2">
+          <a href={ROUTES.FORGOT_PASSWORD} className="text-xs font-semibold text-primary">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
         <Button type="submit" fullWidth size="lg" loading={loading} className="mt-2">
           Iniciar sesión
         </Button>
       </form>
 
-      <p className="text-center text-sm mt-4">
-        <a href={ROUTES.FORGOT_PASSWORD} className="text-gray-400">
-          ¿Olvidaste tu contraseña?
-        </a>
-      </p>
-
-      <p className="text-center text-sm text-gray-400 mt-2">
+      <p className="text-center text-sm text-gray-500 mt-6">
         ¿No tienes cuenta?{' '}
         <a href={ROUTES.REGISTER} className="text-primary font-semibold">
           Regístrate aquí

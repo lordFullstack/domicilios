@@ -41,7 +41,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <div>
             <span className="text-5xl mb-4 block">😕</span>
             <h1 className="font-display font-bold text-lg text-secondary mb-2">Algo salió mal</h1>
-            <p className="text-sm text-gray-400 mb-6">
+            <p className="text-sm text-gray-500 mb-6">
               Estamos intentando recuperar la aplicación.
             </p>
             <Button onClick={this.handleRetry}>Reintentar</Button>

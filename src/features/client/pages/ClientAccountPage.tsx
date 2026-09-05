@@ -50,10 +50,10 @@ export const ClientAccountPage = () => {
 
       {/* Mi perfil */}
       <div className="px-5 mb-6">
-        <h2 className="text-xs font-bold text-gray-400 tracking-wide mb-2">MI PERFIL</h2>
+        <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">MI PERFIL</h2>
         <div className="border border-gray-100 rounded-2xl p-4">
           <Input label="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
-          <p className="text-xs text-gray-400 mt-2">{user?.email}</p>
+          <p className="text-xs text-gray-500 mt-2">{user?.email}</p>
 
           {error && <p className="text-danger text-xs mt-2">{error}</p>}
 
@@ -67,7 +67,7 @@ export const ClientAccountPage = () => {
 
       {/* Configuración */}
       <div className="px-5 mb-6">
-        <h2 className="text-xs font-bold text-gray-400 tracking-wide mb-2">CONFIGURACIÓN</h2>
+        <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">CONFIGURACIÓN</h2>
         <InstallAppCard />
         <NotificationPermissionCard />
 
@@ -76,7 +76,7 @@ export const ClientAccountPage = () => {
           className="focus-ring w-full flex items-center justify-between border border-gray-100 rounded-2xl p-4 mt-2"
         >
           <span className="flex items-center gap-2 text-sm font-semibold text-secondary">
-            <Bell className="w-4 h-4 text-gray-400" />
+            <Bell className="w-4 h-4 text-gray-500" />
             Mis pedidos
           </span>
           <ChevronRight className="w-4 h-4 text-gray-300" />

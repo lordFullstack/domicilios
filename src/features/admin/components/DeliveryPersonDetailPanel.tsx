@@ -64,17 +64,17 @@ export const DeliveryPersonDetailPanel = ({
             </div>
             <div className="min-w-0">
               <h3 className="font-display font-bold text-secondary truncate">{deliveryPerson.name}</h3>
-              <p className="text-xs text-gray-400 truncate">{deliveryPerson.email}</p>
+              <p className="text-xs text-gray-500 truncate">{deliveryPerson.email}</p>
             </div>
           </div>
-          <button onClick={onClose} aria-label="Cerrar" className="focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
+          <button onClick={onClose} aria-label="Cerrar" className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
             <X className="w-4 h-4 text-secondary" />
           </button>
         </div>
 
         <div className="p-6 space-y-5">
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">PERFIL</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">PERFIL</p>
             <div className="flex items-center gap-2 text-sm text-secondary mb-1">
               {deliveryPerson.phone && (
                 <a href={`tel:${deliveryPerson.phone}`} className="flex items-center gap-1 text-primary font-semibold">
@@ -93,7 +93,7 @@ export const DeliveryPersonDetailPanel = ({
                 {deliveryPerson.rating_avg?.toFixed(1)} ({deliveryPerson.rating_count} calificaciones)
               </p>
             ) : (
-              <p className="text-xs text-gray-400 mt-1">Todavía sin calificaciones</p>
+              <p className="text-xs text-gray-500 mt-1">Todavía sin calificaciones</p>
             )}
             <span
               className={`inline-block mt-2 px-2 py-0.5 rounded-full text-xs font-semibold ${
@@ -105,26 +105,26 @@ export const DeliveryPersonDetailPanel = ({
           </div>
 
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-2">MÉTRICAS</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">MÉTRICAS</p>
             <div className="grid grid-cols-3 gap-2">
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-secondary">{stats.totalDeliveries}</p>
-                <p className="text-[11px] text-gray-400">Entregas</p>
+                <p className="text-[11px] text-gray-500">Entregas</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-warning">{stats.activeOrders.length}</p>
-                <p className="text-[11px] text-gray-400">En camino</p>
+                <p className="text-[11px] text-gray-500">En camino</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-primary text-sm">{formatCOP(stats.deliveredValue)}</p>
-                <p className="text-[11px] text-gray-400">Valor entregado</p>
+                <p className="text-[11px] text-gray-500">Valor entregado</p>
               </div>
             </div>
           </div>
 
           {stats.activeOrders.length > 0 && (
             <div>
-              <p className="text-xs font-bold text-gray-400 tracking-wide mb-2">ENTREGA EN CURSO</p>
+              <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">ENTREGA EN CURSO</p>
               {activeOrderWithLocation ? (
                 <DeliveryLiveMap
                   lat={activeOrderWithLocation.current_lat!}
@@ -134,16 +134,16 @@ export const DeliveryPersonDetailPanel = ({
               ) : (
                 <div className="bg-gray-50 rounded-2xl p-4 text-center flex items-center justify-center gap-2">
                   <MapPin className="w-4 h-4 text-gray-300" />
-                  <p className="text-xs text-gray-400">Sin ubicación publicada todavía</p>
+                  <p className="text-xs text-gray-500">Sin ubicación publicada todavía</p>
                 </div>
               )}
             </div>
           )}
 
           <div>
-            <p className="text-xs font-bold text-gray-400 tracking-wide mb-2">PEDIDOS ASIGNADOS</p>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">PEDIDOS ASIGNADOS</p>
             {orders.length === 0 ? (
-              <p className="text-sm text-gray-400">Todavía no tiene pedidos asignados.</p>
+              <p className="text-sm text-gray-500">Todavía no tiene pedidos asignados.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {orders.slice(0, 8).map((order) => (
@@ -152,7 +152,7 @@ export const DeliveryPersonDetailPanel = ({
                       <p className="text-xs font-semibold text-secondary">
                         #{order.id.substring(0, 8).toUpperCase()}
                       </p>
-                      <p className="text-xs text-gray-400 truncate">
+                      <p className="text-xs text-gray-500 truncate">
                         {restaurantsById.get(order.restaurant_id)?.name || 'Restaurante'}
                       </p>
                     </div>

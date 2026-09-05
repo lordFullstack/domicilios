@@ -15,7 +15,7 @@ export const RestaurantsCardList = ({ restaurants, onEdit, onToggleApproval }: R
         <div className="flex items-start justify-between mb-2">
           <div>
             <p className="font-display font-bold text-secondary">{r.name}</p>
-            <p className="text-xs text-gray-400">{r.category} · {r.address}</p>
+            <p className="text-xs text-gray-500">{r.category} · {r.address}</p>
           </div>
           <div className="flex flex-col items-end gap-1">
             <span

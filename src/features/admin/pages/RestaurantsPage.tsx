@@ -53,7 +53,7 @@ export const AdminRestaurantsPage = () => {
           {filteredRestaurants.length} de {restaurants.length} restaurante(s)
         </p>
 
-        {loading && <p className="text-gray-400 text-sm">Cargando restaurantes...</p>}
+        {loading && <p className="text-gray-500 text-sm">Cargando restaurantes...</p>}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && (
@@ -70,7 +70,7 @@ export const AdminRestaurantsPage = () => {
             />
 
             {filteredRestaurants.length === 0 ? (
-              <p className="text-gray-400 text-sm text-center py-12 border border-gray-100 rounded-2xl">
+              <p className="text-gray-500 text-sm text-center py-12 border border-gray-100 rounded-2xl">
                 {restaurants.length === 0
                   ? 'No hay restaurantes registrados todavía.'
                   : 'Ningún restaurante coincide con estos filtros.'}

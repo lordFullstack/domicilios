@@ -24,7 +24,7 @@ export const HomeHeader = () => {
           <MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" />
           <span className="text-xs text-gray-500">Entregar en</span>
           <span className="text-xs font-semibold text-secondary">{FIXED_LOCATION}</span>
-          <ChevronDown className="w-3 h-3 text-gray-400" />
+          <ChevronDown className="w-3 h-3 text-gray-500" />
         </button>
         <NotificationBell />
       </div>

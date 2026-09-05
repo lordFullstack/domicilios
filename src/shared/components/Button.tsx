@@ -23,8 +23,8 @@ export const Button = ({
   const variants = {
     primary: 'bg-primary text-white hover:bg-primary-dark active:scale-[0.97] disabled:bg-gray-300',
     secondary: 'bg-secondary text-white hover:bg-secondary/90 active:scale-[0.97] disabled:bg-gray-300',
-    outline: 'border-2 border-primary text-primary hover:bg-primary/5 active:scale-[0.97] disabled:border-gray-300 disabled:text-gray-400',
-    ghost: 'text-primary hover:bg-primary/5 active:scale-[0.97] disabled:text-gray-400',
+    outline: 'border-2 border-primary text-primary hover:bg-primary/5 active:scale-[0.97] disabled:border-gray-300 disabled:text-gray-500',
+    ghost: 'text-primary hover:bg-primary/5 active:scale-[0.97] disabled:text-gray-500',
   }
 
   // min-h-[48px] en md/lg para respetar el área táctil mínima (~48px);

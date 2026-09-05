@@ -9,7 +9,7 @@ interface RestaurantsTableProps {
 export const RestaurantsTable = ({ restaurants, onEdit, onToggleApproval }: RestaurantsTableProps) => (
   <table className="w-full text-sm">
     <thead>
-      <tr className="text-left text-gray-400 border-b border-gray-100">
+      <tr className="text-left text-gray-500 border-b border-gray-100">
         <th className="font-medium py-3 px-2">Restaurante</th>
         <th className="font-medium py-3 px-2">Categoría</th>
         <th className="font-medium py-3 px-2">Estado</th>
@@ -22,7 +22,7 @@ export const RestaurantsTable = ({ restaurants, onEdit, onToggleApproval }: Rest
         <tr key={r.id} className="border-b border-gray-50 hover:bg-gray-50">
           <td className="py-3 px-2">
             <p className="font-semibold text-secondary">{r.name}</p>
-            <p className="text-xs text-gray-400">{r.address}</p>
+            <p className="text-xs text-gray-500">{r.address}</p>
           </td>
           <td className="py-3 px-2 text-gray-500">{r.category}</td>
           <td className="py-3 px-2">
@@ -47,13 +47,13 @@ export const RestaurantsTable = ({ restaurants, onEdit, onToggleApproval }: Rest
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => onEdit(r)}
-                className="focus-ring text-xs font-semibold text-primary hover:underline"
+                className="text-xs font-semibold text-primary hover:underline"
               >
                 Editar
               </button>
               <button
                 onClick={() => onToggleApproval(r)}
-                className="focus-ring text-xs font-semibold text-gray-500 hover:underline"
+                className="text-xs font-semibold text-gray-500 hover:underline"
               >
                 {r.approved ? 'Suspender' : 'Aprobar'}
               </button>

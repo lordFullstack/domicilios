@@ -132,7 +132,7 @@ export const RestaurantDetailPage = () => {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center px-6">
         <div className="text-center">
-          <p className="text-gray-400 text-sm mb-4">Restaurante no encontrado</p>
+          <p className="text-gray-500 text-sm mb-4">Restaurante no encontrado</p>
           <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>
         </div>
       </div>
@@ -147,7 +147,7 @@ export const RestaurantDetailPage = () => {
         <div className="text-center">
           <p className="text-4xl mb-3">⛔</p>
           <p className="font-display font-bold text-secondary mb-1">Restaurante no disponible</p>
-          <p className="text-gray-400 text-sm mb-4">
+          <p className="text-gray-500 text-sm mb-4">
             Este restaurante está temporalmente suspendido y no puede recibir pedidos.
           </p>
           <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>
@@ -206,7 +206,7 @@ export const RestaurantDetailPage = () => {
             {restaurantIsOpen ? '🟢 Abierto' : '🔴 Cerrado'}
           </Badge>
         </div>
-        <p className="text-xs text-gray-400 mb-4">{restaurant.description}</p>
+        <p className="text-xs text-gray-500 mb-4">{restaurant.description}</p>
         {(restaurantFromCache || productsFromCache) && (
           <OfflineDataBadge cachedAt={Math.max(restaurantCachedAt || 0, productsCachedAt || 0) || null} />
         )}

@@ -37,6 +37,7 @@ export const RestaurantFilters = ({
     <select
       value={category}
       onChange={(e) => onCategoryChange(e.target.value)}
+      aria-label="Filtrar por categoría"
       className="border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-secondary bg-white"
     >
       <option value="all">Todas las categorías</option>
@@ -50,6 +51,7 @@ export const RestaurantFilters = ({
     <select
       value={status}
       onChange={(e) => onStatusChange(e.target.value as StatusFilter)}
+      aria-label="Filtrar por estado"
       className="border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-secondary bg-white"
     >
       <option value="all">Abierto y cerrado</option>
@@ -60,6 +62,7 @@ export const RestaurantFilters = ({
     <select
       value={approval}
       onChange={(e) => onApprovalChange(e.target.value as ApprovalFilter)}
+      aria-label="Filtrar por aprobación"
       className="border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-secondary bg-white"
     >
       <option value="all">Aprobado y suspendido</option>

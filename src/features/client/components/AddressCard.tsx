@@ -35,7 +35,7 @@ export const AddressCard = ({ draft, onEdit }: AddressCardProps) => {
           {draft.street}
           {draft.complement ? `, ${draft.complement}` : ''}
         </p>
-        <p className="text-xs text-gray-400">Riohacha, La Guajira</p>
+        <p className="text-xs text-gray-500">Riohacha, La Guajira</p>
       </div>
       <span className="flex items-center gap-0.5 text-xs font-semibold text-primary flex-shrink-0">
         Cambiar <ChevronRight className="w-3 h-3" />

@@ -14,7 +14,7 @@ export const InstallAppCard = () => {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-secondary">Instala la app</p>
-        <p className="text-xs text-gray-400">Acceso más rápido, desde tu pantalla de inicio</p>
+        <p className="text-xs text-gray-500">Acceso más rápido, desde tu pantalla de inicio</p>
       </div>
       <Button size="sm" onClick={promptInstall} className="flex-shrink-0">
         Instalar

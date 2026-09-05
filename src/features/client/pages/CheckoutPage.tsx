@@ -47,7 +47,7 @@ export const CheckoutPage = () => {
       <div className="min-h-screen bg-white max-w-md mx-auto flex flex-col items-center justify-center px-8 text-center">
         <span className="text-5xl mb-4">🛒</span>
         <p className="font-display font-bold mb-1 text-secondary">Tu carrito está vacío</p>
-        <p className="text-sm text-gray-400 mb-6">No hay productos para ordenar</p>
+        <p className="text-sm text-gray-500 mb-6">No hay productos para ordenar</p>
         <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>
       </div>
     )
@@ -138,18 +138,18 @@ export const CheckoutPage = () => {
 
       <form onSubmit={handleSubmit} className="px-5 flex flex-col gap-5">
         {error && (
-          <div className="bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3">{error}</div>
+          <div className="bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3" role="alert">{error}</div>
         )}
 
         {/* ENTREGA */}
         <div>
-          <h2 className="text-xs font-bold text-gray-400 tracking-wide mb-2">ENTREGA</h2>
+          <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">ENTREGA</h2>
           <AddressCard draft={address} onEdit={() => setAddressSheetOpen(true)} />
         </div>
 
         {/* MÉTODO */}
         <div>
-          <h2 className="text-xs font-bold text-gray-400 tracking-wide mb-2">MÉTODO DE PAGO</h2>
+          <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">MÉTODO DE PAGO</h2>
           <div className="flex flex-col gap-2">
             <button
               type="button"
@@ -165,7 +165,7 @@ export const CheckoutPage = () => {
               </div>
               <div className="flex-1">
                 <p className="text-sm font-semibold text-secondary">Efectivo o datáfono</p>
-                <p className="text-xs text-gray-400">Pagas al recibir tu pedido</p>
+                <p className="text-xs text-gray-500">Pagas al recibir tu pedido</p>
               </div>
               <div
                 className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${
@@ -178,11 +178,11 @@ export const CheckoutPage = () => {
 
             <div className="flex items-center gap-3 border border-gray-100 rounded-2xl p-3 opacity-50">
               <div className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
-                <CreditCard className="w-4 h-4 text-gray-400" />
+                <CreditCard className="w-4 h-4 text-gray-500" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-gray-400">Pagar en línea</p>
-                <p className="text-xs text-gray-400">Tarjeta, PSE, Nequi</p>
+                <p className="text-sm font-semibold text-gray-500">Pagar en línea</p>
+                <p className="text-xs text-gray-500">Tarjeta, PSE, Nequi</p>
               </div>
               <Badge variant="default">Próximamente</Badge>
             </div>
@@ -191,7 +191,7 @@ export const CheckoutPage = () => {
 
         {/* RESUMEN */}
         <div>
-          <h2 className="text-xs font-bold text-gray-400 tracking-wide mb-2">RESUMEN</h2>
+          <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">RESUMEN</h2>
           <div className="border border-gray-100 rounded-2xl p-4">
             <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
               <span className="text-xl">{restaurant?.image_url}</span>
@@ -217,7 +217,7 @@ export const CheckoutPage = () => {
           </div>
         </div>
 
-        <p className="text-xs text-gray-400 text-center px-4">
+        <p className="text-xs text-gray-500 text-center px-4">
           Tu pedido será procesado inmediatamente. El restaurante y el domiciliario recibirán la notificación.
         </p>
       </form>
@@ -225,7 +225,7 @@ export const CheckoutPage = () => {
       {/* CTA fijo abajo, con el total siempre visible */}
       <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 px-5 pt-3 pb-5 safe-bottom">
         {isOffline && (
-          <div className="flex items-center gap-2 bg-red-50 text-danger text-xs font-semibold rounded-xl p-2.5 mb-3">
+          <div className="flex items-center gap-2 bg-red-50 text-danger text-xs font-semibold rounded-xl p-2.5 mb-3" role="alert">
             <WifiOff className="w-3.5 h-3.5 flex-shrink-0" />
             Sin conexión — tu carrito está guardado
           </div>

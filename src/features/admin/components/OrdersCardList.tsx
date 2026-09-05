@@ -22,7 +22,7 @@ export const OrdersCardList = ({ orders, usersById, restaurantsById, onOpenDetai
               <p className="font-display font-bold text-secondary">
                 #{order.id.substring(0, 8).toUpperCase()}
               </p>
-              <p className="text-xs text-gray-400">{restaurant?.name} · {client?.name || '—'}</p>
+              <p className="text-xs text-gray-500">{restaurant?.name} · {client?.name || '—'}</p>
             </div>
             <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 flex-shrink-0">
               {STATUS_LABELS[order.status] || order.status}
@@ -30,7 +30,7 @@ export const OrdersCardList = ({ orders, usersById, restaurantsById, onOpenDetai
           </div>
           <div className="flex items-center justify-between">
             <span className="font-semibold text-primary">{formatCOP(order.total)}</span>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-500">
               {new Date(order.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
             </span>
           </div>

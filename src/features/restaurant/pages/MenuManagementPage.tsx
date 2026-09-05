@@ -87,19 +87,21 @@ export const MenuManagementPage = () => {
       <div className="px-5 pt-6 pb-4 flex items-center gap-3 md:max-w-4xl md:mx-auto md:px-0 md:pt-8">
         <button
           onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}
-          className="focus-ring w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0 md:hidden"
+          aria-label="Volver al panel"
+          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0 md:hidden"
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
         <div>
           <h1 className="font-display text-lg font-bold text-secondary">Menú</h1>
-          <p className="text-xs text-gray-400">{myRestaurant.name}</p>
+          <p className="text-xs text-gray-500">{myRestaurant.name}</p>
         </div>
       </div>
 
       <div className="px-5 md:max-w-4xl md:mx-auto md:px-0">
         {successMessage && (
           <div
+            role={isErrorMessage ? 'alert' : 'status'}
             className={`mb-4 text-sm font-semibold rounded-2xl p-3 ${
               isErrorMessage ? 'bg-red-50 text-danger' : 'bg-green-50 text-green-700'
             }`}
@@ -110,13 +112,13 @@ export const MenuManagementPage = () => {
 
         {/* Stats + botón nuevo */}
         <div className="flex items-center justify-between mb-4">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-500">
             <strong className="text-secondary">{products.length}</strong> productos ·{' '}
             <strong className="text-secondary">{products.filter((p) => p.available).length}</strong> activos
           </p>
           <button
             onClick={handleOpenCreate}
-            className="focus-ring w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
+            className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
           >
             <Plus className="w-4 h-4 text-white" />
           </button>
@@ -127,7 +129,7 @@ export const MenuManagementPage = () => {
           <div className="text-center py-16">
             <p className="text-5xl mb-4">🍽️</p>
             <p className="font-display font-bold mb-1 text-secondary">Tu menú está vacío</p>
-            <p className="text-sm text-gray-400 mb-6">Agrega tu primer producto para empezar a vender</p>
+            <p className="text-sm text-gray-500 mb-6">Agrega tu primer producto para empezar a vender</p>
             <Button variant="primary" onClick={handleOpenCreate}>
               Crear primer producto
             </Button>
@@ -136,7 +138,7 @@ export const MenuManagementPage = () => {
           <div className="flex flex-col gap-5">
             {PRODUCT_CATEGORIES.filter((cat) => products.some((p) => p.category === cat)).map((cat) => (
               <div key={cat}>
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{cat}</p>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">{cat}</p>
                 <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-3">
                   {products
                     .filter((p) => p.category === cat)
@@ -158,18 +160,22 @@ export const MenuManagementPage = () => {
                                 ${product.price.toLocaleString('es-CO')}
                               </span>
                             </div>
-                            <p className="text-xs text-gray-400 truncate mb-2">
+                            <p className="text-xs text-gray-500 truncate mb-2">
                               {product.description || 'Sin descripción'}
                             </p>
 
                             <div className="flex items-center justify-between">
                               <button
                                 onClick={() => toggleAvailability(product.id)}
-                                className={`focus-ring relative w-9 h-5 rounded-full transition-colors ${
+                                role="switch"
+                                aria-checked={product.available}
+                                aria-label={`${product.name} ${product.available ? 'disponible' : 'agotado'}`}
+                                className={`relative w-9 h-5 rounded-full transition-colors ${
                                   product.available ? 'bg-success' : 'bg-gray-300'
                                 }`}
                               >
                                 <span
+                                  aria-hidden="true"
                                   className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
                                     product.available ? 'translate-x-4' : 'translate-x-0.5'
                                   }`}
@@ -179,21 +185,23 @@ export const MenuManagementPage = () => {
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => handleOpenEdit(product)}
-                                  className="focus-ring w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                  aria-label={`Editar ${product.name}`}
+                                  className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
                                 >
                                   <Pencil className="w-3 h-3 text-gray-500" />
                                 </button>
                                 {deleteConfirmId === product.id ? (
                                   <button
                                     onClick={() => handleDelete(product.id)}
-                                    className="focus-ring text-xs font-semibold text-white bg-danger px-2 rounded-full"
+                                    className="text-xs font-semibold text-white bg-danger px-2 rounded-full"
                                   >
                                     Confirmar
                                   </button>
                                 ) : (
                                   <button
                                     onClick={() => setDeleteConfirmId(product.id)}
-                                    className="focus-ring w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                    aria-label={`Eliminar ${product.name}`}
+                                    className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
                                   >
                                     <Trash2 className="w-3 h-3 text-gray-500" />
                                   </button>

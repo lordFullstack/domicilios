@@ -142,19 +142,19 @@ export const DeliveryDashboard = () => {
         <div>
           <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
           <h1 className="font-display text-xl font-bold text-secondary">🚴 Panel de Domiciliario</h1>
-          <p className="text-sm text-gray-400">Hola {user?.name?.split(' ')[0]}, aquí tus entregas</p>
+          <p className="text-sm text-gray-500">Hola {user?.name?.split(' ')[0]}, aquí tus entregas</p>
         </div>
         <NotificationBell />
       </div>
 
       <div className="px-5 pb-3">
         {isOffline ? (
-          <p className="flex items-center gap-1.5 text-xs text-gray-400">
+          <p className="flex items-center gap-1.5 text-xs text-gray-500">
             <WifiOff className="w-3 h-3" />
             Sin conexión — no podés aceptar ni completar entregas ahora
           </p>
         ) : (
-          <p className="flex items-center gap-1.5 text-xs text-gray-400">
+          <p className="flex items-center gap-1.5 text-xs text-gray-500">
             <Wifi className="w-3 h-3 text-success" />
             Conectado en tiempo real
           </p>
@@ -177,7 +177,7 @@ export const DeliveryDashboard = () => {
           <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Mi Entrega Actual</h2>
 
           {locationError ? (
-            <div className="flex items-center gap-2 bg-red-50 text-danger text-xs font-semibold rounded-2xl p-3 mb-3">
+            <div className="flex items-center gap-2 bg-red-50 text-danger text-xs font-semibold rounded-2xl p-3 mb-3" role="alert">
               <MapPinOff className="w-4 h-4 flex-shrink-0" />
               {locationError}
             </div>
@@ -201,7 +201,7 @@ export const DeliveryDashboard = () => {
         <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Órdenes Disponibles</h2>
 
         {availableOrders.length === 0 ? (
-          <p className="text-gray-400 text-sm text-center py-8">No hay órdenes disponibles en este momento</p>
+          <p className="text-gray-500 text-sm text-center py-8">No hay órdenes disponibles en este momento</p>
         ) : (
           <div className="flex flex-col gap-3">
             {availableOrders.map((order) => (
@@ -222,7 +222,7 @@ export const DeliveryDashboard = () => {
                   <p className="font-semibold text-sm text-secondary">
                     #{order.id.substring(0, 8).toUpperCase()}
                   </p>
-                  <p className="text-xs text-gray-400 truncate">{order.delivery_address}</p>
+                  <p className="text-xs text-gray-500 truncate">{order.delivery_address}</p>
                 </div>
                 <div className="text-right flex-shrink-0 ml-2">
                   <p className="text-success font-semibold text-xs">Entregada</p>

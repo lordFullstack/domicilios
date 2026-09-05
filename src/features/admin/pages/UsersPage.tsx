@@ -57,7 +57,7 @@ export const AdminUsersPage = () => {
           className="w-full max-w-sm border border-gray-200 rounded-xl px-4 py-2 text-sm mb-5"
         />
 
-        {loading && <p className="text-gray-400 text-sm">Cargando usuarios...</p>}
+        {loading && <p className="text-gray-500 text-sm">Cargando usuarios...</p>}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && (
@@ -99,7 +99,7 @@ export const AdminUsersPage = () => {
                 ))}
                 {filteredUsers.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="text-center py-8 text-gray-400">
+                    <td colSpan={5} className="text-center py-8 text-gray-500">
                       No se encontraron usuarios.
                     </td>
                   </tr>

@@ -48,13 +48,13 @@ export const CreateRestaurantPage = ({ onCreated }: CreateRestaurantPageProps) =
         <h1 className="font-display text-2xl font-bold text-secondary text-center">
           Crea tu restaurante
         </h1>
-        <p className="text-gray-400 text-sm mt-1 text-center">
+        <p className="text-gray-500 text-sm mt-1 text-center">
           Cuéntanos de tu negocio para empezar a vender
         </p>
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-2xl mb-4">
+        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-2xl mb-4" role="alert">
           {error}
         </div>
       )}

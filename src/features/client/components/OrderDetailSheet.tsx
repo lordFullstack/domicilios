@@ -20,10 +20,10 @@ export const OrderDetailSheet = ({ open, onClose, order }: OrderDetailSheetProps
       </div>
 
       <div className="border-t border-gray-100 pt-3">
-        <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">ENTREGA</p>
+        <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">ENTREGA</p>
         <p className="text-sm text-secondary">{order.delivery_address}</p>
         {order.special_instructions && (
-          <p className="text-xs text-gray-400 italic mt-1">"{order.special_instructions}"</p>
+          <p className="text-xs text-gray-500 italic mt-1">"{order.special_instructions}"</p>
         )}
       </div>
     </div>

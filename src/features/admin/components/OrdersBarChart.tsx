@@ -10,7 +10,7 @@ export const OrdersBarChart = ({ data }: OrdersBarChartProps) => {
       <h2 className="text-lg font-bold text-secondary mb-4">📈 Pedidos por día (últimos 7 días)</h2>
       <div className="border border-gray-100 rounded-2xl p-5">
         {data.every((d) => d.count === 0) && (
-          <p className="text-sm text-gray-400 text-center mb-4">Todavía no hay pedidos en este rango.</p>
+          <p className="text-sm text-gray-500 text-center mb-4">Todavía no hay pedidos en este rango.</p>
         )}
         <div className="flex items-end justify-between gap-2 h-40">
           {data.map((d) => (
@@ -20,7 +20,7 @@ export const OrdersBarChart = ({ data }: OrdersBarChartProps) => {
                 className="w-full max-w-[32px] bg-primary rounded-t-lg transition-all"
                 style={{ height: `${Math.max((d.count / max) * 100, d.count > 0 ? 6 : 2)}%` }}
               />
-              <span className="text-xs text-gray-400 capitalize">{d.label}</span>
+              <span className="text-xs text-gray-500 capitalize">{d.label}</span>
             </div>
           ))}
         </div>

@@ -81,6 +81,7 @@ export const AdminProductsPage = () => {
 
         {message && (
           <div
+            role={isError ? 'alert' : 'status'}
             className={`mb-4 text-sm font-semibold rounded-2xl p-3 ${
               isError ? 'bg-red-50 text-danger' : 'bg-green-50 text-green-700'
             }`}
@@ -90,9 +91,9 @@ export const AdminProductsPage = () => {
         )}
 
         {loadingRestaurants ? (
-          <p className="text-gray-400 text-sm">Cargando restaurantes...</p>
+          <p className="text-gray-500 text-sm">Cargando restaurantes...</p>
         ) : restaurants.length === 0 ? (
-          <p className="text-gray-400 text-sm text-center py-12 border border-gray-100 rounded-2xl bg-white">
+          <p className="text-gray-500 text-sm text-center py-12 border border-gray-100 rounded-2xl bg-white">
             No hay restaurantes registrados todavía.
           </p>
         ) : (
@@ -101,6 +102,7 @@ export const AdminProductsPage = () => {
               <select
                 value={restaurantId}
                 onChange={(e) => setRestaurantId(e.target.value)}
+                aria-label="Seleccionar restaurante"
                 className="border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-secondary bg-white"
               >
                 {restaurants.map((r) => (
@@ -111,7 +113,7 @@ export const AdminProductsPage = () => {
               </select>
 
               <div className="flex items-center gap-3">
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-gray-500">
                   <strong className="text-secondary">{products.length}</strong> productos ·{' '}
                   <strong className="text-secondary">{products.filter((p) => p.available).length}</strong> activos
                 </p>
@@ -123,7 +125,7 @@ export const AdminProductsPage = () => {
             </div>
 
             {loading ? (
-              <p className="text-gray-400 text-sm">Cargando menú...</p>
+              <p className="text-gray-500 text-sm">Cargando menú...</p>
             ) : products.length === 0 ? (
               <div className="text-center py-16 bg-white border border-gray-100 rounded-2xl">
                 <p className="text-5xl mb-4">🍽️</p>
@@ -134,7 +136,7 @@ export const AdminProductsPage = () => {
               <div className="flex flex-col gap-6">
                 {PRODUCT_CATEGORIES.filter((cat) => products.some((p) => p.category === cat)).map((cat) => (
                   <div key={cat}>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{cat}</p>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">{cat}</p>
                     <div className="grid md:grid-cols-2 gap-3">
                       {products
                         .filter((p) => p.category === cat)
@@ -155,17 +157,21 @@ export const AdminProductsPage = () => {
                                   {formatCOP(product.price)}
                                 </span>
                               </div>
-                              <p className="text-xs text-gray-400 truncate mb-2">
+                              <p className="text-xs text-gray-500 truncate mb-2">
                                 {product.description || 'Sin descripción'}
                               </p>
                               <div className="flex items-center justify-between">
                                 <button
                                   onClick={() => toggleAvailability(product.id)}
-                                  className={`focus-ring relative w-9 h-5 rounded-full transition-colors ${
+                                  role="switch"
+                                  aria-checked={product.available}
+                                  aria-label={`${product.name} ${product.available ? 'disponible' : 'agotado'}`}
+                                  className={`relative w-9 h-5 rounded-full transition-colors ${
                                     product.available ? 'bg-success' : 'bg-gray-300'
                                   }`}
                                 >
                                   <span
+                                    aria-hidden="true"
                                     className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
                                       product.available ? 'translate-x-4' : 'translate-x-0.5'
                                     }`}
@@ -177,21 +183,23 @@ export const AdminProductsPage = () => {
                                       setEditingProduct(product)
                                       setIsModalOpen(true)
                                     }}
-                                    className="focus-ring w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                    aria-label={`Editar ${product.name}`}
+                                    className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
                                   >
                                     <Pencil className="w-3 h-3 text-gray-500" />
                                   </button>
                                   {deleteConfirmId === product.id ? (
                                     <button
                                       onClick={() => handleDelete(product.id)}
-                                      className="focus-ring text-xs font-semibold text-white bg-danger px-2 rounded-full"
+                                      className="text-xs font-semibold text-white bg-danger px-2 rounded-full"
                                     >
                                       Confirmar
                                     </button>
                                   ) : (
                                     <button
                                       onClick={() => setDeleteConfirmId(product.id)}
-                                      className="focus-ring w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                      aria-label={`Eliminar ${product.name}`}
+                                      className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
                                     >
                                       <Trash2 className="w-3 h-3 text-gray-500" />
                                     </button>

@@ -12,7 +12,7 @@ export const RevenueBarChart = ({ data }: RevenueBarChartProps) => {
       <h2 className="text-lg font-bold text-secondary mb-4">💵 Ventas por día (entregados)</h2>
       <div className="border border-gray-100 rounded-2xl p-5 overflow-x-auto">
         {data.every((d) => d.revenue === 0) && (
-          <p className="text-sm text-gray-400 text-center mb-4">Todavía no hay ventas en este rango.</p>
+          <p className="text-sm text-gray-500 text-center mb-4">Todavía no hay ventas en este rango.</p>
         )}
         <div className="flex items-end justify-between gap-2 h-40 min-w-[280px]">
           {data.map((d) => (
@@ -24,7 +24,7 @@ export const RevenueBarChart = ({ data }: RevenueBarChartProps) => {
                 className="w-full max-w-[32px] bg-success rounded-t-lg transition-all"
                 style={{ height: `${Math.max((d.revenue / max) * 100, d.revenue > 0 ? 6 : 2)}%` }}
               />
-              <span className="text-xs text-gray-400 capitalize">{d.label}</span>
+              <span className="text-xs text-gray-500 capitalize">{d.label}</span>
             </div>
           ))}
         </div>

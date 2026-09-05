@@ -67,7 +67,7 @@ export const CartPage = () => {
       </div>
 
       {restaurant && (
-        <p className="px-5 text-xs text-gray-400 mb-4">
+        <p className="px-5 text-xs text-gray-500 mb-4">
           Pedido de <span className="font-semibold text-secondary">{restaurant.image_url} {restaurant.name}</span>
         </p>
       )}

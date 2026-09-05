@@ -196,7 +196,7 @@ export const RestaurantDashboard = () => {
         <button
           onClick={handleToggleStatus}
           disabled={togglingStatus}
-          className="focus-ring relative w-full flex items-center justify-between bg-white/10 rounded-2xl px-4 py-3 mt-4 active:scale-[0.98] transition-transform disabled:opacity-60"
+          className="relative w-full flex items-center justify-between bg-white/10 rounded-2xl px-4 py-3 mt-4 active:scale-[0.98] transition-transform disabled:opacity-60"
         >
           <span className="flex items-center gap-2 text-sm font-semibold text-white">
             <span
@@ -221,7 +221,7 @@ export const RestaurantDashboard = () => {
       </div>
 
       {noDeliveryMsg && (
-        <div className="mx-5 mb-4 bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3 md:max-w-4xl md:mx-auto">
+        <div className="mx-5 mb-4 bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3 md:max-w-4xl md:mx-auto" role="alert">
           No hay domiciliarios disponibles en este momento. Intenta de nuevo en unos minutos.
         </div>
       )}
@@ -230,21 +230,21 @@ export const RestaurantDashboard = () => {
       <div className="grid grid-cols-2 gap-3 px-5 mb-4 md:grid-cols-4 md:max-w-4xl md:mx-auto md:px-0">
         <Card className="text-center py-4">
           <p className="text-2xl font-display font-bold text-warning">{pendingOrders.length}</p>
-          <p className="text-gray-400 text-xs mt-1">Pendientes</p>
+          <p className="text-gray-500 text-xs mt-1">Pendientes</p>
         </Card>
         <Card className="text-center py-4">
           <p className="text-2xl font-display font-bold text-primary">{activeOrders.length}</p>
-          <p className="text-gray-400 text-xs mt-1">Activas</p>
+          <p className="text-gray-500 text-xs mt-1">Activas</p>
         </Card>
         <Card className="text-center py-4">
           <p className="text-2xl font-display font-bold text-success">{deliveredToday.length}</p>
-          <p className="text-gray-400 text-xs mt-1">Entregadas hoy</p>
+          <p className="text-gray-500 text-xs mt-1">Entregadas hoy</p>
         </Card>
         <Card className="text-center py-4">
           <p className="text-lg font-display font-bold text-primary">
             ${revenueToday.toLocaleString('es-CO')}
           </p>
-          <p className="text-gray-400 text-xs mt-1">Ingresos hoy</p>
+          <p className="text-gray-500 text-xs mt-1">Ingresos hoy</p>
         </Card>
       </div>
 
@@ -253,7 +253,7 @@ export const RestaurantDashboard = () => {
         <Card>
           <div className="flex items-center justify-between mb-2">
             <p className="font-display font-bold text-sm text-secondary">Menú</p>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-gray-500">
               {products.length} productos · {products.filter((p) => p.available).length} activos
             </span>
           </div>
@@ -268,7 +268,7 @@ export const RestaurantDashboard = () => {
         <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Órdenes Activas</h2>
 
         {activeOrders.length === 0 ? (
-          <p className="text-gray-400 text-sm text-center py-8">No hay órdenes activas en este momento</p>
+          <p className="text-gray-500 text-sm text-center py-8">No hay órdenes activas en este momento</p>
         ) : (
           <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
             {activeOrders.map((order) => (
@@ -281,9 +281,9 @@ export const RestaurantDashboard = () => {
                     {STATUS_LABELS[order.status]}
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 mb-1">{order.delivery_address}</p>
+                <p className="text-xs text-gray-500 mb-1">{order.delivery_address}</p>
                 {order.special_instructions && (
-                  <p className="text-xs text-gray-400 italic mb-1">"{order.special_instructions}"</p>
+                  <p className="text-xs text-gray-500 italic mb-1">"{order.special_instructions}"</p>
                 )}
 
                 <div className="bg-gray-50 rounded-xl p-2.5 my-2">
@@ -294,7 +294,7 @@ export const RestaurantDashboard = () => {
                   <p className="text-base font-display font-bold text-primary">
                     ${order.total.toLocaleString('es-CO')}
                   </p>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-gray-500">
                     {order.payment_method === 'cash_on_delivery' ? '💵 Contra entrega' : '💳 Pagado en línea'}
                   </span>
                 </div>

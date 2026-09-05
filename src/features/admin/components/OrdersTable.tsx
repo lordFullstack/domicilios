@@ -12,7 +12,7 @@ interface OrdersTableProps {
 export const OrdersTable = ({ orders, usersById, restaurantsById, onOpenDetail }: OrdersTableProps) => (
   <table className="w-full text-sm">
     <thead>
-      <tr className="text-left text-gray-400 border-b border-gray-100">
+      <tr className="text-left text-gray-500 border-b border-gray-100">
         <th className="font-medium py-3 px-2">Pedido</th>
         <th className="font-medium py-3 px-2">Cliente</th>
         <th className="font-medium py-3 px-2">Restaurante</th>
@@ -39,13 +39,13 @@ export const OrdersTable = ({ orders, usersById, restaurantsById, onOpenDetail }
               </span>
             </td>
             <td className="py-3 px-2 font-semibold text-secondary">{formatCOP(order.total)}</td>
-            <td className="py-3 px-2 text-gray-400 text-xs">
+            <td className="py-3 px-2 text-gray-500 text-xs">
               {new Date(order.created_at).toLocaleDateString('es-CO', { day: '2-digit', month: 'short' })}
             </td>
             <td className="py-3 px-2 text-right">
               <button
                 onClick={() => onOpenDetail(order)}
-                className="focus-ring text-xs font-semibold text-primary hover:underline"
+                className="text-xs font-semibold text-primary hover:underline"
               >
                 Ver detalle
               </button>

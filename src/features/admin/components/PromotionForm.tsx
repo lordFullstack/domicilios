@@ -108,7 +108,7 @@ export const PromotionForm = ({ promotion, restaurants, products, onClose, onSav
               ))}
             </select>
             {promotion && (
-              <p className="text-xs text-gray-400 mt-1">El tipo no se puede cambiar al editar.</p>
+              <p className="text-xs text-gray-500 mt-1">El tipo no se puede cambiar al editar.</p>
             )}
           </div>
 
@@ -213,7 +213,7 @@ export const PromotionForm = ({ promotion, restaurants, products, onClose, onSav
               />
             </div>
           </div>
-          <p className="text-xs text-gray-400 -mt-2">
+          <p className="text-xs text-gray-500 -mt-2">
             Si dejas "Termina" vacío, la promo se queda activa hasta que la desactives manualmente.
           </p>
 

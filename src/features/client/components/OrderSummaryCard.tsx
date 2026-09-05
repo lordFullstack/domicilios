@@ -20,7 +20,7 @@ export const OrderSummaryCard = ({
       <span className="text-2xl">{restaurantEmoji}</span>
       <div>
         <p className="font-semibold text-sm text-secondary">{restaurantName}</p>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-gray-500">
           {itemCount} {itemCount === 1 ? 'producto' : 'productos'}
         </p>
       </div>

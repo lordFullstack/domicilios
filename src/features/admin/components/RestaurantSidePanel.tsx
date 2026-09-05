@@ -57,7 +57,7 @@ export const RestaurantSidePanel = ({ restaurant, onClose, onSave }: RestaurantS
           <button
             onClick={onClose}
             aria-label="Cerrar"
-            className="focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center"
+            className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center"
           >
             <X className="w-4 h-4 text-secondary" />
           </button>
@@ -99,7 +99,7 @@ export const RestaurantSidePanel = ({ restaurant, onClose, onSave }: RestaurantS
             onChange={(e) => setImageUrl(e.target.value)}
           />
           <Input label="URL de portada" value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} />
-          <p className="text-xs text-gray-400 -mt-2">
+          <p className="text-xs text-gray-500 -mt-2">
             La subida de fotos solo la puede hacer el dueño del restaurante desde su panel — acá solo
             se puede editar el link.
           </p>

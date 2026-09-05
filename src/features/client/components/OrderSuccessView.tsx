@@ -27,9 +27,9 @@ export const OrderSuccessView = ({
     </p>
 
     <div className="w-full border border-gray-100 rounded-2xl p-4 mb-8">
-      <p className="text-xs text-gray-400 mb-1">Restaurante</p>
+      <p className="text-xs text-gray-500 mb-1">Restaurante</p>
       <p className="font-semibold text-secondary mb-3">{restaurantName}</p>
-      <p className="text-xs text-gray-400 mb-1">Total</p>
+      <p className="text-xs text-gray-500 mb-1">Total</p>
       <p className="font-display font-bold text-lg text-primary">{formatCOP(total)}</p>
     </div>
 

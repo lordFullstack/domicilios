@@ -32,7 +32,7 @@ export const AdminSidebar = () => {
     <div className="hidden md:flex flex-col fixed left-0 top-0 bottom-0 w-56 bg-secondary text-white z-40">
       <div className="px-5 py-6">
         <span className="font-display font-bold text-lg">🚀 Admin</span>
-        <p className="text-xs text-gray-400 mt-0.5">pa comer express</p>
+        <p className="text-xs text-gray-400 mt-0.5">Domicilios Riohacha</p>
       </div>
 
       <nav className="flex-1 px-3 space-y-1">
@@ -42,7 +42,7 @@ export const AdminSidebar = () => {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`focus-ring w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 active ? 'bg-primary text-white' : 'text-gray-300 hover:bg-white/5'
               }`}
             >
@@ -55,7 +55,7 @@ export const AdminSidebar = () => {
 
       <button
         onClick={handleLogout}
-        className="focus-ring flex items-center gap-3 px-3 py-2.5 mx-3 mb-6 rounded-xl text-sm font-medium text-gray-300 hover:bg-white/5 transition-colors"
+        className="flex items-center gap-3 px-3 py-2.5 mx-3 mb-6 rounded-xl text-sm font-medium text-gray-300 hover:bg-white/5 transition-colors"
       >
         <LogOut className="w-4 h-4" />
         Cerrar sesión

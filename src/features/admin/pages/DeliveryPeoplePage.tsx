@@ -96,7 +96,7 @@ export const AdminDeliveryPeoplePage = () => {
               <button
                 key={opt.value}
                 onClick={() => setQuickFilter(opt.value)}
-                className={`focus-ring px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+                className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
                   quickFilter === opt.value ? 'bg-white text-secondary shadow-card' : 'text-gray-500'
                 }`}
               >
@@ -106,11 +106,11 @@ export const AdminDeliveryPeoplePage = () => {
           </div>
         </div>
 
-        {loading && <p className="text-gray-400 text-sm">Cargando domiciliarios...</p>}
+        {loading && <p className="text-gray-500 text-sm">Cargando domiciliarios...</p>}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && filteredList.length === 0 && (
-          <p className="text-gray-400 text-sm text-center py-12 border border-gray-100 rounded-2xl bg-white">
+          <p className="text-gray-500 text-sm text-center py-12 border border-gray-100 rounded-2xl bg-white">
             {deliveryPeople.length === 0
               ? 'Todavía no hay domiciliarios registrados.'
               : 'Ningún domiciliario coincide con este filtro.'}
@@ -138,7 +138,7 @@ export const AdminDeliveryPeoplePage = () => {
                       </div>
                       <div className="min-w-0">
                         <p className="font-semibold text-secondary truncate">{d.name}</p>
-                        <p className="text-xs text-gray-400 capitalize truncate">
+                        <p className="text-xs text-gray-500 capitalize truncate">
                           {d.vehicle_type || 'Sin vehículo'} {d.vehicle_plate && `· ${d.vehicle_plate}`}
                         </p>
                       </div>

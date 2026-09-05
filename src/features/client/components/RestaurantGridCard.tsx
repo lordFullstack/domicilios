@@ -81,7 +81,7 @@ export const RestaurantGridCard = ({ restaurant }: RestaurantGridCardProps) => {
             25-35 min
           </span>
         </div>
-        <p className="text-xs text-gray-400 mt-1 truncate">{restaurant.category}</p>
+        <p className="text-xs text-gray-500 mt-1 truncate">{restaurant.category}</p>
       </div>
     </button>
   )

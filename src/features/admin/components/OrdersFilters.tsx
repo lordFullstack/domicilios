@@ -55,6 +55,7 @@ export const OrdersFilters = ({
     <select
       value={statusFilter}
       onChange={(e) => onStatusChange(e.target.value as OrderStatus | 'all')}
+      aria-label="Filtrar por estado"
       className="border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white"
     >
       <option value="all">Todos los estados</option>
@@ -68,6 +69,7 @@ export const OrdersFilters = ({
     <select
       value={restaurantFilter}
       onChange={(e) => onRestaurantChange(e.target.value)}
+      aria-label="Filtrar por restaurante"
       className="border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white"
     >
       <option value="all">Todos los restaurantes</option>
@@ -83,7 +85,7 @@ export const OrdersFilters = ({
         <button
           key={opt.value}
           onClick={() => onPeriodChange(opt.value)}
-          className={`focus-ring px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
+          className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
             period === opt.value ? 'bg-white text-secondary shadow-card' : 'text-gray-500'
           }`}
         >

@@ -63,7 +63,7 @@ export const ProductCard = ({ product, onSelect }: ProductCardProps) => {
                   e.stopPropagation()
                   setQuantity(Math.max(1, quantity - 1))
                 }}
-                className="focus-ring px-2 py-1 hover:bg-gray-200 rounded"
+                className="px-2 py-1 hover:bg-gray-200 rounded"
               >
                 −
               </button>
@@ -73,7 +73,7 @@ export const ProductCard = ({ product, onSelect }: ProductCardProps) => {
                   e.stopPropagation()
                   setQuantity(quantity + 1)
                 }}
-                className="focus-ring px-2 py-1 hover:bg-gray-200 rounded"
+                className="px-2 py-1 hover:bg-gray-200 rounded"
               >
                 +
               </button>

@@ -34,21 +34,21 @@ export const DeliveryOrderDetailSheet = ({
     <BottomSheet open={open} onClose={onClose} title="Detalle del pedido">
       <div className="flex flex-col gap-4">
         <div>
-          <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">RECOGER EN</p>
+          <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">RECOGER EN</p>
           <p className="text-sm font-semibold text-secondary">{restaurant?.name}</p>
-          <p className="text-xs text-gray-400">{restaurant?.address}</p>
+          <p className="text-xs text-gray-500">{restaurant?.address}</p>
         </div>
 
         <div>
-          <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">ENTREGAR EN</p>
+          <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">ENTREGAR EN</p>
           <p className="text-sm font-semibold text-secondary">{order.delivery_address}</p>
           {order.special_instructions && (
-            <p className="text-xs text-gray-400 italic mt-1">"{order.special_instructions}"</p>
+            <p className="text-xs text-gray-500 italic mt-1">"{order.special_instructions}"</p>
           )}
         </div>
 
         <div className="bg-gray-50 rounded-xl p-3">
-          <p className="text-xs font-bold text-gray-400 tracking-wide mb-2">PRODUCTOS</p>
+          <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">PRODUCTOS</p>
           <OrderItemsList orderId={order.id} />
         </div>
 

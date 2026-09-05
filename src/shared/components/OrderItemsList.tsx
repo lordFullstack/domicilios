@@ -25,7 +25,7 @@ export const OrderItemsList = ({ orderId, className }: OrderItemsListProps) => {
           <span className="truncate">
             <span className="font-semibold text-secondary">{item.quantity}x</span> {item.product_name}
           </span>
-          <span className="whitespace-nowrap text-gray-400">
+          <span className="whitespace-nowrap text-gray-500">
             ${(item.unit_price * item.quantity).toLocaleString('es-CO')}
           </span>
         </li>

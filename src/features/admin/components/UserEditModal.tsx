@@ -63,7 +63,7 @@ export const UserEditModal = ({ user, onClose, onSave, onResetPassword }: UserEd
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
         <h3 className="font-display font-bold text-lg text-secondary mb-1">Editar usuario</h3>
-        <p className="text-xs text-gray-400 mb-4">{user.email}</p>
+        <p className="text-xs text-gray-500 mb-4">{user.email}</p>
 
         <div className="space-y-3">
           <Input label="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
