@@ -186,18 +186,22 @@ export const RestaurantDetailPage = () => {
     <div className="min-h-screen bg-white max-w-md mx-auto pb-28 relative safe-left safe-right">
       <Toast message={toastMessage} />
 
-      {/* Hero */}
-      <div className="h-40 bg-primary/10 relative overflow-hidden">
+      {/* Hero — la info del restaurante vive integrada al banner (overlay),
+          no repetida debajo (spec LOOP_MENU_UX_01.1). */}
+      <div className="relative h-64 overflow-hidden bg-primary/10">
         {restaurant.cover_url ? (
-          <>
-            <img src={restaurant.cover_url} alt={restaurant.name} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-          </>
+          <img
+            src={restaurant.cover_url}
+            alt={restaurant.name}
+            className="w-full h-full object-cover"
+          />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-6xl">
+          <div className="w-full h-full flex items-center justify-center text-7xl">
             {restaurant.image_url}
           </div>
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
+
         <button
           onClick={() => navigate(-1)}
           aria-label="Volver"
@@ -217,37 +221,49 @@ export const RestaurantDetailPage = () => {
             color={isFavorite(restaurant.id) ? '#E11D48' : '#1A1A1A'}
           />
         </button>
+
+        <div className="absolute inset-x-0 bottom-0 p-5">
+          <div className="flex items-end gap-3">
+            <div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-white/70 bg-white flex items-center justify-center text-3xl shadow-md">
+              {restaurant.cover_url ? (
+                <img src={restaurant.cover_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                restaurant.image_url
+              )}
+            </div>
+            <div className="min-w-0 flex-1 pb-0.5">
+              <h1 className="font-display text-xl font-bold text-white truncate drop-shadow">
+                {restaurant.name}
+              </h1>
+              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/90">
+                <span>⭐ {restaurant.rating_count > 0 ? restaurant.rating_avg.toFixed(1) : 'Nuevo'}</span>
+                <span>· 25-35 min</span>
+                <span>· {restaurant.category}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2">
+            <Badge variant={restaurantIsOpen ? 'success' : 'danger'}>
+              {restaurantIsOpen ? '🟢 Abierto' : '🔴 Cerrado'}
+            </Badge>
+          </div>
+
+          <p className="mt-2 text-xs text-white/85 line-clamp-2">{restaurant.description}</p>
+        </div>
       </div>
 
-      {/* Info */}
-      <div className="px-5 pt-4">
-        <h1 className="font-display text-xl font-bold text-secondary">{restaurant.name}</h1>
-        <div className="flex items-center gap-2 text-xs text-gray-500 mt-1 mb-1">
-          <span>⭐ {restaurant.rating_count > 0 ? restaurant.rating_avg.toFixed(1) : 'Nuevo'}</span>
-          <span>· 25-35 min</span>
-          <span>· {restaurant.category}</span>
-        </div>
-        <div className="mb-2">
-          <Badge variant={restaurantIsOpen ? 'success' : 'danger'}>
-            {restaurantIsOpen ? '🟢 Abierto' : '🔴 Cerrado'}
-          </Badge>
-        </div>
-        <p className="text-xs text-gray-500 mb-4">{restaurant.description}</p>
-        {(restaurantFromCache || productsFromCache) && (
+      {(restaurantFromCache || productsFromCache) && (
+        <div className="px-5 pt-3">
           <OfflineDataBadge cachedAt={Math.max(restaurantCachedAt || 0, productsCachedAt || 0) || null} />
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Menú */}
-      <div className="px-5">
-        <div className="mb-4">
-          <h2 className="font-display text-lg font-bold text-secondary">
-            Menú
-          </h2>
-          <p className="mt-1 text-xs text-gray-500">
-            Elige tus favoritos y agrégalos directamente
-          </p>
-        </div>
+      <div className="px-5 pt-4">
+        <h2 className="font-display text-lg font-bold text-secondary mb-3">
+          Menú
+        </h2>
 
         {productsLoading ? (
           <div className="flex flex-col gap-3">
@@ -260,14 +276,6 @@ export const RestaurantDetailPage = () => {
           </div>
         ) : products.length > 0 ? (
           <>
-            {/* Recomendados */}
-            <FeaturedProductStrip
-              products={featuredProducts}
-              restaurantIsOpen={restaurantIsOpen}
-              onOpenDetail={setDetailProduct}
-              onQuickAdd={handleQuickAdd}
-            />
-
             {/* Categorías */}
             <div className="sticky top-0 z-20 -mx-5 mb-5 bg-white/95 px-5 py-2 backdrop-blur">
               <div className="no-scrollbar flex gap-2 overflow-x-auto">
@@ -287,6 +295,14 @@ export const RestaurantDetailPage = () => {
                 ))}
               </div>
             </div>
+
+            {/* Recomendados */}
+            <FeaturedProductStrip
+              products={featuredProducts}
+              restaurantIsOpen={restaurantIsOpen}
+              onOpenDetail={setDetailProduct}
+              onQuickAdd={handleQuickAdd}
+            />
 
             {/* Productos */}
             <section aria-labelledby="active-category-title">
