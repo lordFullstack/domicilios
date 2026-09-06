@@ -674,17 +674,31 @@ export const useOrders = (userId?: string) => {
   // estado, etc.) recarga la lista automáticamente, sin que el usuario
   // tenga que refrescar la página.
   useEffect(() => {
+    // Admin/restaurante/domiciliario llaman useOrders() sin userId y sí
+    // necesitan enterarse de cambios en pedidos ajenos a su propia cuenta
+    // (nuevos pedidos entrantes, etc.) — para esos casos se mantiene sin
+    // filtro. Pero el caso más frecuente es el cliente viendo "Mis
+    // pedidos" (useOrders(user.id)), donde antes CUALQUIER pedido de
+    // CUALQUIER usuario en toda la plataforma disparaba un reload() acá,
+    // aunque no tuviera nada que ver. Con el filtro puesto en el canal,
+    // Postgres ya ni le manda el evento si no es de este usuario.
     const channel = supabase
-      .channel('orders-realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
-        reload()
-      })
+      .channel(userId ? `orders-realtime-${userId}` : 'orders-realtime')
+      .on(
+        'postgres_changes',
+        userId
+          ? { event: '*', schema: 'public', table: 'orders', filter: `user_id=eq.${userId}` }
+          : { event: '*', schema: 'public', table: 'orders' },
+        () => {
+          reload()
+        }
+      )
       .subscribe()
 
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [reload])
+  }, [reload, userId])
 
   const createOrder = async (
     order: {

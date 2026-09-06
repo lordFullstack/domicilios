@@ -1,5 +1,14 @@
+import { lazy, Suspense } from 'react'
 import { Phone, Bike } from 'lucide-react'
-import { DeliveryLiveMap } from '@/shared/components/DeliveryLiveMap'
+
+// Leaflet pesa ~155kB — antes se importaba directo, así que se descargaba
+// en CADA apertura de un detalle de pedido (entregado, cancelado, etc.),
+// aunque el mapa solo se muestra cuando el pedido está en camino. Con
+// lazy(), solo se pide cuando este componente realmente se monta (el
+// padre ya lo renderiza condicionalmente con isInDelivery).
+const DeliveryLiveMap = lazy(() =>
+  import('@/shared/components/DeliveryLiveMap').then((m) => ({ default: m.DeliveryLiveMap }))
+)
 
 interface DeliveryPerson {
   name: string
@@ -59,7 +68,15 @@ export const DeliveryTrackingSection = ({ deliveryPerson, liveLocation }: Delive
     )}
 
     {liveLocation ? (
-      <DeliveryLiveMap lat={liveLocation.lat} lng={liveLocation.lng} updatedAt={liveLocation.updatedAt} />
+      <Suspense
+        fallback={
+          <div className="bg-gray-50 rounded-2xl h-48 flex items-center justify-center">
+            <p className="text-gray-500 text-xs">Cargando mapa...</p>
+          </div>
+        }
+      >
+        <DeliveryLiveMap lat={liveLocation.lat} lng={liveLocation.lng} updatedAt={liveLocation.updatedAt} />
+      </Suspense>
     ) : (
       <div className="bg-gray-50 rounded-2xl p-6 text-center">
         <p className="text-gray-500 text-xs">Esperando la ubicación del domiciliario...</p>

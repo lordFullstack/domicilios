@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, Banknote, CreditCard, WifiOff } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { Badge } from '@/shared/components/Badge'
-import { useCart, useOrders, useRestaurantById, useProductById } from '@/hooks/useLocalData'
+import { useCart, useOrders, useRestaurantById, useProductById, useProducts } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
 import { ROUTES, ORDER_STATUS, PAYMENT_METHOD } from '@/config/constants'
-import { PaymentMethod } from '@/shared/types'
+import { PaymentMethod, Product } from '@/shared/types'
 import { formatCOP } from '@/shared/utils/money'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 import { AddressSheet, AddressDraft } from '../components/AddressSheet'
@@ -39,6 +39,13 @@ export const CheckoutPage = () => {
   const firstProduct = useProductById(cart[0]?.productId || '')
   const { restaurant, loading: restaurantLoading } = useRestaurantById(firstProduct.product?.restaurant_id || '')
   const checkoutInfoReady = !firstProduct.loading && !restaurantLoading && !!restaurant
+
+  // Antes cada línea del resumen (CheckoutItemRow) llamaba a
+  // useProductById() por su cuenta — una consulta por producto. El
+  // carrito ya está limitado a un solo restaurante, así que una sola
+  // consulta de todo su menú resuelve todas las líneas.
+  const { products: restaurantProducts } = useProducts(restaurant?.id)
+  const productById = new Map(restaurantProducts.map((p) => [p.id, p]))
 
   const hasAddress = address.street.trim().length >= 5
 
@@ -200,7 +207,11 @@ export const CheckoutPage = () => {
 
             <div className="flex flex-col gap-1.5 mb-3">
               {cart.map((item) => (
-                <CheckoutItemRow key={item.productId} item={item} />
+                <CheckoutItemRow
+                  key={item.productId}
+                  item={item}
+                  product={productById.get(item.productId) || null}
+                />
               ))}
             </div>
 
@@ -266,10 +277,11 @@ export const CheckoutPage = () => {
 // Componente auxiliar: fila de producto en el resumen del checkout.
 const CheckoutItemRow = ({
   item,
+  product,
 }: {
   item: { productId: string; quantity: number; unitPrice: number }
+  product: Product | null
 }) => {
-  const { product } = useProductById(item.productId)
   if (!product) return null
 
   return (

@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from '@/features/auth/AuthContext'
 import { Router } from '@/router'
 import { unlockNotificationAudio } from '@/shared/utils/notificationSound'
@@ -7,15 +6,6 @@ import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
 import { ConnectionBanner } from '@/shared/components/ConnectionBanner'
 import { UpdatePrompt } from '@/shared/components/UpdatePrompt'
 import '@/styles.css'
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutos
-      retry: 1,
-    },
-  },
-})
 
 export const App = () => {
   useEffect(() => {
@@ -37,13 +27,11 @@ export const App = () => {
 
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <ConnectionBanner />
-          <UpdatePrompt />
-          <Router />
-        </AuthProvider>
-      </QueryClientProvider>
+      <AuthProvider>
+        <ConnectionBanner />
+        <UpdatePrompt />
+        <Router />
+      </AuthProvider>
     </ErrorBoundary>
   )
 }

@@ -1,17 +1,15 @@
 import { Banknote } from 'lucide-react'
-import { Order } from '@/shared/types'
-import { useRestaurantById } from '@/hooks/useLocalData'
+import { Order, Restaurant } from '@/shared/types'
 import { formatCOP } from '@/shared/utils/money'
 import { PAYMENT_METHOD } from '@/config/constants'
 
 interface DeliveryOrderCardProps {
   order: Order
+  restaurant?: Restaurant
   onOpenDetail: (order: Order) => void
 }
 
-export const DeliveryOrderCard = ({ order, onOpenDetail }: DeliveryOrderCardProps) => {
-  const { restaurant } = useRestaurantById(order.restaurant_id)
-
+export const DeliveryOrderCard = ({ order, restaurant, onOpenDetail }: DeliveryOrderCardProps) => {
   return (
     <button
       onClick={() => onOpenDetail(order)}

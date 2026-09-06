@@ -1,10 +1,13 @@
-import { useMemo } from 'react'
+import { useMemo, lazy, Suspense } from 'react'
 import { X, Phone, Star, MapPin } from 'lucide-react'
 import { User, Order } from '@/shared/types'
 import { ORDER_STATUS } from '@/config/constants'
 import { formatCOP } from '@/shared/utils/money'
-import { DeliveryLiveMap } from '@/shared/components/DeliveryLiveMap'
 import { Button } from '@/shared/components/Button'
+
+const DeliveryLiveMap = lazy(() =>
+  import('@/shared/components/DeliveryLiveMap').then((m) => ({ default: m.DeliveryLiveMap }))
+)
 
 interface DeliveryPersonDetailPanelProps {
   deliveryPerson: User
@@ -126,11 +129,19 @@ export const DeliveryPersonDetailPanel = ({
             <div>
               <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">ENTREGA EN CURSO</p>
               {activeOrderWithLocation ? (
-                <DeliveryLiveMap
-                  lat={activeOrderWithLocation.current_lat!}
-                  lng={activeOrderWithLocation.current_lng!}
-                  updatedAt={activeOrderWithLocation.location_updated_at || ''}
-                />
+                <Suspense
+                  fallback={
+                    <div className="bg-gray-50 rounded-2xl h-48 flex items-center justify-center">
+                      <p className="text-gray-500 text-xs">Cargando mapa...</p>
+                    </div>
+                  }
+                >
+                  <DeliveryLiveMap
+                    lat={activeOrderWithLocation.current_lat!}
+                    lng={activeOrderWithLocation.current_lng!}
+                    updatedAt={activeOrderWithLocation.location_updated_at || ''}
+                  />
+                </Suspense>
               ) : (
                 <div className="bg-gray-50 rounded-2xl p-4 text-center flex items-center justify-center gap-2">
                   <MapPin className="w-4 h-4 text-gray-300" />

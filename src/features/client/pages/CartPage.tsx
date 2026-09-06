@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react'
-import { useCart, useProductById, useRestaurantById } from '@/hooks/useLocalData'
+import { useCart, useProductById, useRestaurantById, useProducts } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { formatCOP } from '@/shared/utils/money'
 import { ROUTES } from '@/config/constants'
+import { Product } from '@/shared/types'
 
 export const CartPage = () => {
   const navigate = useNavigate()
@@ -16,6 +17,14 @@ export const CartPage = () => {
   // producto, mismo patrón usado en RestaurantDetailPage y CheckoutPage.
   const { product: firstProduct } = useProductById(cart[0]?.productId || '')
   const { restaurant } = useRestaurantById(firstProduct?.restaurant_id || '')
+
+  // Antes cada fila del carrito llamaba a useProductById() por su cuenta
+  // (una consulta a Supabase por producto — con 5 productos, 5 consultas
+  // en paralelo). Como el carrito ya solo admite un restaurante a la vez,
+  // una sola consulta de TODO su menú alcanza para resolver todas las
+  // filas de una.
+  const { products: restaurantProducts } = useProducts(restaurant?.id)
+  const productById = new Map(restaurantProducts.map((p) => [p.id, p]))
 
   const changeQty = (productId: string, delta: number, currentQty: number) => {
     const next = currentQty + delta
@@ -78,6 +87,7 @@ export const CartPage = () => {
           <CartItemRow
             key={item.productId}
             item={item}
+            product={productById.get(item.productId) || null}
             onChangeQty={changeQty}
             onRemove={() => removeItem(item.productId)}
           />
@@ -126,15 +136,15 @@ export const CartPage = () => {
 // Componente auxiliar: fila de producto en el carrito
 const CartItemRow = ({
   item,
+  product,
   onChangeQty,
   onRemove,
 }: {
   item: { productId: string; quantity: number; unitPrice: number }
+  product: Product | null
   onChangeQty: (productId: string, delta: number, currentQty: number) => void
   onRemove: () => void
 }) => {
-  const { product } = useProductById(item.productId)
-
   if (!product) return null
 
   return (

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapPin, MapPinOff, Wifi, WifiOff } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { useOrders, useRestaurantById, updateOrderLocation } from '@/hooks/useLocalData'
+import { useOrders, useRestaurants, updateOrderLocation } from '@/hooks/useLocalData'
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
@@ -22,6 +22,8 @@ const LOCATION_UPDATE_INTERVAL_MS = 10000
 export const DeliveryDashboard = () => {
   const { user } = useAuth()
   const { orders, updateOrder, acceptOrder, getOrdersByDelivery } = useOrders()
+  const { restaurants } = useRestaurants()
+  const restaurantsById = new Map(restaurants.map((r) => [r.id, r]))
   const connectionStatus = useOnlineStatus()
   const isOffline = connectionStatus === 'offline'
 
@@ -48,7 +50,7 @@ export const DeliveryDashboard = () => {
   const activeDeliveries = myDeliveries.filter((o) => o.status === ORDER_STATUS.IN_DELIVERY)
   const completedDeliveries = myDeliveries.filter((o) => o.status === ORDER_STATUS.DELIVERED)
   const activeOrder = activeDeliveries[0]
-  const { restaurant: activeRestaurant } = useRestaurantById(activeOrder?.restaurant_id || '')
+  const activeRestaurant = activeOrder ? restaurantsById.get(activeOrder.restaurant_id) : undefined
 
   // Mientras haya una entrega activa, comparte la ubicación del celular
   // para que el cliente pueda ver en un mapa por dónde va su pedido.
@@ -190,7 +192,12 @@ export const DeliveryDashboard = () => {
 
           <div className="flex flex-col gap-3">
             {activeDeliveries.map((order) => (
-              <DeliveryOrderCard key={order.id} order={order} onOpenDetail={setDetailOrder} />
+              <DeliveryOrderCard
+                key={order.id}
+                order={order}
+                restaurant={restaurantsById.get(order.restaurant_id)}
+                onOpenDetail={setDetailOrder}
+              />
             ))}
           </div>
         </div>
@@ -205,7 +212,12 @@ export const DeliveryDashboard = () => {
         ) : (
           <div className="flex flex-col gap-3">
             {availableOrders.map((order) => (
-              <DeliveryOrderCard key={order.id} order={order} onOpenDetail={setDetailOrder} />
+              <DeliveryOrderCard
+                key={order.id}
+                order={order}
+                restaurant={restaurantsById.get(order.restaurant_id)}
+                onOpenDetail={setDetailOrder}
+              />
             ))}
           </div>
         )}
