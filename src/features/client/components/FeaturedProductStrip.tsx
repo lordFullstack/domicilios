@@ -35,7 +35,7 @@ export const FeaturedProductStrip = ({
           return (
             <article
               key={product.id}
-              className="w-[136px] flex-shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
+              className="w-[136px] flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm"
             >
               <button
                 type="button"
