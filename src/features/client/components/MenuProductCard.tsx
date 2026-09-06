@@ -36,7 +36,7 @@ export const MenuProductCard = ({
           aria-label={`Ver detalles de ${product.name}`}
           className="focus-ring flex min-w-0 flex-1 items-center gap-3 text-left active:scale-[0.99] transition-transform"
         >
-          <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50">
+          <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50">
             <ProductImage imageUrl={product.image_url} alt={product.name} />
           </div>
 

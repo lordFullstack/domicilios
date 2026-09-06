@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useMemo, useEffect } from 'react'
-import { ChevronLeft, Heart, AlertTriangle } from 'lucide-react'
+import { ChevronLeft, Heart, AlertTriangle, Soup, UtensilsCrossed, CupSoda, Cake, PlusCircle } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { Badge } from '@/shared/components/Badge'
 import { EmptyState } from '@/shared/components/EmptyState'
@@ -21,6 +21,16 @@ import { MenuProductCard } from '../components/MenuProductCard'
 import { FeaturedProductStrip } from '../components/FeaturedProductStrip'
 import { ProductDetailSheet } from '../components/ProductDetailSheet'
 import { CartFloatingBar } from '../components/CartFloatingBar'
+
+// Un ícono por cada valor de PRODUCT_CATEGORIES (config/constants.ts).
+// Si se agrega una categoría nueva ahí, hay que sumarle su ícono acá.
+const CATEGORY_ICONS: Record<string, typeof Soup> = {
+  Entradas: Soup,
+  Platos: UtensilsCrossed,
+  Bebidas: CupSoda,
+  Postres: Cake,
+  Adicionales: PlusCircle,
+}
 
 export const RestaurantDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -261,10 +271,6 @@ export const RestaurantDetailPage = () => {
 
       {/* Menú */}
       <div className="px-5 pt-4">
-        <h2 className="font-display text-lg font-bold text-secondary mb-3">
-          Menú
-        </h2>
-
         {productsLoading ? (
           <div className="flex flex-col gap-3">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -276,19 +282,23 @@ export const RestaurantDetailPage = () => {
             {/* Categorías */}
             <div className="sticky top-0 z-20 -mx-5 mb-5 bg-white/95 px-5 py-2 backdrop-blur">
               <div className="no-scrollbar flex gap-2 overflow-x-auto">
-                {availableCategories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
-                    className={`focus-ring flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors min-h-[40px] ${
-                      activeCategory === cat
-                        ? 'bg-primary text-white'
-                        : 'bg-gray-50 text-gray-500'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
+                {availableCategories.map((cat) => {
+                  const Icon = CATEGORY_ICONS[cat] ?? UtensilsCrossed
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`focus-ring flex flex-shrink-0 items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors min-h-[40px] ${
+                        activeCategory === cat
+                          ? 'bg-primary text-white'
+                          : 'bg-gray-50 text-gray-500'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                      {cat}
+                    </button>
+                  )
+                })}
               </div>
             </div>
 
