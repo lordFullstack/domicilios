@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
@@ -74,5 +74,16 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'esbuild',
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    css: false,
+    // tsconfig.json no declara los tipos globales de Vitest a propósito:
+    // 'npm run build' corre tsc sobre TODO src/, y no queremos que el
+    // build de producción dependa de tipos de testing. Por eso los tests
+    // importan describe/it/expect explícitamente desde 'vitest' en vez
+    // de usarlos como globals.
+    globals: false,
   },
 })
