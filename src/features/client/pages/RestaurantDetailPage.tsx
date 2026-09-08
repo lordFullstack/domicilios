@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useMemo, useEffect } from 'react'
-import { ChevronLeft, Heart, AlertTriangle } from 'lucide-react'
+import { ChevronLeft, Heart, AlertTriangle, Soup, UtensilsCrossed, CupSoda, Cake, PlusCircle } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { Badge } from '@/shared/components/Badge'
 import { EmptyState } from '@/shared/components/EmptyState'
@@ -18,8 +18,19 @@ import { ROUTES, PRODUCT_CATEGORIES } from '@/config/constants'
 import { Product } from '@/shared/types'
 import { RestaurantDetailSkeleton } from '../components/RestaurantDetailSkeleton'
 import { MenuProductCard } from '../components/MenuProductCard'
+import { FeaturedProductStrip } from '../components/FeaturedProductStrip'
 import { ProductDetailSheet } from '../components/ProductDetailSheet'
 import { CartFloatingBar } from '../components/CartFloatingBar'
+
+// Un ícono por cada valor de PRODUCT_CATEGORIES (config/constants.ts).
+// Si se agrega una categoría nueva ahí, hay que sumarle su ícono acá.
+const CATEGORY_ICONS: Record<string, typeof Soup> = {
+  Entradas: Soup,
+  Platos: UtensilsCrossed,
+  Bebidas: CupSoda,
+  Postres: Cake,
+  Adicionales: PlusCircle,
+}
 
 export const RestaurantDetailPage = () => {
   const { id } = useParams<{ id: string }>()
@@ -38,7 +49,7 @@ export const RestaurantDetailPage = () => {
     fromCache: productsFromCache,
     cachedAt: productsCachedAt,
   } = useProducts(id)
-  const { cart, addItem, clear } = useCart()
+  const { cart, addItem, removeItem, updateQuantity, clear } = useCart()
   const { isFavorite, toggleFavorite } = useFavorites()
   const [favPending, setFavPending] = useState(false)
 
@@ -73,6 +84,13 @@ export const RestaurantDetailPage = () => {
   const filteredProducts = products.filter((p) => p.category === activeCategory)
   const restaurantIsOpen = restaurant?.status === 'open'
 
+  // No hay métrica de ventas en el modelo actual; por eso la franja se
+  // etiqueta "Recomendados" y no "Más vendidos".
+  const featuredProducts = useMemo(
+    () => products.filter((product) => product.available).slice(0, 3),
+    [products]
+  )
+
   const actuallyAdd = (product: Product, quantity: number) => {
     addItem(product.id, product.price, quantity)
     setDetailProduct(null)
@@ -90,6 +108,24 @@ export const RestaurantDetailPage = () => {
   }
 
   const handleQuickAdd = (product: Product) => handleAdd(product, 1)
+
+  const getProductQuantity = (productId: string) =>
+    cart.find((item) => item.productId === productId)?.quantity ?? 0
+
+  const handleIncrement = (product: Product) => {
+    handleAdd(product, 1)
+  }
+
+  const handleDecrement = (product: Product) => {
+    const currentQuantity = getProductQuantity(product.id)
+
+    if (currentQuantity <= 1) {
+      removeItem(product.id)
+      return
+    }
+
+    updateQuantity(product.id, currentQuantity - 1)
+  }
 
   const confirmSwitch = () => {
     clear()
@@ -160,18 +196,22 @@ export const RestaurantDetailPage = () => {
     <div className="min-h-screen bg-white max-w-md mx-auto pb-28 relative safe-left safe-right">
       <Toast message={toastMessage} />
 
-      {/* Hero */}
-      <div className="h-40 bg-primary/10 relative overflow-hidden">
+      {/* Hero — info del restaurante integrada al banner (overlay), sin
+          repetirla debajo. */}
+      <div className="relative h-64 overflow-hidden bg-primary/10">
         {restaurant.cover_url ? (
-          <>
-            <img src={restaurant.cover_url} alt={restaurant.name} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-          </>
+          <img
+            src={restaurant.cover_url}
+            alt={restaurant.name}
+            className="w-full h-full object-cover"
+          />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-6xl">
+          <div className="w-full h-full flex items-center justify-center text-7xl">
             {restaurant.image_url}
           </div>
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
+
         <button
           onClick={() => navigate(-1)}
           aria-label="Volver"
@@ -191,31 +231,46 @@ export const RestaurantDetailPage = () => {
             color={isFavorite(restaurant.id) ? '#E11D48' : '#1A1A1A'}
           />
         </button>
+
+        <div className="absolute inset-x-0 bottom-0 p-5">
+          <div className="flex items-end gap-3">
+            <div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-white/70 bg-white flex items-center justify-center text-3xl shadow-md">
+              {restaurant.cover_url ? (
+                <img src={restaurant.cover_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                restaurant.image_url
+              )}
+            </div>
+            <div className="min-w-0 flex-1 pb-0.5">
+              <h1 className="font-display text-xl font-bold text-white truncate drop-shadow">
+                {restaurant.name}
+              </h1>
+              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/90">
+                <span>⭐ {restaurant.rating_count > 0 ? restaurant.rating_avg.toFixed(1) : 'Nuevo'}</span>
+                <span>· 25-35 min</span>
+                <span>· {restaurant.category}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2">
+            <Badge variant={restaurantIsOpen ? 'success' : 'danger'}>
+              {restaurantIsOpen ? '🟢 Abierto' : '🔴 Cerrado'}
+            </Badge>
+          </div>
+
+          <p className="mt-2 text-xs text-white/85 line-clamp-2">{restaurant.description}</p>
+        </div>
       </div>
 
-      {/* Info */}
-      <div className="px-5 pt-4">
-        <h1 className="font-display text-xl font-bold text-secondary">{restaurant.name}</h1>
-        <div className="flex items-center gap-2 text-xs text-gray-500 mt-1 mb-1">
-          <span>⭐ {restaurant.rating_count > 0 ? restaurant.rating_avg.toFixed(1) : 'Nuevo'}</span>
-          <span>· 25-35 min</span>
-          <span>· {restaurant.category}</span>
-        </div>
-        <div className="mb-2">
-          <Badge variant={restaurantIsOpen ? 'success' : 'danger'}>
-            {restaurantIsOpen ? '🟢 Abierto' : '🔴 Cerrado'}
-          </Badge>
-        </div>
-        <p className="text-xs text-gray-500 mb-4">{restaurant.description}</p>
-        {(restaurantFromCache || productsFromCache) && (
+      {(restaurantFromCache || productsFromCache) && (
+        <div className="px-5 pt-3">
           <OfflineDataBadge cachedAt={Math.max(restaurantCachedAt || 0, productsCachedAt || 0) || null} />
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Menú */}
-      <div className="px-5">
-        <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Menú</h2>
-
+      <div className="px-5 pt-4">
         {productsLoading ? (
           <div className="flex flex-col gap-3">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -224,22 +279,36 @@ export const RestaurantDetailPage = () => {
           </div>
         ) : products.length > 0 ? (
           <>
-            {/* Pestañas de categoría */}
-            <div className="flex gap-2 overflow-x-auto pb-3 mb-2 -mx-1 px-1 no-scrollbar">
-              {availableCategories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`focus-ring flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors min-h-[40px] ${
-                    activeCategory === cat
-                      ? 'bg-primary text-white'
-                      : 'bg-gray-50 text-gray-500'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+            {/* Categorías */}
+            <div className="sticky top-0 z-20 -mx-5 mb-5 bg-white/95 px-5 py-2 backdrop-blur">
+              <div className="no-scrollbar flex gap-2 overflow-x-auto">
+                {availableCategories.map((cat) => {
+                  const Icon = CATEGORY_ICONS[cat] ?? UtensilsCrossed
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`focus-ring flex flex-shrink-0 items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors min-h-[40px] ${
+                        activeCategory === cat
+                          ? 'bg-primary text-white'
+                          : 'bg-gray-50 text-gray-500'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4" />
+                      {cat}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
+
+            {/* Recomendados */}
+            <FeaturedProductStrip
+              products={featuredProducts}
+              restaurantIsOpen={restaurantIsOpen}
+              onOpenDetail={setDetailProduct}
+              onQuickAdd={handleQuickAdd}
+            />
 
             <div className="flex flex-col gap-3">
               {filteredProducts.map((product) => (
@@ -247,8 +316,10 @@ export const RestaurantDetailPage = () => {
                   key={product.id}
                   product={product}
                   restaurantIsOpen={restaurantIsOpen}
+                  quantity={getProductQuantity(product.id)}
                   onOpenDetail={setDetailProduct}
-                  onQuickAdd={handleQuickAdd}
+                  onIncrement={handleIncrement}
+                  onDecrement={handleDecrement}
                 />
               ))}
             </div>
