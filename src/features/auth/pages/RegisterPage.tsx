@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Rocket, Bot } from 'lucide-react'
+import { Mail, User, ArrowRight } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { Button } from '@/shared/components/Button'
-import { Input } from '@/shared/components/Input'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 import { UserRole } from '@/shared/types'
 import { getAuthErrorMessage } from '../utils/authErrors'
+import { RegisterHero } from '../components/RegisterHero'
+import { AuthInput } from '../components/AuthInput'
+import { AuthPasswordInput } from '../components/AuthPasswordInput'
+import { AuthRoleSelector } from '../components/AuthRoleSelector'
+import { RegisterFooter } from '../components/RegisterFooter'
 
 const ROUTE_BY_ROLE: Record<string, string> = {
   [USER_ROLES.CLIENT]: ROUTES.CLIENT_HOME,
@@ -44,80 +48,68 @@ export const RegisterPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center px-8 py-10 max-w-md mx-auto">
-      <div className="flex flex-col items-center mb-8">
-        <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mb-4">
-          <Rocket className="w-8 h-8 text-white" />
+    <div className="min-h-screen bg-white flex flex-col md:grid md:grid-cols-2">
+      <RegisterHero />
+
+      <div className="relative z-10 -mt-8 md:mt-0 flex flex-col justify-center bg-white rounded-t-[2rem] md:rounded-none px-6 sm:px-8 md:px-12 lg:px-16 py-8 md:py-16 safe-bottom">
+        <div className="w-full max-w-[400px] mx-auto animate-fade-slide-up">
+          <div className="mb-6 md:mb-8">
+            <h2 className="font-display text-xl md:text-2xl font-bold text-secondary">
+              Crea tu cuenta
+            </h2>
+            <p className="text-gray-500 text-sm mt-1">
+              Regístrate y empieza a pedir tu comida favorita
+            </p>
+          </div>
+
+          {error && (
+            <div className="bg-red-50 text-danger text-sm p-3 rounded-2xl mb-4" role="alert">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <AuthInput
+              icon={User}
+              label="Nombre completo"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Juan Pérez"
+              required
+            />
+            <AuthInput
+              icon={Mail}
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="tu@email.com"
+              required
+            />
+            <AuthPasswordInput
+              label="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+            <AuthRoleSelector value={role} onChange={setRole} />
+
+            <Button
+              type="submit"
+              fullWidth
+              size="lg"
+              loading={loading}
+              className="mt-2 shadow-lg shadow-primary/25 whitespace-nowrap"
+            >
+              <span className="whitespace-nowrap">Crear cuenta</span>
+              {!loading && <ArrowRight className="w-4 h-4 shrink-0" />}
+            </Button>
+          </form>
+
+          <RegisterFooter />
         </div>
-        <h1 className="font-display text-2xl font-bold text-secondary text-center">
-          Crea tu cuenta
-        </h1>
-        <p className="text-gray-500 text-sm mt-1">Únete a Domicilios Riohacha</p>
       </div>
-
-      {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-2xl mb-4" role="alert">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          label="Nombre completo"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Juan Pérez"
-          required
-        />
-        <Input
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="tu@email.com"
-          required
-        />
-        <Input
-          label="Contraseña"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••"
-          required
-        />
-
-        <div>
-          <label htmlFor="register-role" className="block text-sm font-medium text-gray-700 mb-2">
-            Tipo de cuenta
-          </label>
-          <select
-            id="register-role"
-            value={role}
-            onChange={(e) => setRole(e.target.value as UserRole)}
-            className="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-primary"
-          >
-            <option value={USER_ROLES.CLIENT}>Cliente</option>
-            <option value={USER_ROLES.RESTAURANT}>Restaurante</option>
-            <option value={USER_ROLES.DELIVERY}>Domiciliario</option>
-          </select>
-        </div>
-
-        <Button type="submit" fullWidth size="lg" loading={loading} className="mt-2">
-          Registrarse
-        </Button>
-      </form>
-
-      <p className="text-center text-sm text-gray-500 mt-6">
-        ¿Ya tienes cuenta?{' '}
-        <a href={ROUTES.LOGIN} className="text-primary font-semibold">
-          Inicia sesión
-        </a>
-      </p>
-
-      <p className="flex items-center justify-center gap-1.5 text-xs text-gray-300 mt-8">
-        <Bot className="w-3.5 h-3.5" />
-        by Jorge Ghisays y Claude
-      </p>
     </div>
   )
 }
