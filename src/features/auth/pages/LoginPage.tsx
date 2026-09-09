@@ -41,11 +41,11 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col md:flex-row">
+    <div className="min-h-screen bg-white flex flex-col md:grid md:grid-cols-2">
       <LoginHero />
 
-      <div className="relative z-10 -mt-8 md:mt-0 flex-1 flex flex-col justify-center bg-white rounded-t-[2rem] md:rounded-none px-6 sm:px-8 md:px-16 py-8 md:py-16">
-        <div className="w-full max-w-sm mx-auto animate-fade-slide-up">
+      <div className="relative z-10 -mt-8 md:mt-0 flex flex-col justify-center bg-white rounded-t-[2rem] md:rounded-none px-6 sm:px-8 md:px-12 lg:px-16 py-8 md:py-16 safe-bottom">
+        <div className="w-full max-w-[400px] mx-auto animate-fade-slide-up">
           <div className="mb-6 md:mb-8">
             <h2 className="font-display text-xl md:text-2xl font-bold text-secondary">
               Bienvenido de nuevo
@@ -91,10 +91,10 @@ export const LoginPage = () => {
               fullWidth
               size="lg"
               loading={loading}
-              className="mt-2 shadow-lg shadow-primary/25"
+              className="mt-2 shadow-lg shadow-primary/25 whitespace-nowrap"
             >
-              Iniciar sesión
-              {!loading && <ArrowRight className="w-4 h-4" />}
+              <span className="whitespace-nowrap">Iniciar sesión</span>
+              {!loading && <ArrowRight className="w-4 h-4 shrink-0" />}
             </Button>
           </form>
 
