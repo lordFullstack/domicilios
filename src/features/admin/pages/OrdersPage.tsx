@@ -9,6 +9,7 @@ import { OrdersCardList } from '../components/OrdersCardList'
 import { OrderDetailPanel } from '../components/OrderDetailPanel'
 import { USER_ROLES } from '@/config/constants'
 import { Order } from '@/shared/types'
+import { AdminListSkeleton } from '../components/AdminListSkeleton'
 
 export const AdminOrdersPage = () => {
   const {
@@ -59,7 +60,7 @@ export const AdminOrdersPage = () => {
           </p>
         )}
 
-        {loading && <p className="text-gray-500 text-sm">Cargando pedidos...</p>}
+        {loading && <AdminListSkeleton />}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && (
@@ -82,7 +83,7 @@ export const AdminOrdersPage = () => {
               </p>
             ) : (
               <>
-                <div className="hidden md:block bg-white border border-gray-100 rounded-2xl overflow-hidden px-4">
+                <div className="hidden md:block bg-white border border-gray-100 rounded-2xl overflow-x-auto px-4">
                   <OrdersTable
                     orders={orders}
                     usersById={usersById}

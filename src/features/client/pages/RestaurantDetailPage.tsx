@@ -215,7 +215,8 @@ export const RestaurantDetailPage = () => {
         <button
           onClick={() => navigate(-1)}
           aria-label="Volver"
-          className="touch-target focus-ring absolute top-4 left-4 w-10 h-10 rounded-full glass flex items-center justify-center active:scale-90 transition-transform"
+          className="touch-target focus-ring absolute left-4 w-10 h-10 rounded-full glass flex items-center justify-center active:scale-90 transition-transform"
+          style={{ top: 'max(1rem, env(safe-area-inset-top))' }}
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
@@ -223,7 +224,8 @@ export const RestaurantDetailPage = () => {
           onClick={handleToggleFavorite}
           disabled={favPending}
           aria-label={isFavorite(restaurant.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-          className="touch-target focus-ring absolute top-4 right-4 w-10 h-10 rounded-full glass flex items-center justify-center active:scale-90 transition-transform"
+          className="touch-target focus-ring absolute right-4 w-10 h-10 rounded-full glass flex items-center justify-center active:scale-90 transition-transform"
+          style={{ top: 'max(1rem, env(safe-area-inset-top))' }}
         >
           <Heart
             className="w-4 h-4"

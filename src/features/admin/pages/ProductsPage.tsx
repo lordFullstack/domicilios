@@ -8,6 +8,7 @@ import { Button } from '@/shared/components/Button'
 import { Product, ProductCategory } from '@/shared/types'
 import { PRODUCT_CATEGORIES } from '@/config/constants'
 import { formatCOP } from '@/shared/utils/money'
+import { AdminListSkeleton } from '../components/AdminListSkeleton'
 
 export const AdminProductsPage = () => {
   const { restaurants, loading: loadingRestaurants } = useRestaurants()
@@ -125,7 +126,7 @@ export const AdminProductsPage = () => {
             </div>
 
             {loading ? (
-              <p className="text-gray-500 text-sm">Cargando menú...</p>
+              <AdminListSkeleton />
             ) : products.length === 0 ? (
               <div className="text-center py-16 bg-white border border-gray-100 rounded-2xl">
                 <p className="text-5xl mb-4">🍽️</p>
@@ -184,7 +185,7 @@ export const AdminProductsPage = () => {
                                       setIsModalOpen(true)
                                     }}
                                     aria-label={`Editar ${product.name}`}
-                                    className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                    className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center"
                                   >
                                     <Pencil className="w-3 h-3 text-gray-500" />
                                   </button>
@@ -199,7 +200,7 @@ export const AdminProductsPage = () => {
                                     <button
                                       onClick={() => setDeleteConfirmId(product.id)}
                                       aria-label={`Eliminar ${product.name}`}
-                                      className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                      className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center"
                                     >
                                       <Trash2 className="w-3 h-3 text-gray-500" />
                                     </button>

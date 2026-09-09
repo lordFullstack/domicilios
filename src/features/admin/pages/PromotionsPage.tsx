@@ -7,6 +7,7 @@ import { useAdminRestaurants } from '../hooks/useAdminRestaurants'
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { Promotion } from '@/shared/types'
+import { AdminListSkeleton } from '../components/AdminListSkeleton'
 
 const TYPE_LABELS: Record<string, string> = {
   banner: '🎉 Banner',
@@ -71,7 +72,7 @@ export const AdminPromotionsPage = () => {
           Banners y destacados que ven los clientes en Inicio
         </p>
 
-        {loading && <p className="text-gray-500 text-sm">Cargando promociones...</p>}
+        {loading && <AdminListSkeleton />}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && (

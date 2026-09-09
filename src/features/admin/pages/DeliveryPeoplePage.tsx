@@ -10,6 +10,7 @@ import { useAdminRestaurants } from '../hooks/useAdminRestaurants'
 import { Card } from '@/shared/components/Card'
 import { USER_ROLES, ORDER_STATUS } from '@/config/constants'
 import { User } from '@/shared/types'
+import { AdminListSkeleton } from '../components/AdminListSkeleton'
 
 type QuickFilter = 'all' | 'active_now' | 'disabled'
 
@@ -106,7 +107,7 @@ export const AdminDeliveryPeoplePage = () => {
           </div>
         </div>
 
-        {loading && <p className="text-gray-500 text-sm">Cargando domiciliarios...</p>}
+        {loading && <AdminListSkeleton />}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && filteredList.length === 0 && (

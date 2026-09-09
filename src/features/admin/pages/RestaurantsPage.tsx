@@ -7,6 +7,7 @@ import { RestaurantsTable } from '../components/RestaurantsTable'
 import { RestaurantsCardList } from '../components/RestaurantsCardList'
 import { useAdminRestaurants } from '../hooks/useAdminRestaurants'
 import { Restaurant } from '@/shared/types'
+import { AdminListSkeleton } from '../components/AdminListSkeleton'
 
 export const AdminRestaurantsPage = () => {
   const { restaurants, loading, error, editRestaurant, toggleApproved } = useAdminRestaurants()
@@ -53,7 +54,7 @@ export const AdminRestaurantsPage = () => {
           {filteredRestaurants.length} de {restaurants.length} restaurante(s)
         </p>
 
-        {loading && <p className="text-gray-500 text-sm">Cargando restaurantes...</p>}
+        {loading && <AdminListSkeleton />}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && (
@@ -77,7 +78,7 @@ export const AdminRestaurantsPage = () => {
               </p>
             ) : (
               <>
-                <div className="hidden md:block border border-gray-100 rounded-2xl overflow-hidden px-4">
+                <div className="hidden md:block border border-gray-100 rounded-2xl overflow-x-auto px-4">
                   <RestaurantsTable
                     restaurants={filteredRestaurants}
                     onEdit={setEditingRestaurant}

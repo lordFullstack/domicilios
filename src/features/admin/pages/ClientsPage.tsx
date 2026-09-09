@@ -9,6 +9,7 @@ import { useAdminRestaurants } from '../hooks/useAdminRestaurants'
 import { Card } from '@/shared/components/Card'
 import { USER_ROLES } from '@/config/constants'
 import { User } from '@/shared/types'
+import { AdminListSkeleton } from '../components/AdminListSkeleton'
 
 export const AdminClientsPage = () => {
   const { users, loading, error, editUser, toggleActive, changePassword } = useAdminUsers()
@@ -78,7 +79,7 @@ export const AdminClientsPage = () => {
           className="w-full max-w-sm border border-gray-200 rounded-xl px-4 py-2 text-sm mb-6"
         />
 
-        {loading && <p className="text-gray-500 text-sm">Cargando clientes...</p>}
+        {loading && <AdminListSkeleton />}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && filteredClients.length === 0 && (

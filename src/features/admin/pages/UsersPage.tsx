@@ -6,6 +6,7 @@ import { useAdminUsers } from '../hooks/useAdminUsers'
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
 import { User } from '@/shared/types'
+import { AdminListSkeleton } from '../components/AdminListSkeleton'
 
 const ROLE_LABELS: Record<string, string> = {
   client: '🧑 Cliente',
@@ -57,7 +58,7 @@ export const AdminUsersPage = () => {
           className="w-full max-w-sm border border-gray-200 rounded-xl px-4 py-2 text-sm mb-5"
         />
 
-        {loading && <p className="text-gray-500 text-sm">Cargando usuarios...</p>}
+        {loading && <AdminListSkeleton />}
         {error && <p className="text-danger text-sm">{error}</p>}
 
         {!loading && (

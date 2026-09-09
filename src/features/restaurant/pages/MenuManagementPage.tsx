@@ -186,7 +186,7 @@ export const MenuManagementPage = () => {
                                 <button
                                   onClick={() => handleOpenEdit(product)}
                                   aria-label={`Editar ${product.name}`}
-                                  className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                  className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center"
                                 >
                                   <Pencil className="w-3 h-3 text-gray-500" />
                                 </button>
@@ -201,7 +201,7 @@ export const MenuManagementPage = () => {
                                   <button
                                     onClick={() => setDeleteConfirmId(product.id)}
                                     aria-label={`Eliminar ${product.name}`}
-                                    className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center"
+                                    className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center"
                                   >
                                     <Trash2 className="w-3 h-3 text-gray-500" />
                                   </button>
