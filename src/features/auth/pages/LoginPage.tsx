@@ -6,8 +6,8 @@ import { Button } from '@/shared/components/Button'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 import { getAuthErrorMessage } from '../utils/authErrors'
 import { LoginHero } from '../components/LoginHero'
-import { LoginInput } from '../components/LoginInput'
-import { LoginPasswordInput } from '../components/LoginPasswordInput'
+import { AuthInput } from '../components/AuthInput'
+import { AuthPasswordInput } from '../components/AuthPasswordInput'
 import { LoginFooter } from '../components/LoginFooter'
 
 const ROUTE_BY_ROLE: Record<string, string> = {
@@ -62,7 +62,7 @@ export const LoginPage = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <LoginInput
+            <AuthInput
               icon={Mail}
               label="Email"
               type="email"
@@ -71,7 +71,7 @@ export const LoginPage = () => {
               placeholder="tu@email.com"
               required
             />
-            <LoginPasswordInput
+            <AuthPasswordInput
               label="Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

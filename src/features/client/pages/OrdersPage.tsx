@@ -1,9 +1,11 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, ClipboardList } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { Skeleton } from '@/shared/components/Skeleton'
+import { EmptyState } from '@/shared/components/EmptyState'
 import { OrderCard } from '../components/OrderCard'
 import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
@@ -18,12 +20,13 @@ export const OrdersPage = () => {
   const successMessage = (location.state as any)?.message
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
+    <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right pb-24">
       {/* Header */}
       <div className="px-5 pt-6 flex items-center gap-3 mb-4">
         <button
           onClick={() => navigate(ROUTES.CLIENT_HOME)}
-          className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"
+          aria-label="Volver al inicio"
+          className="touch-target focus-ring w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center active:scale-90 transition-transform"
         >
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
@@ -33,7 +36,7 @@ export const OrdersPage = () => {
       {/* Contenido */}
       <div className="px-5">
         {successMessage && (
-          <div className="mb-4 bg-green-50 text-green-700 text-sm font-semibold rounded-2xl p-3">
+          <div className="mb-4 bg-success/10 text-success text-sm font-semibold rounded-2xl p-3">
             {successMessage}
           </div>
         )}
@@ -42,7 +45,18 @@ export const OrdersPage = () => {
         <NotificationPermissionCard />
 
         {loading ? (
-          <p className="text-gray-500 text-sm text-center py-8">Cargando órdenes...</p>
+          <div className="flex flex-col gap-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="flex gap-4 rounded-2xl border border-gray-100 p-4">
+                <Skeleton className="w-12 h-12 flex-shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
+              </div>
+            ))}
+          </div>
         ) : orders.length > 0 ? (
           <div className="flex flex-col gap-3">
             {orders.map((order) => (
@@ -54,12 +68,12 @@ export const OrdersPage = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <p className="text-5xl mb-4">📭</p>
-            <p className="font-display font-bold mb-1 text-secondary">No tienes órdenes</p>
-            <p className="text-sm text-gray-500 mb-6">Realiza tu primera orden ahora</p>
-            <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>
-          </div>
+          <EmptyState
+            icon={ClipboardList}
+            title="No tienes órdenes"
+            description="Realiza tu primera orden ahora."
+            action={<Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>}
+          />
         )}
       </div>
 

@@ -46,10 +46,10 @@ export const PromoBanner = () => {
             </div>
           </div>
         ) : (
-          <div className="flex items-center justify-between p-4">
+          <div className="flex items-center justify-between p-4 bg-brand-gradient">
             <div>
-              <p className="font-display font-bold text-sm text-primary">{current.title}</p>
-              {current.subtitle && <p className="text-xs text-gray-500">{current.subtitle}</p>}
+              <p className="font-display font-bold text-sm text-white">{current.title}</p>
+              {current.subtitle && <p className="text-xs text-white/80">{current.subtitle}</p>}
             </div>
             <span className="text-3xl">🎉</span>
           </div>

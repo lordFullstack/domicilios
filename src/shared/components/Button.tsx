@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react'
 import clsx from 'clsx'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'gradient'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
   fullWidth?: boolean
@@ -25,6 +25,9 @@ export const Button = ({
     secondary: 'bg-secondary text-white hover:bg-secondary/90 active:scale-[0.97] disabled:bg-gray-300',
     outline: 'border-2 border-primary text-primary hover:bg-primary/5 active:scale-[0.97] disabled:border-gray-300 disabled:text-gray-500',
     ghost: 'text-primary hover:bg-primary/5 active:scale-[0.97] disabled:text-gray-500',
+    // Reservado para CTAs realmente destacados (promo hero, checkout final).
+    // No usar como reemplazo general de "primary" — ver LOOP_01.
+    gradient: 'bg-brand-gradient text-white hover:opacity-90 active:scale-[0.97] disabled:bg-none disabled:bg-gray-300',
   }
 
   // min-h-[48px] en md/lg para respetar el área táctil mínima (~48px);

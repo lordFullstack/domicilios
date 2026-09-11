@@ -9,14 +9,12 @@ interface AuthInputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 /**
- * Input con icono para el Registro.
- * Mismo sistema visual que el Login (LOOP 01.1), pero como archivo
- * independiente: este LOOP tiene prohibido modificar Login, así que no
- * se reutiliza LoginInput.tsx directamente ni se toca LoginPage.tsx.
- * No reemplaza ni modifica el <Input /> compartido (src/shared/components/Input.tsx).
- *
- * PENDIENTE — LOOP FUTURO: consolidar AuthInput/LoginInput en un único
- * componente compartido (requeriría tocar Login, fuera de alcance aquí).
+ * Input con icono para pantallas de autenticación (Login, Registro).
+ * Consolidado en LOOP_02: antes existía duplicado como LoginInput.tsx
+ * (mismo componente, distinto nombre) porque un loop anterior tenía
+ * prohibido tocar LoginPage. Ya no aplica esa restricción.
+ * No reemplaza ni modifica el <Input /> compartido (src/shared/components/Input.tsx),
+ * que sigue usándose en el resto de la app (Admin, Restaurante, Domiciliario, Cuenta).
  */
 export const AuthInput = ({
   label,

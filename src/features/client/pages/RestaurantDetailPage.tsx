@@ -7,6 +7,7 @@ import { EmptyState } from '@/shared/components/EmptyState'
 import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
 import { Toast } from '@/shared/components/Toast'
 import { BottomSheet } from '@/shared/components/BottomSheet'
+import { Skeleton } from '@/shared/components/Skeleton'
 import {
   useRestaurantById,
   useProducts,
@@ -153,7 +154,7 @@ export const RestaurantDetailPage = () => {
   // Error real de carga (sin internet y sin caché) — distinto de "no existe".
   if (!restaurant && restaurantError) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-6">
+      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center px-6">
         <EmptyState
           icon={AlertTriangle}
           title="No pudimos cargar este restaurante"
@@ -166,7 +167,7 @@ export const RestaurantDetailPage = () => {
 
   if (!restaurant) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-6">
+      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center px-6">
         <div className="text-center">
           <p className="text-gray-500 text-sm mb-4">Restaurante no encontrado</p>
           <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>
@@ -179,7 +180,7 @@ export const RestaurantDetailPage = () => {
   // aunque el cliente tenga el link directo (favoritos, historial, etc.)
   if (!restaurant.approved) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center px-6">
+      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center px-6">
         <div className="text-center">
           <p className="text-4xl mb-3">⛔</p>
           <p className="font-display font-bold text-secondary mb-1">Restaurante no disponible</p>
@@ -249,7 +250,6 @@ export const RestaurantDetailPage = () => {
               </h1>
               <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/90">
                 <span>⭐ {restaurant.rating_count > 0 ? restaurant.rating_avg.toFixed(1) : 'Nuevo'}</span>
-                <span>· 25-35 min</span>
                 <span>· {restaurant.category}</span>
               </div>
             </div>
@@ -276,7 +276,7 @@ export const RestaurantDetailPage = () => {
         {productsLoading ? (
           <div className="flex flex-col gap-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-20 bg-gray-100 rounded-2xl animate-pulse" />
+              <Skeleton key={i} className="h-20 w-full rounded-2xl" />
             ))}
           </div>
         ) : products.length > 0 ? (

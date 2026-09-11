@@ -37,7 +37,7 @@ export const CartPage = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
+      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right pb-24">
         <div className="px-5 pt-6 flex items-center gap-3 mb-2">
           <button
             onClick={() => navigate(-1)}
@@ -63,7 +63,7 @@ export const CartPage = () => {
   const total = getTotal()
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-44">
+    <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right pb-44">
       {/* Header */}
       <div className="px-5 pt-6 flex items-center gap-3 mb-1">
         <button

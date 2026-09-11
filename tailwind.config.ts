@@ -19,6 +19,16 @@ export default {
         danger: '#E11D48',
         info: '#0284C7',          // azul informativo, distinto del primary (más cobalto)
         surface: '#F7F7F5',       // fondo gris muy claro para secciones alternas
+        coral: '#FF5A6B',         // acento coral/rosa — promos y elementos destacados puntuales (LOOP 01)
+        ink: '#101B3D',           // navy/charcoal profundo — texto principal (LOOP 01)
+        'ink-muted': '#64748B',   // gris azulado — texto secundario (LOOP 01)
+      },
+      backgroundImage: {
+        // Gradiente de marca naranja→rosa/fucsia: exclusivo para CTAs
+        // destacados, promos y estados activos puntuales. No usar como
+        // fondo general de pantalla (ver LOOP_01 — "no festival de
+        // gradientes").
+        'brand-gradient': 'linear-gradient(135deg, #FF7A45 0%, #FF3D81 60%, #E026B0 100%)',
       },
       fontFamily: {
         display: ['"Poppins"', 'sans-serif'],

@@ -1,55 +1,19 @@
 import { Order } from '@/shared/types'
 import { Card } from '@/shared/components/Card'
 import { useRestaurantById } from '@/hooks/useLocalData'
+import { OrderStatusIcon } from '@/shared/constants/icons'
 import { ORDER_STATUS } from '@/config/constants'
+import { formatCOP } from '@/shared/utils/money'
 
 interface OrderCardProps {
   order: Order
   onClick?: () => void
 }
 
-const getStatusColor = (status: string): string => {
-  switch (status) {
-    case ORDER_STATUS.PENDING:
-      return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-    case ORDER_STATUS.CONFIRMED:
-      return 'bg-blue-100 text-blue-800 border-blue-200'
-    case ORDER_STATUS.PREPARING:
-      return 'bg-orange-100 text-orange-800 border-orange-200'
-    case ORDER_STATUS.READY:
-      return 'bg-purple-100 text-purple-800 border-purple-200'
-    case ORDER_STATUS.IN_DELIVERY:
-      return 'bg-cyan-100 text-cyan-800 border-cyan-200'
-    case ORDER_STATUS.DELIVERED:
-      return 'bg-green-100 text-green-800 border-green-200'
-    case ORDER_STATUS.CANCELLED:
-      return 'bg-red-100 text-red-800 border-red-200'
-    default:
-      return 'bg-gray-100 text-gray-800 border-gray-200'
-  }
-}
-
-const getStatusEmoji = (status: string): string => {
-  switch (status) {
-    case ORDER_STATUS.PENDING:
-      return '⏳'
-    case ORDER_STATUS.CONFIRMED:
-      return '✅'
-    case ORDER_STATUS.PREPARING:
-      return '👨‍🍳'
-    case ORDER_STATUS.READY:
-      return '📦'
-    case ORDER_STATUS.IN_DELIVERY:
-      return '🚴'
-    case ORDER_STATUS.DELIVERED:
-      return '🎉'
-    case ORDER_STATUS.CANCELLED:
-      return '❌'
-    default:
-      return '❓'
-  }
-}
-
+// Mismas etiquetas que OrderStatusTimeline/OrderStatusHero — una sola
+// fuente de verdad para el texto de cada estado seria mejor, pero
+// timeline/hero tienen copys distintos (paso corto vs. título+descripción)
+// por diseño, así que esta lista solo replica las etiquetas cortas.
 const getStatusLabel = (status: string): string => {
   switch (status) {
     case ORDER_STATUS.PENDING:
@@ -71,6 +35,27 @@ const getStatusLabel = (status: string): string => {
   }
 }
 
+const getStatusColor = (status: string): string => {
+  switch (status) {
+    case ORDER_STATUS.PENDING:
+      return 'bg-yellow-100 text-yellow-800'
+    case ORDER_STATUS.CONFIRMED:
+      return 'bg-blue-100 text-blue-800'
+    case ORDER_STATUS.PREPARING:
+      return 'bg-orange-100 text-orange-800'
+    case ORDER_STATUS.READY:
+      return 'bg-purple-100 text-purple-800'
+    case ORDER_STATUS.IN_DELIVERY:
+      return 'bg-primary/10 text-primary'
+    case ORDER_STATUS.DELIVERED:
+      return 'bg-success/10 text-success'
+    case ORDER_STATUS.CANCELLED:
+      return 'bg-danger/10 text-danger'
+    default:
+      return 'bg-gray-100 text-gray-600'
+  }
+}
+
 export const OrderCard = ({ order, onClick }: OrderCardProps) => {
   const { restaurant } = useRestaurantById(order.restaurant_id)
 
@@ -86,58 +71,39 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
   })
 
   return (
-    <Card
-      hoverable
-      onClick={onClick}
-      className="cursor-pointer transition-all hover:shadow-lg"
-    >
+    <Card hoverable onClick={onClick}>
       <div className="flex gap-4">
-        {/* Emoji restaurante */}
-        <div className="text-4xl">{restaurant?.image_url || '🏪'}</div>
+        <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0">
+          {restaurant?.image_url || '🏪'}
+        </div>
 
-        {/* Contenido */}
         <div className="flex-1 min-w-0">
-          {/* Header: Nombre y estado */}
           <div className="flex justify-between items-start gap-2 mb-2">
             <div className="min-w-0 flex-1">
-              <h3 className="font-bold text-gray-900 truncate">
+              <h3 className="font-semibold text-sm text-secondary truncate">
                 {restaurant?.name || 'Restaurante'}
               </h3>
               <p className="text-xs text-gray-500">
-                Orden #{order.id.substring(0, 8).toUpperCase()}
+                #{order.id.substring(0, 8).toUpperCase()} · {formattedDate} · {formattedTime}
               </p>
             </div>
             <div
-              className={`px-3 py-1 rounded-full text-xs font-semibold border whitespace-nowrap ${getStatusColor(
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap flex-shrink-0 ${getStatusColor(
                 order.status
               )}`}
             >
-              {getStatusEmoji(order.status)} {getStatusLabel(order.status)}
+              <OrderStatusIcon status={order.status} className="w-3 h-3" />
+              {getStatusLabel(order.status)}
             </div>
           </div>
 
-          {/* Fecha y hora */}
-          <p className="text-xs text-gray-600 mb-3">
-            📅 {formattedDate} • {formattedTime}
-          </p>
+          <p className="text-xs text-gray-500 mb-3 line-clamp-1">{order.delivery_address}</p>
 
-          {/* Dirección */}
-          <p className="text-sm text-gray-600 mb-3 line-clamp-1">
-            📍 {order.delivery_address}
-          </p>
-
-          {/* Footer: Domiciliario y Total */}
           <div className="flex justify-between items-center">
-            <div className="text-xs text-gray-600">
-              {order.delivery_person_id ? (
-                <span>🚴 Domiciliario asignado</span>
-              ) : (
-                <span className="text-yellow-600">⚠️ Sin domiciliario</span>
-              )}
-            </div>
-            <div className="text-lg font-bold text-primary">
-              ${order.total.toLocaleString('es-CO')}
-            </div>
+            <span className="text-xs text-gray-500">
+              {order.delivery_person_id ? 'Domiciliario asignado' : 'Sin domiciliario'}
+            </span>
+            <span className="font-display font-bold text-primary">{formatCOP(order.total)}</span>
           </div>
         </div>
       </div>

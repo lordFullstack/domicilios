@@ -66,7 +66,7 @@ export const OrderDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center">
         <p className="text-gray-500 text-sm">Cargando orden...</p>
       </div>
     )
@@ -74,7 +74,7 @@ export const OrderDetailPage = () => {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8 text-center">
+      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex flex-col items-center justify-center px-8 text-center">
         <p className="text-gray-500 text-sm mb-4">Orden no encontrada</p>
         <Button onClick={() => navigate(ROUTES.CLIENT_ORDERS)}>Volver a mis órdenes</Button>
       </div>

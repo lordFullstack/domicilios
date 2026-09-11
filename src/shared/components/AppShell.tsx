@@ -31,7 +31,7 @@ export const AppShell = ({
     <div
       className={clsx(
         'min-h-screen max-w-md mx-auto safe-left safe-right',
-        background === 'white' ? 'bg-white' : 'bg-surface-bg',
+        background === 'white' ? 'bg-white' : 'bg-surface',
         !hideNav && 'pb-24',
         className
       )}

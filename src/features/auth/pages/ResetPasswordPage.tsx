@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Rocket, CheckCircle2 } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import { supabase } from '@/shared/utils/supabase'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
+import { RocketMark } from '@/shared/components/RocketMark'
 import { ROUTES } from '@/config/constants'
 import { getAuthErrorMessage } from '../utils/authErrors'
 
@@ -90,7 +91,7 @@ export const ResetPasswordPage = () => {
     <div className="min-h-screen bg-white flex flex-col justify-center px-8 py-10 max-w-md mx-auto">
       <div className="flex flex-col items-center mb-8">
         <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mb-4">
-          <Rocket className="w-8 h-8 text-white" />
+          <RocketMark variant="icon" size={32} />
         </div>
         <h1 className="font-display text-xl font-bold text-secondary text-center">
           Crea una nueva contraseña
@@ -98,7 +99,7 @@ export const ResetPasswordPage = () => {
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-2xl mb-4" role="alert">{error}</div>
+        <div className="bg-red-50 text-danger text-sm p-3 rounded-2xl mb-4" role="alert">{error}</div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">

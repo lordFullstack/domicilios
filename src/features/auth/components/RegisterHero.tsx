@@ -1,4 +1,5 @@
-import { Rocket, Store, Soup, Bike } from 'lucide-react'
+import { Store, Soup, Bike } from 'lucide-react'
+import { RocketMark } from '@/shared/components/RocketMark'
 
 const FEATURES = [
   { icon: Store, label: 'Restaurantes locales verificados' },
@@ -23,7 +24,7 @@ export const RegisterHero = () => {
         {/* Marca */}
         <div className="animate-fade-in">
           <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-md flex items-center justify-center shadow-floating">
-            <Rocket className="w-8 h-8 text-white" strokeWidth={2.25} />
+            <RocketMark variant="icon" size={32} />
           </div>
           <h1 className="font-display text-3xl md:text-[2.5rem] md:leading-tight font-extrabold text-white mt-5 animate-fade-slide-up">
             Únete y empieza a pedir

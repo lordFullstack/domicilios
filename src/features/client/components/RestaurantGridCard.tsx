@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Star, Clock, Heart } from 'lucide-react'
+import { Star, Heart } from 'lucide-react'
 import { Restaurant } from '@/shared/types'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { Badge } from '@/shared/components/Badge'
@@ -75,10 +75,6 @@ export const RestaurantGridCard = ({ restaurant }: RestaurantGridCardProps) => {
           <span className="flex items-center gap-1">
             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
             {restaurant.rating_count > 0 ? restaurant.rating_avg.toFixed(1) : 'Nuevo'}
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="w-3 h-3" />
-            25-35 min
           </span>
         </div>
         <p className="text-xs text-gray-500 mt-1 truncate">{restaurant.category}</p>

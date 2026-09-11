@@ -33,13 +33,13 @@ export const Input = ({
         className={clsx(
           'w-full px-4 py-3 border rounded-2xl text-sm',
           'focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary',
-          error ? 'border-red-500' : 'border-gray-200',
+          error ? 'border-danger' : 'border-gray-200',
           className
         )}
         {...props}
       />
       {error && (
-        <p id={errorId} role="alert" className="text-red-500 text-sm mt-1">
+        <p id={errorId} role="alert" className="text-danger text-sm mt-1">
           {error}
         </p>
       )}

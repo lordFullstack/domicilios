@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Rocket, ChevronLeft, MailCheck } from 'lucide-react'
+import { ChevronLeft, MailCheck } from 'lucide-react'
 import { supabase } from '@/shared/utils/supabase'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
+import { RocketMark } from '@/shared/components/RocketMark'
 import { ROUTES } from '@/config/constants'
 import { getAuthErrorMessage } from '../utils/authErrors'
 
@@ -60,7 +61,7 @@ export const ForgotPasswordPage = () => {
 
       <div className="flex flex-col items-center mb-8">
         <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mb-4">
-          <Rocket className="w-8 h-8 text-white" />
+          <RocketMark variant="icon" size={32} />
         </div>
         <h1 className="font-display text-xl font-bold text-secondary text-center">
           ¿Olvidaste tu contraseña?
@@ -71,7 +72,7 @@ export const ForgotPasswordPage = () => {
       </div>
 
       {error && (
-        <div className="bg-red-50 text-red-600 text-sm p-3 rounded-2xl mb-4" role="alert">{error}</div>
+        <div className="bg-red-50 text-danger text-sm p-3 rounded-2xl mb-4" role="alert">{error}</div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">

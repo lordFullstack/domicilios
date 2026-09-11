@@ -8,10 +8,10 @@ interface AuthPasswordInputProps extends Omit<InputHTMLAttributes<HTMLInputEleme
 }
 
 /**
- * Input de contraseña para el Registro, con mostrar/ocultar.
- * El Registro actual no tenía esta función; se agrega como mejora
- * puramente visual (useState local) para seguir el mismo sistema
- * del Login — no toca la validación ni el envío del formulario.
+ * Input de contraseña para pantallas de autenticación (Login, Registro),
+ * con mostrar/ocultar. Consolidado en LOOP_02 (antes duplicado como
+ * LoginPasswordInput.tsx). El toggle es únicamente estado visual local
+ * (useState) — no toca la lógica de autenticación ni las validaciones.
  */
 export const AuthPasswordInput = ({
   label,

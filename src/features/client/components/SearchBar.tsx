@@ -3,11 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '@/config/constants'
 
 /**
- * Todavía no existe un mecanismo de búsqueda/filtrado real en el proyecto
- * (RestaurantListPage tampoco lo tiene). Para no inventar una segunda
- * arquitectura de búsqueda a medias, esto es un botón con apariencia de
- * input que lleva al listado completo — el lugar natural donde, cuando se
- * construya la búsqueda real, debería vivir el filtrado.
+ * La búsqueda real (con filtros) vive en RestaurantListPage
+ * (ExploreSearchInput + filterAndSortRestaurants). Este botón con apariencia
+ * de input es el punto de entrada desde el Home: lleva directo a esa
+ * pantalla, donde el usuario ya puede escribir su búsqueda.
  */
 export const SearchBar = () => {
   const navigate = useNavigate()
