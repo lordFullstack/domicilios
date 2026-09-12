@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react'
-import { useCart, useProductById, useRestaurantById, useProducts } from '@/hooks/useLocalData'
+import { useProductById, useRestaurantById, useProducts } from '@/hooks/useLocalData'
+import { useCartContext } from '@/shared/hooks/useCartContext'
 import { Button } from '@/shared/components/Button'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { BottomNav } from '@/shared/components/BottomNav'
@@ -11,7 +12,7 @@ import { Product } from '@/shared/types'
 
 export const CartPage = () => {
   const navigate = useNavigate()
-  const { cart, removeItem, updateQuantity, getTotal } = useCart()
+  const { cart, removeItem, updateQuantity, getTotal } = useCartContext()
 
   // El carrito no guarda restaurant_id por ítem — se infiere del primer
   // producto, mismo patrón usado en RestaurantDetailPage y CheckoutPage.

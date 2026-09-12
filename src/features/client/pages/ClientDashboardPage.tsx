@@ -5,6 +5,7 @@ import { AppShell } from '@/shared/components/AppShell'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { HomeHeader } from '../components/HomeHeader'
 import { SearchBar } from '../components/SearchBar'
+import { HomeHeroBanner } from '../components/HomeHeroBanner'
 import { CategoryScroller } from '../components/CategoryScroller'
 import { PromoBanner } from '../components/PromoBanner'
 import { FeaturedSection } from '../components/FeaturedSection'
@@ -32,13 +33,14 @@ export const ClientDashboardPage = () => {
     <AppShell>
       <HomeHeader />
       <SearchBar />
+      <HomeHeroBanner />
       <CategoryScroller />
 
       {activeOrder && <ActiveOrderCard order={activeOrder} />}
 
       <PromoBanner />
+      <FeaturedSection type="featured_product" title="Platos que te pueden gustar" variant="promoGrid" />
       <FeaturedSection type="featured_restaurant" title="Recomendados para ti" />
-      <FeaturedSection type="featured_product" title="Platos que te pueden gustar" />
 
       <RestaurantsGrid
         restaurants={restaurants}

@@ -11,10 +11,10 @@ import { Skeleton } from '@/shared/components/Skeleton'
 import {
   useRestaurantById,
   useProducts,
-  useCart,
   useFavorites,
   useProductById,
 } from '@/hooks/useLocalData'
+import { useCartContext } from '@/shared/hooks/useCartContext'
 import { ROUTES, PRODUCT_CATEGORIES } from '@/config/constants'
 import { Product } from '@/shared/types'
 import { RestaurantDetailSkeleton } from '../components/RestaurantDetailSkeleton'
@@ -50,7 +50,7 @@ export const RestaurantDetailPage = () => {
     fromCache: productsFromCache,
     cachedAt: productsCachedAt,
   } = useProducts(id)
-  const { cart, addItem, removeItem, updateQuantity, clear } = useCart()
+  const { cart, addItem, removeItem, updateQuantity, clear } = useCartContext()
   const { isFavorite, toggleFavorite } = useFavorites()
   const [favPending, setFavPending] = useState(false)
 
@@ -346,7 +346,7 @@ export const RestaurantDetailPage = () => {
       <CartFloatingBar />
 
       {/* Confirmación al mezclar productos de otro restaurante — el carrito
-          actual (ver useCart) solo soporta un restaurante a la vez. */}
+          actual (ver useCartContext) solo soporta un restaurante a la vez. */}
       <BottomSheet open={switchConfirmOpen} onClose={cancelSwitch} title="¿Cambiar de restaurante?">
         <p className="text-sm text-gray-500 mb-5">
           Tu carrito tiene productos de otro restaurante. Si continúas, vamos a vaciarlo y agregar

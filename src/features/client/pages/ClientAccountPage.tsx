@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LogOut, ChevronRight, Bell } from 'lucide-react'
+import { LogOut, ChevronRight, Bell, ClipboardList } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
+import { useNotifications } from '@/hooks/useLocalData'
 import { AppShell } from '@/shared/components/AppShell'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { LogoutConfirmSheet } from '@/shared/components/LogoutConfirmSheet'
@@ -14,6 +15,7 @@ import { ROUTES } from '@/config/constants'
 export const ClientAccountPage = () => {
   const { user, updateProfile, logout } = useAuth()
   const navigate = useNavigate()
+  const { unreadCount } = useNotifications()
 
   const [name, setName] = useState(user?.name || '')
   const [saving, setSaving] = useState(false)
@@ -72,11 +74,27 @@ export const ClientAccountPage = () => {
         <NotificationPermissionCard />
 
         <button
-          onClick={() => navigate(ROUTES.CLIENT_ORDERS)}
+          onClick={() => navigate(ROUTES.NOTIFICATIONS)}
           className="focus-ring w-full flex items-center justify-between border border-gray-100 rounded-2xl p-4 mt-2"
         >
           <span className="flex items-center gap-2 text-sm font-semibold text-secondary">
             <Bell className="w-4 h-4 text-gray-500" />
+            Notificaciones
+            {unreadCount > 0 && (
+              <span className="bg-primary text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </span>
+          <ChevronRight className="w-4 h-4 text-gray-300" />
+        </button>
+
+        <button
+          onClick={() => navigate(ROUTES.CLIENT_ORDERS)}
+          className="focus-ring w-full flex items-center justify-between border border-gray-100 rounded-2xl p-4 mt-2"
+        >
+          <span className="flex items-center gap-2 text-sm font-semibold text-secondary">
+            <ClipboardList className="w-4 h-4 text-gray-500" />
             Mis pedidos
           </span>
           <ChevronRight className="w-4 h-4 text-gray-300" />

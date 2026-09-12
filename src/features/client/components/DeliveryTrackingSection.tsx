@@ -37,6 +37,7 @@ export const DeliveryTrackingSection = ({ deliveryPerson, liveLocation }: Delive
             <img
               src={deliveryPerson.avatar_url}
               alt={deliveryPerson.name}
+              loading="lazy"
               className="w-full h-full object-cover"
             />
           ) : (

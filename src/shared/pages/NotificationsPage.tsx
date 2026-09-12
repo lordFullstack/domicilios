@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Check } from 'lucide-react'
+import { ChevronLeft, Check, Bell } from 'lucide-react'
 import { useNotifications } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { getNotificationIcon, getNotificationTarget } from '@/shared/utils/notificationLinks'
+import { Skeleton } from '@/shared/components/Skeleton'
+import { EmptyState } from '@/shared/components/EmptyState'
 
 const timeAgo = (dateStr: string) => {
   const minutes = Math.max(0, Math.round((Date.now() - new Date(dateStr).getTime()) / 60000))
@@ -32,7 +34,7 @@ export const NotificationsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-10 safe-bottom">
+    <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right pb-10 safe-bottom">
       <div className="flex items-center justify-between px-5 pt-6 pb-4">
         <div className="flex items-center gap-3">
           <button
@@ -74,11 +76,27 @@ export const NotificationsPage = () => {
       </div>
 
       {loading ? (
-        <p className="text-center text-gray-500 text-sm py-12">Cargando...</p>
+        <div className="px-5 flex flex-col gap-2">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex items-start gap-3 rounded-2xl p-3 border border-gray-100">
+              <Skeleton className="w-9 h-9 rounded-full flex-shrink-0" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-3 w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : visible.length === 0 ? (
-        <p className="text-center text-gray-500 text-sm py-12 px-5">
-          {tab === 'unread' ? 'No tienes notificaciones sin leer.' : 'Todavía no tienes notificaciones.'}
-        </p>
+        <EmptyState
+          icon={Bell}
+          title={tab === 'unread' ? 'Todo al día' : 'Sin notificaciones'}
+          description={
+            tab === 'unread'
+              ? 'No tienes notificaciones sin leer.'
+              : 'Todavía no tienes notificaciones.'
+          }
+        />
       ) : (
         <div className="px-5 flex flex-col gap-2">
           {visible.map((n) => {

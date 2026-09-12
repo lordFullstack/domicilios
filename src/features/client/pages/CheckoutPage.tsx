@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, Banknote, CreditCard, WifiOff } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { Badge } from '@/shared/components/Badge'
-import { useCart, useOrders, useRestaurantById, useProductById, useProducts } from '@/hooks/useLocalData'
+import { useOrders, useRestaurantById, useProductById, useProducts } from '@/hooks/useLocalData'
+import { useCartContext } from '@/shared/hooks/useCartContext'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
 import { ROUTES, ORDER_STATUS, PAYMENT_METHOD } from '@/config/constants'
@@ -21,7 +22,7 @@ type SubmitState = 'idle' | 'submitting' | 'success' | 'error'
 export const CheckoutPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { cart, clear, getTotal } = useCart()
+  const { cart, clear, getTotal } = useCartContext()
   const { createOrder } = useOrders()
   const connectionStatus = useOnlineStatus()
   const isOffline = connectionStatus === 'offline'

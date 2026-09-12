@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { ShoppingBag, ChevronRight } from 'lucide-react'
-import { useCart } from '@/hooks/useLocalData'
+import { useCartContext } from '@/shared/hooks/useCartContext'
 import { ROUTES } from '@/config/constants'
 
 /**
@@ -10,7 +10,7 @@ import { ROUTES } from '@/config/constants'
  */
 export const CartFloatingBar = () => {
   const navigate = useNavigate()
-  const { cart, getTotal } = useCart()
+  const { cart, getTotal } = useCartContext()
 
   const count = cart.reduce((sum, item) => sum + item.quantity, 0)
   if (count === 0) return null

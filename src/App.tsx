@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { AuthProvider } from '@/features/auth/AuthContext'
+import { CartProvider } from '@/features/client/CartContext'
 import { Router } from '@/router'
 import { unlockNotificationAudio } from '@/shared/utils/notificationSound'
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
@@ -28,9 +29,20 @@ export const App = () => {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <ConnectionBanner />
-        <UpdatePrompt />
-        <Router />
+        {/* CartProvider vive aquí (LOOP_09 — QA funcional): antes NO
+            estaba montado en ningún lugar del árbol, así que cada
+            pantalla que llamaba a useCart() (BottomNav, CartFloatingBar,
+            RestaurantDetailPage, CartPage, CheckoutPage, OrderDetailPage)
+            tenía su propia copia de estado leída de localStorage solo al
+            montarse — el caso de bug que el propio CartContext.tsx ya
+            documentaba, pero que nunca se terminó de conectar. Con el
+            Provider real montado y todos los consumidores usando
+            useCartContext(), un solo estado compartido. */}
+        <CartProvider>
+          <ConnectionBanner />
+          <UpdatePrompt />
+          <Router />
+        </CartProvider>
       </AuthProvider>
     </ErrorBoundary>
   )

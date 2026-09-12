@@ -842,8 +842,16 @@ export const useOrders = (userId?: string) => {
 }
 
 // ============================================
-// HOOK: useCart (sigue local — carrito efímero de sesión)
+// HOOK: useCart (OBSOLETO — no importar en componentes nuevos)
 // ============================================
+// Reemplazado en LOOP_09 por useCartContext() (@/shared/hooks/useCartContext),
+// que lee de CartProvider (@/features/client/CartContext), montado en
+// App.tsx. Este hook de aquí crea una copia de estado independiente por
+// cada componente que lo llama — es la causa raíz de un bug real donde
+// BottomNav/CartFloatingBar no reflejaban productos agregados desde otra
+// pantalla hasta que se remontaban. Se deja el código (no se borra) solo
+// por si algo externo al árbol de React todavía lo importa, pero ningún
+// componente de la app debería usarlo.
 
 interface CartItem {
   productId: string

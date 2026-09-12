@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Home, UtensilsCrossed, ShoppingCart, ClipboardList, User, Rocket, LucideIcon } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { useCart } from '@/hooks/useLocalData'
+import { useCartContext } from '@/shared/hooks/useCartContext'
 import { ROUTES } from '@/config/constants'
 import { LogoutConfirmSheet } from './LogoutConfirmSheet'
 
@@ -41,7 +41,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
   const navigate = useNavigate()
   const location = useLocation()
   const { user, logout } = useAuth()
-  const { cart } = useCart()
+  const { cart } = useCartContext()
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0)
   const [logoutSheetOpen, setLogoutSheetOpen] = useState(false)
 
@@ -75,7 +75,9 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
                 onClick={() => navigate(path)}
                 aria-label={label}
                 aria-current={isActive ? 'page' : undefined}
-                className="touch-target focus-ring flex flex-col items-center justify-center gap-0.5 px-3 relative rounded-2xl transition-transform duration-150 active:scale-[0.94]"
+                className={`touch-target focus-ring flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 relative rounded-full transition-all duration-150 active:scale-[0.94] ${
+                  isActive ? 'bg-primary/10' : ''
+                }`}
               >
                 <Icon
                   className="w-5 h-5"

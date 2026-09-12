@@ -12,9 +12,9 @@ import {
   useDeliveryPersonProfile,
   useOrderRating,
   useProducts,
-  useCart,
   useProductById,
 } from '@/hooks/useLocalData'
+import { useCartContext } from '@/shared/hooks/useCartContext'
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
 import { OrderStatusHero } from '../components/OrderStatusHero'
 import { OrderStatusTimeline } from '../components/OrderStatusTimeline'
@@ -47,7 +47,7 @@ export const OrderDetailPage = () => {
   // disponibilidad real) y el carrito, para detectar si ya tiene
   // productos de otro restaurante (mismo patrón que RestaurantDetailPage).
   const { products } = useProducts(order?.restaurant_id)
-  const { cart, addItem, clear } = useCart()
+  const { cart, addItem, clear } = useCartContext()
   const { product: firstCartProduct } = useProductById(cart[0]?.productId || '')
   const cartRestaurantId = cart.length > 0 ? firstCartProduct?.restaurant_id : undefined
 

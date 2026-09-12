@@ -20,13 +20,13 @@ export const RegisterHero = () => {
       <div className="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-accent/30 blur-3xl" />
       <div className="absolute -bottom-28 -left-20 w-80 h-80 rounded-full bg-white/10 blur-3xl" />
 
-      <div className="relative safe-top px-8 pt-12 pb-16 md:min-h-screen md:flex md:flex-col md:justify-between md:py-16">
+      <div className="relative safe-top px-8 pt-7 pb-6 md:pt-12 md:pb-16 md:min-h-screen md:flex md:flex-col md:justify-between md:py-16">
         {/* Marca */}
         <div className="animate-fade-in">
-          <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-md flex items-center justify-center shadow-floating">
-            <RocketMark variant="icon" size={32} />
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-md flex items-center justify-center shadow-floating">
+            <RocketMark variant="icon" size={26} />
           </div>
-          <h1 className="font-display text-3xl md:text-[2.5rem] md:leading-tight font-extrabold text-white mt-5 animate-fade-slide-up">
+          <h1 className="font-display text-2xl md:text-[2.5rem] md:leading-tight font-extrabold text-white mt-3 md:mt-5 animate-fade-slide-up">
             Únete y empieza a pedir
           </h1>
           <p className="text-white/80 text-sm md:text-base mt-2 max-w-xs animate-fade-slide-up">
@@ -35,7 +35,7 @@ export const RegisterHero = () => {
         </div>
 
         {/* Comunidad — elemento visual protagonista, distinto al del Login */}
-        <div className="mt-10 md:mt-0 animate-fade-slide-up">
+        <div className="mt-5 md:mt-0 animate-fade-slide-up">
           <p className="hidden md:block text-white/70 text-sm font-medium mb-3">
             Todo lo que necesitas en un solo lugar
           </p>

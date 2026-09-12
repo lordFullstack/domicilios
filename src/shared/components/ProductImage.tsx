@@ -16,6 +16,7 @@ export const ProductImage = ({ imageUrl, alt, className, emojiClassName }: Produ
       <img
         src={imageUrl}
         alt={alt}
+        loading="lazy"
         className={className || 'w-full h-full object-cover'}
       />
     )

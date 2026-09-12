@@ -14,7 +14,10 @@ const FEATURES = [
  * Jerarquía (LOOP 01.2): Logo → Marca → Bandeja paisa (foto real,
  * protagonista) → Tagline → texto secundario.
  *
- * Mobile: franja superior con esquinas inferiores redondeadas.
+ * Mobile: franja superior con esquinas inferiores redondeadas, tamaño
+ * compacto a propósito (logo/imagen/paddings reducidos) para que el
+ * formulario completo — incluido el link "Crear cuenta" del footer — quepa
+ * sin scroll en la mayoría de los celulares (ver LOOP_02, ajuste post-review).
  * Desktop (md+): columna izquierda a pantalla completa; la fotografía
  * ocupa el espacio flexible entre marca y tagline (md:flex-1) y se
  * desborda hacia el borde derecho del panel (md:-mr-8) para sentirse
@@ -30,19 +33,19 @@ export const LoginHero = () => {
       <div className="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-accent/20 blur-3xl" />
       <div className="absolute -bottom-28 -left-20 w-80 h-80 rounded-full bg-white/10 blur-3xl" />
 
-      <div className="relative safe-top px-8 pt-12 pb-10 md:min-h-screen md:flex md:flex-col md:py-14">
+      <div className="relative safe-top px-8 pt-7 pb-5 md:pt-12 md:pb-10 md:min-h-screen md:flex md:flex-col md:py-14">
         {/* 1-2. Logo + marca */}
         <div className="shrink-0 animate-fade-in">
-          <div className="w-16 h-16 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-md flex items-center justify-center shadow-floating">
-            <RocketMark variant="icon" size={32} />
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-md flex items-center justify-center shadow-floating">
+            <RocketMark variant="icon" size={26} />
           </div>
-          <h1 className="font-display text-3xl md:text-[2.5rem] md:leading-tight font-extrabold text-white mt-5 animate-fade-slide-up">
+          <h1 className="font-display text-2xl md:text-[2.5rem] md:leading-tight font-extrabold text-white mt-3 md:mt-5 animate-fade-slide-up">
             Domicilios Riohacha
           </h1>
         </div>
 
         {/* 3. Bandeja paisa — foco visual principal, foto real del proyecto */}
-        <div className="relative h-48 sm:h-56 md:h-auto md:flex-1 md:-mr-8 my-6 md:my-8 min-h-[180px] overflow-hidden rounded-[2rem] md:rounded-l-[2.5rem] md:rounded-r-none shadow-floating animate-fade-slide-up">
+        <div className="relative h-32 sm:h-40 md:h-auto md:flex-1 md:-mr-8 my-4 md:my-8 min-h-[128px] overflow-hidden rounded-[2rem] md:rounded-l-[2.5rem] md:rounded-r-none shadow-floating animate-fade-slide-up">
           <picture>
             <source
               type="image/webp"

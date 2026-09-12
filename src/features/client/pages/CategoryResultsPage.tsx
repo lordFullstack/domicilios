@@ -57,7 +57,7 @@ export const CategoryResultsPage = () => {
               >
                 <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                   {product.image_url ? (
-                    <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+                    <img src={product.image_url} alt={product.name} loading="lazy" className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-2xl">🍽️</span>
                   )}
