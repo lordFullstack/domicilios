@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import clsx from 'clsx'
+import { useCartContext } from '@/shared/hooks/useCartContext'
 
 interface AppShellProps {
   children: ReactNode
@@ -15,6 +16,10 @@ interface AppShellProps {
  * No reemplaza el layout de las páginas existentes — es infraestructura para
  * que las páginas nuevas (o refactors futuros) lo adopten de forma incremental.
  *
+ * El padding inferior reserva espacio para el BottomNav (pb-24) y, cuando
+ * hay productos en el carrito, además para CartFloatingBar (pb-44) — si no,
+ * esa barra flotante queda tapando el último contenido de la pantalla.
+ *
  * Uso:
  *   <AppShell>
  *     ...contenido...
@@ -27,12 +32,15 @@ export const AppShell = ({
   background = 'white',
   className,
 }: AppShellProps) => {
+  const { cart } = useCartContext()
+  const hasFloatingCart = !hideNav && cart.length > 0
+
   return (
     <div
       className={clsx(
         'min-h-screen max-w-md mx-auto safe-left safe-right',
         background === 'white' ? 'bg-white' : 'bg-surface',
-        !hideNav && 'pb-24',
+        !hideNav && (hasFloatingCart ? 'pb-44' : 'pb-24'),
         className
       )}
     >

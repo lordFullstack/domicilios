@@ -42,11 +42,11 @@ export const FeaturedProductStrip = ({
                 onClick={() => onOpenDetail(product)}
                 className="focus-ring block w-full text-left active:scale-[0.99] transition-transform"
               >
-                <div className="h-28 w-full overflow-hidden bg-gray-50">
+                <div className="h-24 w-full overflow-hidden bg-gray-50">
                   <ProductImage imageUrl={product.image_url} alt={product.name} />
                 </div>
 
-                <div className="p-2.5 pr-10">
+                <div className="p-2.5 pr-12">
                   <p className="truncate font-display text-xs font-bold text-secondary">
                     {product.name}
                   </p>

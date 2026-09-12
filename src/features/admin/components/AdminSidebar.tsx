@@ -65,44 +65,27 @@ export const AdminSidebar = () => {
 }
 
 // Barra superior simple para pantallas pequeñas — el Admin no tiene
-// mobile-first, pero sí necesita poder navegar (y cerrar sesión) aunque
-// abras el link en el celular.
+// mobile-first, pero sí necesita poder navegar aunque abras el link en el celular.
 export const AdminMobileNav = () => {
   const navigate = useNavigate()
-  const { logout } = useAuth()
-
-  const handleLogout = async () => {
-    await logout()
-    navigate(ROUTES.LOGIN)
-  }
 
   return (
-    <div className="md:hidden flex items-center justify-between gap-2 bg-secondary text-white px-4 pb-3 safe-top">
-      <span className="font-display font-bold text-sm shrink-0">🚀 Admin</span>
-      <div className="flex items-center gap-2 min-w-0">
-        <select
-          onChange={(e) => navigate(e.target.value)}
-          className="bg-white/10 text-white text-xs rounded-lg px-2 py-1 border-none min-w-0"
-          defaultValue=""
-        >
-          <option value="" disabled>
-            Ir a...
+    <div className="md:hidden flex items-center justify-between bg-secondary text-white px-4 pb-3 safe-top">
+      <span className="font-display font-bold text-sm">🚀 Admin</span>
+      <select
+        onChange={(e) => navigate(e.target.value)}
+        className="bg-white/10 text-white text-xs rounded-lg px-2 py-1 border-none"
+        defaultValue=""
+      >
+        <option value="" disabled>
+          Ir a...
+        </option>
+        {NAV_ITEMS.map(({ label, path }) => (
+          <option key={path} value={path} className="text-black">
+            {label}
           </option>
-          {NAV_ITEMS.map(({ label, path }) => (
-            <option key={path} value={path} className="text-black">
-              {label}
-            </option>
-          ))}
-        </select>
-        <button
-          type="button"
-          onClick={handleLogout}
-          aria-label="Cerrar sesión"
-          className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 text-gray-300 hover:text-white hover:bg-white/15 transition-colors shrink-0"
-        >
-          <LogOut className="w-4 h-4" />
-        </button>
-      </div>
+        ))}
+      </select>
     </div>
   )
 }

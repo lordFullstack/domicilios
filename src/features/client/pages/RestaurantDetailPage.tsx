@@ -194,12 +194,12 @@ export const RestaurantDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-28 relative safe-left safe-right">
+    <div className="min-h-screen bg-white max-w-md mx-auto pb-44 relative safe-left safe-right">
       <Toast message={toastMessage} />
 
       {/* Hero — info del restaurante integrada al banner (overlay), sin
           repetirla debajo. */}
-      <div className="relative h-64 overflow-hidden bg-primary/10">
+      <div className="relative h-52 overflow-hidden bg-primary/10">
         {restaurant.cover_url ? (
           <img
             src={restaurant.cover_url}
@@ -235,9 +235,9 @@ export const RestaurantDetailPage = () => {
           />
         </button>
 
-        <div className="absolute inset-x-0 bottom-0 p-5">
-          <div className="flex items-end gap-3">
-            <div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-white/70 bg-white flex items-center justify-center text-3xl shadow-md">
+        <div className="absolute inset-x-0 bottom-0 p-4">
+          <div className="flex items-end gap-2.5">
+            <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-white/70 bg-white flex items-center justify-center text-2xl shadow-md">
               {restaurant.cover_url ? (
                 <img src={restaurant.cover_url} alt="" className="w-full h-full object-cover" />
               ) : (
@@ -245,10 +245,10 @@ export const RestaurantDetailPage = () => {
               )}
             </div>
             <div className="min-w-0 flex-1 pb-0.5">
-              <h1 className="font-display text-xl font-bold text-white truncate drop-shadow">
+              <h1 className="font-display text-lg font-bold text-white truncate drop-shadow">
                 {restaurant.name}
               </h1>
-              <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/90">
+              <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/90">
                 <span>
                   ⭐{' '}
                   {restaurant.rating_count > 0
@@ -272,10 +272,12 @@ export const RestaurantDetailPage = () => {
             </Badge>
             <span className="text-xs text-white/70">{restaurant.category}</span>
           </div>
-
-          <p className="mt-2 text-xs text-white/85 line-clamp-2">{restaurant.description}</p>
         </div>
       </div>
+
+      {restaurant.description && (
+        <p className="px-5 pt-3 text-sm text-gray-500 line-clamp-2">{restaurant.description}</p>
+      )}
 
       {(restaurantFromCache || productsFromCache) && (
         <div className="px-5 pt-3">
