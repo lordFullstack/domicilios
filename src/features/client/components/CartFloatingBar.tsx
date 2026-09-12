@@ -19,7 +19,7 @@ export const CartFloatingBar = () => {
     <div className="fixed bottom-24 left-0 right-0 px-5 z-30 animate-fade-slide-up max-w-md mx-auto">
       <button
         onClick={() => navigate(ROUTES.CLIENT_CART)}
-        className="focus-ring w-full flex items-center justify-between bg-primary text-white rounded-2xl px-4 py-3.5 shadow-floating active:scale-[0.98] transition-transform"
+        className="focus-ring w-full flex items-center justify-between bg-brand-gradient text-white rounded-2xl px-4 py-3.5 shadow-floating active:scale-[0.98] transition-transform"
       >
         <span className="flex items-center gap-2 text-sm font-semibold">
           <ShoppingBag className="w-4 h-4" />

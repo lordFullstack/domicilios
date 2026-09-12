@@ -49,7 +49,7 @@ export const MenuProductCard = ({
               {product.description}
             </p>
 
-            <p className="mt-2 text-base font-bold text-primary">
+            <p className="mt-2 text-base font-bold text-coral">
               {formatCOP(product.price)}
             </p>
           </div>
@@ -78,7 +78,7 @@ export const MenuProductCard = ({
                 type="button"
                 onClick={() => onIncrement(product)}
                 aria-label={`Aumentar ${product.name}`}
-                className="touch-target focus-ring flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white shadow-sm active:scale-90 transition-transform"
+                className="touch-target focus-ring flex h-8 w-8 items-center justify-center rounded-full bg-coral text-white shadow-sm active:scale-90 transition-transform"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -88,7 +88,7 @@ export const MenuProductCard = ({
               type="button"
               onClick={() => onIncrement(product)}
               aria-label={`Agregar ${product.name}`}
-              className="touch-target focus-ring flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-sm active:scale-90 transition-transform"
+              className="touch-target focus-ring flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-coral text-white shadow-sm active:scale-90 transition-transform"
             >
               <Plus className="h-5 w-5" />
             </button>

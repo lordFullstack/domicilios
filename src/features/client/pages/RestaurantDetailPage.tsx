@@ -249,16 +249,28 @@ export const RestaurantDetailPage = () => {
                 {restaurant.name}
               </h1>
               <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/90">
-                <span>⭐ {restaurant.rating_count > 0 ? restaurant.rating_avg.toFixed(1) : 'Nuevo'}</span>
-                <span>· {restaurant.category}</span>
+                <span>
+                  ⭐{' '}
+                  {restaurant.rating_count > 0
+                    ? `${restaurant.rating_avg.toFixed(1)} (${restaurant.rating_count})`
+                    : 'Nuevo'}
+                </span>
+                {/* Tiempo estimado / costo de envío / distancia: el modelo
+                    Restaurant todavía no tiene estos campos — placeholder
+                    visual a propósito, para revisar el diseño antes de
+                    construir esa lógica con datos reales en Supabase. */}
+                <span>· 25-35 min</span>
+                <span>· 🚴 $3.000</span>
+                <span>· 📍 1.2 km</span>
               </div>
             </div>
           </div>
 
-          <div className="mt-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <Badge variant={restaurantIsOpen ? 'success' : 'danger'}>
               {restaurantIsOpen ? '🟢 Abierto' : '🔴 Cerrado'}
             </Badge>
+            <span className="text-xs text-white/70">{restaurant.category}</span>
           </div>
 
           <p className="mt-2 text-xs text-white/85 line-clamp-2">{restaurant.description}</p>
@@ -292,7 +304,7 @@ export const RestaurantDetailPage = () => {
                       onClick={() => setActiveCategory(cat)}
                       className={`focus-ring flex flex-shrink-0 items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors min-h-[40px] ${
                         activeCategory === cat
-                          ? 'bg-primary text-white'
+                          ? 'bg-brand-gradient text-white'
                           : 'bg-gray-50 text-gray-500'
                       }`}
                     >
