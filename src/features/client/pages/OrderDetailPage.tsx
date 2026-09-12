@@ -191,7 +191,7 @@ export const OrderDetailPage = () => {
             <p className="font-display font-bold text-danger">Esta orden fue cancelada</p>
           </div>
         ) : (
-          <OrderStatusTimeline status={order.status} />
+          <OrderStatusTimeline status={order.status} updatedAt={order.updated_at} />
         )}
 
         {/* Mapa en vivo del domiciliario — solo si hay ubicación real */}
@@ -234,7 +234,7 @@ export const OrderDetailPage = () => {
                 </p>
               </div>
             ) : (
-              <Button onClick={() => setShowRatingModal(true)} fullWidth>
+              <Button variant="gradient" onClick={() => setShowRatingModal(true)} fullWidth>
                 Calificar este pedido
               </Button>
             )}

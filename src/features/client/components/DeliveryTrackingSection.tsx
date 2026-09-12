@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Phone, Bike } from 'lucide-react'
+import { Phone, MessageCircle, Bike } from 'lucide-react'
 
 // Leaflet pesa ~155kB — antes se importaba directo, así que se descargaba
 // en CADA apertura de un detalle de pedido (entregado, cancelado, etc.),
@@ -57,13 +57,22 @@ export const DeliveryTrackingSection = ({ deliveryPerson, liveLocation }: Delive
           )}
         </div>
         {deliveryPerson.phone && (
-          <a
-            href={`tel:${deliveryPerson.phone}`}
-            aria-label={`Llamar a ${deliveryPerson.name}`}
-            className="touch-target w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0"
-          >
-            <Phone className="w-4 h-4 text-white" />
-          </a>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <a
+              href={`sms:${deliveryPerson.phone}`}
+              aria-label={`Enviar mensaje a ${deliveryPerson.name}`}
+              className="touch-target w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center"
+            >
+              <MessageCircle className="w-4 h-4 text-secondary" />
+            </a>
+            <a
+              href={`tel:${deliveryPerson.phone}`}
+              aria-label={`Llamar a ${deliveryPerson.name}`}
+              className="touch-target w-9 h-9 rounded-full bg-primary flex items-center justify-center"
+            >
+              <Phone className="w-4 h-4 text-white" />
+            </a>
+          </div>
         )}
       </div>
     )}

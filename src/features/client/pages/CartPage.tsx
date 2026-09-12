@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react'
 import { useProductById, useRestaurantById, useProducts } from '@/hooks/useLocalData'
@@ -5,6 +6,7 @@ import { useCartContext } from '@/shared/hooks/useCartContext'
 import { Button } from '@/shared/components/Button'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { BottomNav } from '@/shared/components/BottomNav'
+import { BottomSheet } from '@/shared/components/BottomSheet'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { formatCOP } from '@/shared/utils/money'
 import { ROUTES } from '@/config/constants'
@@ -12,7 +14,8 @@ import { Product } from '@/shared/types'
 
 export const CartPage = () => {
   const navigate = useNavigate()
-  const { cart, removeItem, updateQuantity, getTotal } = useCartContext()
+  const { cart, removeItem, updateQuantity, clear, getTotal } = useCartContext()
+  const [clearConfirmOpen, setClearConfirmOpen] = useState(false)
 
   // El carrito no guarda restaurant_id por ítem — se infiere del primer
   // producto, mismo patrón usado en RestaurantDetailPage y CheckoutPage.
@@ -66,15 +69,49 @@ export const CartPage = () => {
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right pb-44">
       {/* Header */}
-      <div className="px-5 pt-6 flex items-center gap-3 mb-1">
+      <div className="px-5 pt-6 flex items-center justify-between gap-3 mb-1">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="touch-target focus-ring w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center active:scale-90 transition-transform"
+          >
+            <ChevronLeft className="w-4 h-4 text-secondary" />
+          </button>
+          <h1 className="font-display text-lg font-bold text-secondary">Tu carrito</h1>
+        </div>
         <button
-          onClick={() => navigate(-1)}
-          className="touch-target focus-ring w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center active:scale-90 transition-transform"
+          onClick={() => setClearConfirmOpen(true)}
+          aria-label="Vaciar carrito"
+          className="touch-target focus-ring w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-danger active:scale-90 transition-transform"
         >
-          <ChevronLeft className="w-4 h-4 text-secondary" />
+          <Trash2 className="w-4 h-4" />
         </button>
-        <h1 className="font-display text-lg font-bold text-secondary">Tu carrito</h1>
       </div>
+
+      <BottomSheet
+        open={clearConfirmOpen}
+        onClose={() => setClearConfirmOpen(false)}
+        title="¿Vaciar el carrito?"
+      >
+        <p className="text-sm text-gray-500 mb-5 -mt-2">
+          Se eliminarán los {cart.length} {cart.length === 1 ? 'producto' : 'productos'} de tu carrito.
+        </p>
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={() => setClearConfirmOpen(false)} className="flex-1">
+            Cancelar
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              clear()
+              setClearConfirmOpen(false)
+            }}
+            className="flex-1 !bg-danger"
+          >
+            Vaciar
+          </Button>
+        </div>
+      </BottomSheet>
 
       {restaurant && (
         <p className="px-5 text-xs text-gray-500 mb-4">
@@ -118,14 +155,15 @@ export const CartPage = () => {
         </div>
         <div className="flex justify-between font-display font-bold mb-4 text-secondary">
           <span>Total</span>
-          <span className="text-primary">{formatCOP(total)}</span>
+          <span className="text-coral">{formatCOP(total)}</span>
         </div>
         <Button
+          variant="gradient"
           fullWidth
           size="lg"
           onClick={() => navigate(ROUTES.CLIENT_CHECKOUT)}
         >
-          Continuar
+          Continuar al pago →
         </Button>
       </div>
 
@@ -155,7 +193,7 @@ const CartItemRow = ({
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
-        <p className="text-xs font-bold text-primary">{formatCOP(product.price)}</p>
+        <p className="text-xs font-bold text-coral">{formatCOP(product.price)}</p>
       </div>
       <div className="flex items-center gap-1.5 bg-gray-50 rounded-full px-1.5 py-1 flex-shrink-0">
         <button
@@ -169,7 +207,7 @@ const CartItemRow = ({
         <button
           onClick={() => onChangeQty(item.productId, 1, item.quantity)}
           aria-label="Aumentar cantidad"
-          className="touch-target focus-ring w-8 h-8 rounded-full flex items-center justify-center text-white bg-primary active:scale-90 transition-transform"
+          className="touch-target focus-ring w-8 h-8 rounded-full flex items-center justify-center text-white bg-coral active:scale-90 transition-transform"
         >
           <Plus className="w-3 h-3" />
         </button>
