@@ -106,16 +106,16 @@ export const NotificationsPage = () => {
                 key={n.id}
                 onClick={() => handleClick(n.id, n.order_id)}
                 className={`focus-ring text-left rounded-2xl p-3 flex items-start gap-3 transition-colors ${
-                  n.read ? 'bg-white border border-gray-100' : 'bg-primary/5 border border-primary/10'
+                  n.read ? 'bg-white border border-gray-100' : 'bg-coral/5 border border-coral/10'
                 }`}
               >
                 <div className="w-9 h-9 rounded-full bg-white shadow-card flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4 h-4 text-primary" />
+                  <Icon className={`w-4 h-4 ${n.read ? 'text-gray-400' : 'text-coral'}`} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-sm font-semibold text-secondary">{n.title}</p>
-                    {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 flex-shrink-0" />}
+                    {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-coral mt-1.5 flex-shrink-0" />}
                   </div>
                   <p className="text-xs text-gray-500 mt-0.5">{n.body}</p>
                   <p className="text-[11px] text-gray-300 mt-1">{timeAgo(n.created_at)}</p>

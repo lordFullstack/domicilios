@@ -53,7 +53,7 @@ export const ActiveOrderCard = ({ order }: ActiveOrderCardProps) => {
           {STEPS.map((step, i) => (
             <div
               key={step.key}
-              className={`h-1.5 flex-1 rounded-full ${i <= currentStep ? 'bg-primary' : 'bg-white/20'}`}
+              className={`h-1.5 flex-1 rounded-full ${i <= currentStep ? 'bg-brand-gradient' : 'bg-white/20'}`}
             />
           ))}
         </div>

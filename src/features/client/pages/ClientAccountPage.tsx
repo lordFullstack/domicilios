@@ -46,8 +46,18 @@ export const ClientAccountPage = () => {
 
   return (
     <AppShell>
-      <div className="px-5 pt-6 pb-2">
-        <h1 className="font-display text-xl font-bold text-secondary">Mi cuenta</h1>
+      <div className="px-5 pt-6 pb-4 flex items-center gap-3">
+        <div className="w-16 h-16 rounded-full bg-brand-gradient flex items-center justify-center flex-shrink-0">
+          <span className="text-white font-display font-bold text-xl">
+            {(user?.name || user?.email || '?').charAt(0).toUpperCase()}
+          </span>
+        </div>
+        <div className="min-w-0">
+          <h1 className="font-display text-lg font-bold text-secondary truncate">
+            {user?.name || 'Mi cuenta'}
+          </h1>
+          <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+        </div>
       </div>
 
       {/* Mi perfil */}
@@ -55,7 +65,6 @@ export const ClientAccountPage = () => {
         <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">MI PERFIL</h2>
         <div className="border border-gray-100 rounded-2xl p-4">
           <Input label="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
-          <p className="text-xs text-gray-500 mt-2">{user?.email}</p>
 
           {error && <p className="text-danger text-xs mt-2">{error}</p>}
 
@@ -81,7 +90,7 @@ export const ClientAccountPage = () => {
             <Bell className="w-4 h-4 text-gray-500" />
             Notificaciones
             {unreadCount > 0 && (
-              <span className="bg-primary text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="bg-coral text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}

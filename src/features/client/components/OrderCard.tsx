@@ -103,7 +103,7 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
             <span className="text-xs text-gray-500">
               {order.delivery_person_id ? 'Domiciliario asignado' : 'Sin domiciliario'}
             </span>
-            <span className="font-display font-bold text-primary">{formatCOP(order.total)}</span>
+            <span className="font-display font-bold text-coral">{formatCOP(order.total)}</span>
           </div>
         </div>
       </div>

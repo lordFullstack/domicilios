@@ -244,9 +244,10 @@ export const CheckoutPage = () => {
         )}
         <div className="flex justify-between font-display font-bold mb-3 text-secondary">
           <span>Total</span>
-          <span className="text-primary">{formatCOP(total)}</span>
+          <span className="text-coral">{formatCOP(total)}</span>
         </div>
         <Button
+          variant="gradient"
           onClick={handleSubmit}
           fullWidth
           size="lg"

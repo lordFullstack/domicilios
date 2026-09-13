@@ -74,10 +74,18 @@ export const RestaurantGridCard = ({ restaurant }: RestaurantGridCardProps) => {
         <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
           <span className="flex items-center gap-1">
             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-            {restaurant.rating_count > 0 ? restaurant.rating_avg.toFixed(1) : 'Nuevo'}
+            {restaurant.rating_count > 0
+              ? `${restaurant.rating_avg.toFixed(1)} (${restaurant.rating_count})`
+              : 'Nuevo'}
           </span>
         </div>
-        <p className="text-xs text-gray-500 mt-1 truncate">{restaurant.category}</p>
+        <div className="flex items-center justify-between mt-1">
+          <p className="text-xs text-gray-500 truncate">{restaurant.category}</p>
+          {/* "Envío gratis" es consistente con Carrito/Checkout: el negocio
+              no cobra domicilio hoy (no hay campo delivery_fee en el
+              modelo), así que no es un dato inventado por pantalla. */}
+          {isOpen && <span className="text-[10px] font-semibold text-success flex-shrink-0">Envío gratis</span>}
+        </div>
       </div>
     </button>
   )
