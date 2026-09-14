@@ -3,115 +3,162 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ============================================================
+   DESIGN TOKENS (CSS variables) — habilitan dark mode automático
+   ============================================================ */
+:root {
+  --bg:            #FFFFFF;
+  --bg-soft:       #F8FAFC;
+  --bg-muted:      #F1F5F9;
+  --fg:            #0F172A;
+  --fg-muted:      #64748B;
+  --border:        #E2E8F0;
+  --brand:         #2F5EFF;
+  --glass-bg:      rgba(255, 255, 255, 0.72);
+  --glass-border:  rgba(255, 255, 255, 0.5);
+  --scrollbar:     rgba(15, 23, 42, 0.18);
 }
 
-html, body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Dark mode manual (cuando se añada toggle) */
+.dark {
+  --bg:            #0A0F1E;
+  --bg-soft:       #0F172A;
+  --bg-muted:      #1E293B;
+  --fg:            #F8FAFC;
+  --fg-muted:      #94A3B8;
+  --border:        rgba(255, 255, 255, 0.08);
+  --brand:         #5A85FF;
+  --glass-bg:      rgba(15, 23, 42, 0.65);
+  --glass-border:  rgba(255, 255, 255, 0.08);
+  --scrollbar:     rgba(255, 255, 255, 0.18);
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', 'Inter', sans-serif;
-  letter-spacing: -0.01em;
-}
-
-body {
-  background-color: #ffffff;
-  color: #1f2937;
-}
-
-/* Safe areas — notch superior y barra de navegación Android/iOS inferior.
-   Se usan en elementos con position: fixed que tocan los bordes de la
-   pantalla (BottomNav, AdminMobileNav, ConnectionBanner). */
-.safe-top {
-  padding-top: max(0.75rem, env(safe-area-inset-top));
-}
-.safe-bottom {
-  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
-}
-.safe-left {
-  padding-left: env(safe-area-inset-left);
-}
-.safe-right {
-  padding-right: env(safe-area-inset-right);
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.no-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+/* Dark mode automático (sigue preferencia del sistema) */
+@media (prefers-color-scheme: dark) {
+  html:not(.light) {
+    --bg:            #0A0F1E;
+    --bg-soft:       #0F172A;
+    --bg-muted:      #1E293B;
+    --fg:            #F8FAFC;
+    --fg-muted:      #94A3B8;
+    --border:        rgba(255, 255, 255, 0.08);
+    --brand:         #5A85FF;
+    --glass-bg:      rgba(15, 23, 42, 0.65);
+    --glass-border:  rgba(255, 255, 255, 0.08);
+    --scrollbar:     rgba(255, 255, 255, 0.18);
+  }
 }
 
 /* ============================================================
-   DESIGN SYSTEM — LOOP 01 (App Shell + Design tokens)
-   Utilidades añadidas para el nuevo sistema de UI. No se tocó
-   nada de lo anterior en este archivo (Leaflet, safe-areas,
-   scrollbar).
+   BASE
    ============================================================ */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    color-scheme: light dark;
+  }
 
-/* Glassmorphism moderado — usar solo donde aporte jerarquía
-   (BottomNav, GlassCard, sheets flotantes). */
-.glass {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  html, body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sora', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: rgba(47, 94, 255, 0.25);
+    color: var(--fg);
+  }
 }
 
-/* Área táctil mínima recomendada (~48x48px) para elementos
-   interactivos importantes: botones, icon buttons, nav, controles. */
+/* ============================================================
+   UTILIDADES EXISTENTES (conservadas)
+   ============================================================ */
+.safe-top    { padding-top:    max(0.75rem, env(safe-area-inset-top)); }
+.safe-bottom { padding-bottom: max(0.5rem,  env(safe-area-inset-bottom)); }
+.safe-left   { padding-left:   env(safe-area-inset-left); }
+.safe-right  { padding-right:  env(safe-area-inset-right); }
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+}
+
 .touch-target {
   min-width: 48px;
   min-height: 48px;
 }
 
-/* Foco visible consistente para accesibilidad de teclado,
-   sin alterar el look en interacción táctil/mouse. */
-.focus-ring {
-  outline: none;
-}
 .focus-ring:focus-visible {
-  outline: 2px solid #2F5EFF;
+  outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
 
-/* Reduced motion — respeta la preferencia del sistema operativo. */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ============================================================
+   SCROLLBAR PREMIUM
+   ============================================================ */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--fg-muted);
+  background-clip: content-box;
+}
+
+/* ============================================================
+   UTILIDADES NUEVAS (para loops siguientes)
+   ============================================================ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-muted) 0%,
+    rgba(100, 116, 139, 0.08) 50%,
+    var(--bg-muted) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.hairline {
+  box-shadow: inset 0 0 0 0.5px var(--border);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--brand) 0%, #5A85FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
