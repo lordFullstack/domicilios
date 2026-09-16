@@ -68,11 +68,12 @@ export const AddressSheet = ({ open, initialDraft, onClose, onSave }: AddressShe
         />
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="address-reference" className="block text-sm font-medium text-gray-700 mb-2">
             Referencia (opcional)
           </label>
           <textarea
-            className="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+            id="address-reference"
+            className="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm bg-white text-secondary placeholder:text-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             placeholder="Cerca de... / punto de referencia para el domiciliario"
             value={draft.reference}
             onChange={(e) => setDraft({ ...draft, reference: e.target.value })}

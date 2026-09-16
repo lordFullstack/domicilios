@@ -4,8 +4,17 @@
 @tailwind utilities;
 
 /* ============================================================
-   DESIGN TOKENS (CSS variables) — habilitan dark mode automático
-   ============================================================ */
+   DESIGN TOKENS (CSS variables)
+   ============================================================
+   La app es solo-claro por decisión de producto — no hay ningún
+   toggle de tema en la UI. Antes había un bloque @media
+   (prefers-color-scheme: dark) que reescribía estas variables
+   siguiendo el tema del sistema operativo, sin que ningún
+   componente se hubiera diseñado para ese modo: el resultado real
+   era romper elementos que sí llevan `color-scheme` (inputs,
+   textareas, scrollbars nativos del navegador) mientras el resto
+   de la UI, que usa clases de Tailwind explícitas, se quedaba
+   clara — una mezcla inconsistente, no un dark mode real. */
 :root {
   --bg:            #FFFFFF;
   --bg-soft:       #F8FAFC;
@@ -19,36 +28,6 @@
   --scrollbar:     rgba(15, 23, 42, 0.18);
 }
 
-/* Dark mode manual (cuando se añada toggle) */
-.dark {
-  --bg:            #0A0F1E;
-  --bg-soft:       #0F172A;
-  --bg-muted:      #1E293B;
-  --fg:            #F8FAFC;
-  --fg-muted:      #94A3B8;
-  --border:        rgba(255, 255, 255, 0.08);
-  --brand:         #5A85FF;
-  --glass-bg:      rgba(15, 23, 42, 0.65);
-  --glass-border:  rgba(255, 255, 255, 0.08);
-  --scrollbar:     rgba(255, 255, 255, 0.18);
-}
-
-/* Dark mode automático (sigue preferencia del sistema) */
-@media (prefers-color-scheme: dark) {
-  html:not(.light) {
-    --bg:            #0A0F1E;
-    --bg-soft:       #0F172A;
-    --bg-muted:      #1E293B;
-    --fg:            #F8FAFC;
-    --fg-muted:      #94A3B8;
-    --border:        rgba(255, 255, 255, 0.08);
-    --brand:         #5A85FF;
-    --glass-bg:      rgba(15, 23, 42, 0.65);
-    --glass-border:  rgba(255, 255, 255, 0.08);
-    --scrollbar:     rgba(255, 255, 255, 0.18);
-  }
-}
-
 /* ============================================================
    BASE
    ============================================================ */
@@ -57,7 +36,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    color-scheme: light dark;
+    color-scheme: light;
   }
 
   html, body {

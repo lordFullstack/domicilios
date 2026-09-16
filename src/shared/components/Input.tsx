@@ -31,7 +31,7 @@ export const Input = ({
         aria-invalid={!!error}
         aria-describedby={error ? errorId : undefined}
         className={clsx(
-          'w-full px-4 py-3 border rounded-2xl text-sm',
+          'w-full px-4 py-3 border rounded-2xl text-sm bg-white text-secondary placeholder:text-gray-400',
           'focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary',
           error ? 'border-danger' : 'border-gray-200',
           className
