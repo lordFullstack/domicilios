@@ -1,3 +1,5 @@
+import { Pizza, Sandwich, Fish, IceCream2, CupSoda, Beef, Shrimp } from 'lucide-react'
+
 export const APP_NAME = 'Domicilios Riohacha'
 export const APP_VERSION = '0.1.0'
 
@@ -46,13 +48,20 @@ export const ROUTES = {
   ADMIN_PROMOTIONS: '/admin/promotions',
 } as const
 
+// `icon` es el ícono real (usado en Home); `emoji` se mantiene para las
+// pantallas que todavía no migraron de emoji-como-ícono (admin, filtros
+// de explorar) y así no romperlas con este cambio.
 export const RESTAURANT_CATEGORIES = [
-  { value: 'Pizza', label: 'Pizza', emoji: '🍕' },
-  { value: 'Burgers', label: 'Burgers', emoji: '🍔' },
-  { value: 'Sushi', label: 'Sushi', emoji: '🍣' },
-  { value: 'Postres', label: 'Postres', emoji: '🍰' },
-  { value: 'Bebidas', label: 'Bebidas', emoji: '🥤' },
-  { value: 'Asados', label: 'Asados', emoji: '🍗' },
+  { value: 'Pizza', label: 'Pizza', emoji: '🍕', icon: Pizza },
+  { value: 'Burgers', label: 'Burgers', emoji: '🍔', icon: Sandwich },
+  { value: 'Sushi', label: 'Sushi', emoji: '🍣', icon: Fish },
+  { value: 'Postres', label: 'Postres', emoji: '🍰', icon: IceCream2 },
+  { value: 'Bebidas', label: 'Bebidas', emoji: '🥤', icon: CupSoda },
+  { value: 'Asados', label: 'Asados', emoji: '🍗', icon: Beef },
+  // Riohacha es ciudad costera — mariscos es una categoría real del
+  // mercado local que faltaba junto a las genéricas de cualquier app
+  // de domicilios.
+  { value: 'Mariscos', label: 'Mariscos', emoji: '🦐', icon: Shrimp },
 ] as const
 
 export const USER_ROLES = {

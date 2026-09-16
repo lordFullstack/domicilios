@@ -24,7 +24,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 // ============================================================
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-primary text-white shadow-[0_4px_12px_rgba(47,94,255,0.25)] hover:bg-primary-dark hover:shadow-[0_6px_20px_rgba(47,94,255,0.35)]',
+    'bg-primary text-white shadow-[0_4px_12px_rgba(46,58,140,0.25)] hover:bg-primary-dark hover:shadow-[0_6px_20px_rgba(46,58,140,0.35)]',
   secondary:
     'bg-white text-ink ring-1 ring-black/[0.08] hover:bg-surface-soft hover:ring-black/[0.12] dark:bg-white/[0.06] dark:text-white dark:ring-white/[0.08] dark:hover:bg-white/[0.1]',
   ghost:
@@ -32,7 +32,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   danger:
     'bg-danger text-white shadow-[0_4px_12px_rgba(239,68,68,0.25)] hover:bg-red-600',
   gradient:
-    'bg-brand-gradient text-white shadow-[0_8px_24px_rgba(47,94,255,0.35)] hover:opacity-95',
+    'bg-brand-gradient text-white shadow-[0_8px_24px_rgba(244,101,44,0.35)] hover:opacity-95',
 }
 
 // ============================================================

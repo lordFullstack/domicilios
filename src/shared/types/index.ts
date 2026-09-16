@@ -19,7 +19,7 @@ export interface User {
 }
 
 // Restaurant
-export type RestaurantCategory = 'Pizza' | 'Burgers' | 'Sushi' | 'Postres' | 'Bebidas' | 'Asados'
+export type RestaurantCategory = 'Pizza' | 'Burgers' | 'Sushi' | 'Postres' | 'Bebidas' | 'Asados' | 'Mariscos'
 
 export interface Restaurant {
   id: string

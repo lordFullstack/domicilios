@@ -6,29 +6,48 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Azul profundo derivado de la punta del cohete de marca (ver
+        // public/brand/rocket-app-icon.png) — antes era un azul eléctrico
+        // genérico de SaaS (#2F5EFF) sin relación con el propio logo.
         brand: {
-          50:  '#EEF4FF',
-          100: '#DCE7FF',
-          200: '#B9CEFF',
-          300: '#8AABFF',
-          400: '#5A85FF',
-          500: '#2F5EFF',
-          600: '#1E40AF',
-          700: '#1B348C',
-          800: '#172B70',
-          900: '#0F1D4D',
+          50:  '#EEF0FA',
+          100: '#DCE0F4',
+          200: '#B9C1E9',
+          300: '#8E99D6',
+          400: '#5C6BB8',
+          500: '#2E3A8C',
+          600: '#242E70',
+          700: '#1C2459',
+          800: '#151A42',
+          900: '#0D102A',
         },
         ink: {
-          DEFAULT: '#0F172A',
-          muted:   '#64748B',
-          subtle:  '#94A3B8',
-          faint:   '#CBD5E1',
+          DEFAULT: '#1C1917',
+          muted:   '#78716C',
+          subtle:  '#A8A29E',
+          faint:   '#D6D3D1',
         },
         surface: {
           DEFAULT: '#FFFFFF',
-          soft:    '#F8FAFC',
-          muted:   '#F1F5F9',
-          border:  '#E2E8F0',
+          soft:    '#FAFAF9',
+          muted:   '#F5F5F4',
+          border:  '#E7E5E4',
+        },
+        // Tailwind's gray-* se usa en toda la app para texto/bordes
+        // secundarios; se sobreescribe con una rampa cálida (stone) para
+        // que la identidad "costera" llegue a cada pantalla sin tocar
+        // componente por componente.
+        gray: {
+          50:  '#FAFAF9',
+          100: '#F5F5F4',
+          200: '#E7E5E4',
+          300: '#D6D3D1',
+          400: '#A8A29E',
+          500: '#78716C',
+          600: '#57534E',
+          700: '#44403C',
+          800: '#292524',
+          900: '#1C1917',
         },
         accent:  '#F59E0B',
         success: '#10B981',
@@ -37,19 +56,23 @@ export default {
         info:    '#0EA5E9',
 
         // Aliases legacy — mantienen compatibilidad con componentes actuales
-        primary: '#2F5EFF',
-        'primary-dark': '#1E40AF',
-        secondary: '#0F172A',
+        primary: '#2E3A8C',
+        'primary-dark': '#242E70',
+        secondary: '#1C1917',
         coral: '#FF5A6B',
-        'ink-muted': '#64748B',
+        'ink-muted': '#78716C',
       },
 
       backgroundImage: {
-        'brand-gradient': 'linear-gradient(135deg, #2F5EFF 0%, #5A85FF 100%)',
+        // "Atardecer": el mismo barrido azul → naranja → dorado del ícono
+        // de marca, ahora como el gradiente de énfasis de toda la app
+        // (CTAs, hero, barra de progreso de pedido) en vez de un azul
+        // plano sobre azul claro.
+        'brand-gradient': 'linear-gradient(135deg, #1C2459 0%, #F4652C 62%, #FFC24B 100%)',
         'brand-gradient-soft':
-          'linear-gradient(135deg, rgba(47,94,255,0.08) 0%, rgba(90,133,255,0.04) 100%)',
+          'linear-gradient(135deg, rgba(28,36,89,0.08) 0%, rgba(244,101,44,0.06) 60%, rgba(255,194,75,0.05) 100%)',
         'mesh-hero':
-          'radial-gradient(at 20% 0%, rgba(47,94,255,0.15) 0%, transparent 50%), radial-gradient(at 80% 100%, rgba(245,158,11,0.10) 0%, transparent 50%)',
+          'radial-gradient(at 20% 0%, rgba(46,58,140,0.14) 0%, transparent 50%), radial-gradient(at 80% 100%, rgba(244,101,44,0.12) 0%, transparent 50%)',
       },
 
       fontFamily: {
@@ -79,8 +102,8 @@ export default {
         floating: '0 8px 24px rgba(15,23,42,0.12)',
         'bottom-sheet': '0 -8px 32px rgba(15,23,42,0.14)',
         'premium':
-          'inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.08)',
-        'glow-primary': '0 8px 32px rgba(47,94,255,0.28)',
+          'inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 2px rgba(28,25,23,0.04), 0 8px 24px rgba(28,25,23,0.08)',
+        'glow-primary': '0 8px 32px rgba(46,58,140,0.28)',
       },
 
       borderRadius: {
@@ -119,12 +142,17 @@ export default {
           '0%': { backgroundPosition: '-1000px 0' },
           '100%': { backgroundPosition: '1000px 0' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0) rotate(12deg)' },
+          '50%': { transform: 'translateY(-6px) rotate(12deg)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.2s ease-out',
         'fade-slide-up': 'fade-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
         'scale-in': 'scale-in 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
         shimmer: 'shimmer 2s linear infinite',
+        float: 'float 3.5s ease-in-out infinite',
       },
     },
   },

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { Flame, UtensilsCrossed, Store } from 'lucide-react'
 import { usePromotions } from '@/shared/hooks/usePromotions'
 import { ROUTES } from '@/config/constants'
 import { PromotionType } from '@/shared/types'
@@ -62,11 +63,12 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-3xl">🍽️</span>
+                  <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} />
                 )}
               </div>
-              <span className="absolute top-2 left-2 bg-coral text-white text-[10px] font-bold px-2 py-1 rounded-full">
-                🔥 Oferta
+              <span className="absolute top-2 left-2 flex items-center gap-1 bg-coral text-white text-[10px] font-bold px-2 py-1 rounded-full">
+                <Flame className="w-3 h-3" fill="currentColor" />
+                Oferta
               </span>
               <div className="p-3">
                 <p className="font-semibold text-xs text-secondary line-clamp-2">{promo.title}</p>
@@ -95,8 +97,10 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
             <div className="h-28 bg-primary/10 overflow-hidden flex items-center justify-center">
               {promo.image_url ? (
                 <img src={promo.image_url} alt={promo.title} loading="lazy" className="w-full h-full object-cover" />
+              ) : type === 'featured_product' ? (
+                <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} />
               ) : (
-                <span className="text-3xl">{type === 'featured_product' ? '🍽️' : '🏪'}</span>
+                <Store className="w-7 h-7 text-primary/40" strokeWidth={1.5} />
               )}
             </div>
             <div className="p-3">

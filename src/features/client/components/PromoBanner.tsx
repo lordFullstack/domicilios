@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Sparkles } from 'lucide-react'
 import { usePromotions } from '@/shared/hooks/usePromotions'
 import { ROUTES } from '@/config/constants'
 
@@ -51,7 +52,7 @@ export const PromoBanner = () => {
               <p className="font-display font-bold text-sm text-white">{current.title}</p>
               {current.subtitle && <p className="text-xs text-white/80">{current.subtitle}</p>}
             </div>
-            <span className="text-3xl">🎉</span>
+            <Sparkles className="w-6 h-6 text-white/70 flex-shrink-0" strokeWidth={1.75} />
           </div>
         )}
       </button>

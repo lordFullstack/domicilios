@@ -80,9 +80,8 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
                 }`}
               >
                 <Icon
-                  className="w-5 h-5"
+                  className={`w-5 h-5 ${isActive ? 'text-primary' : 'text-gray-400'}`}
                   strokeWidth={isActive ? 2.5 : 2}
-                  color={isActive ? '#2F5EFF' : '#9CA3AF'}
                 />
                 <span
                   className={`text-xs font-medium ${

@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes } from 'react'
+import { Loader2 } from 'lucide-react'
 import clsx from 'clsx'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -51,7 +52,7 @@ export const Button = ({
       disabled={disabled || loading}
       {...props}
     >
-      {loading && <span className="animate-spin">⏳</span>}
+      {loading && <Loader2 className="w-4 h-4 animate-spin" />}
       {children}
     </button>
   )

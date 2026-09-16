@@ -25,10 +25,20 @@ export const RestaurantGridCard = ({ restaurant }: RestaurantGridCardProps) => {
     setPending(false)
   }
 
+  const openRestaurant = () => navigate(ROUTES.CLIENT_RESTAURANT.replace(':id', restaurant.id))
+
+  // Contenedor real: no puede ser un <button> porque adentro hay otro
+  // botón (favorito) — anidar <button> dentro de <button> es HTML
+  // inválido y hacía que el lector de pantalla/el árbol de accesibilidad
+  // no pudiera resolver un nombre para ninguno de los dos.
   return (
-    <button
-      onClick={() => navigate(ROUTES.CLIENT_RESTAURANT.replace(':id', restaurant.id))}
-      className="focus-ring text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-[0.98] transition-transform bg-white"
+    <div
+      role="button"
+      tabIndex={0}
+      aria-label={restaurant.name}
+      onClick={openRestaurant}
+      onKeyDown={(e) => e.key === 'Enter' && openRestaurant()}
+      className="focus-ring text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-[0.98] transition-transform bg-white cursor-pointer"
     >
       <div className="relative aspect-[4/3] bg-primary/10">
         {restaurant.cover_url ? (
@@ -87,6 +97,6 @@ export const RestaurantGridCard = ({ restaurant }: RestaurantGridCardProps) => {
           {isOpen && <span className="text-[10px] font-semibold text-success flex-shrink-0">Envío gratis</span>}
         </div>
       </div>
-    </button>
+    </div>
   )
 }

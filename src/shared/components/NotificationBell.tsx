@@ -61,7 +61,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
       >
         <Bell className={`w-4 h-4 ${iconColor}`} />
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-danger rounded-full flex items-center justify-center text-[10px] font-bold text-white border-2 border-white">
+          <span className="absolute -top-0.5 -right-0.5 min-w-[19px] h-[19px] px-1 bg-danger rounded-full flex items-center justify-center text-[11px] font-bold text-white border-2 border-white">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
