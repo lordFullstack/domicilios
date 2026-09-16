@@ -12,6 +12,7 @@ export const AddressCard = ({ draft, onEdit }: AddressCardProps) => {
   if (!hasAddress) {
     return (
       <button
+        type="button"
         onClick={onEdit}
         className="focus-ring w-full text-left border-2 border-dashed border-gray-200 rounded-2xl p-4 active:scale-[0.98] transition-transform"
       >
@@ -26,6 +27,7 @@ export const AddressCard = ({ draft, onEdit }: AddressCardProps) => {
 
   return (
     <button
+      type="button"
       onClick={onEdit}
       className="focus-ring w-full text-left border border-gray-100 rounded-2xl p-4 flex items-start gap-3 active:scale-[0.98] transition-transform"
     >

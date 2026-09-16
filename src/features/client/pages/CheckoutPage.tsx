@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Banknote, CreditCard, WifiOff } from 'lucide-react'
+import { ChevronLeft, Banknote, CreditCard, WifiOff, ShoppingBag } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { Badge } from '@/shared/components/Badge'
+import { ProductImage } from '@/shared/components/ProductImage'
+import { EmptyState } from '@/shared/components/EmptyState'
 import { useOrders, useRestaurantById, useProductById, useProducts } from '@/hooks/useLocalData'
 import { useCartContext } from '@/shared/hooks/useCartContext'
 import { useAuth } from '@/shared/hooks/useAuth'
@@ -50,13 +52,35 @@ export const CheckoutPage = () => {
 
   const hasAddress = address.street.trim().length >= 5
 
+  // El error solo se limpiaba al reintentar el submit — si el usuario
+  // arreglaba la causa (agregaba dirección, volvía a tener conexión) el
+  // banner rojo se quedaba en pantalla justo encima de un botón ya
+  // habilitado, contradiciendo la propia UI.
+  useEffect(() => {
+    if (error && hasAddress && !isOffline && checkoutInfoReady) {
+      setError(null)
+    }
+  }, [error, hasAddress, isOffline, checkoutInfoReady])
+
   if (cart.length === 0 && submitState !== 'success') {
     return (
-      <div className="min-h-screen bg-white max-w-md mx-auto flex flex-col items-center justify-center px-8 text-center">
-        <span className="text-5xl mb-4">🛒</span>
-        <p className="font-display font-bold mb-1 text-secondary">Tu carrito está vacío</p>
-        <p className="text-sm text-gray-500 mb-6">No hay productos para ordenar</p>
-        <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>
+      <div className="min-h-screen bg-white max-w-md mx-auto">
+        <div className="px-5 pt-6 pb-4 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="touch-target focus-ring w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center active:scale-90 transition-transform"
+          >
+            <ChevronLeft className="w-4 h-4 text-secondary" />
+          </button>
+          <h1 className="font-display text-lg font-bold text-secondary">Confirmar pedido</h1>
+        </div>
+        <EmptyState
+          icon={ShoppingBag}
+          title="Tu carrito está vacío"
+          description="No hay productos para ordenar."
+          action={<Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>}
+        />
       </div>
     )
   }
@@ -184,7 +208,7 @@ export const CheckoutPage = () => {
               />
             </button>
 
-            <div className="flex items-center gap-3 border border-gray-100 rounded-2xl p-3 opacity-50">
+            <div className="flex items-center gap-3 border border-gray-100 rounded-2xl p-3 opacity-50 cursor-not-allowed">
               <div className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
                 <CreditCard className="w-4 h-4 text-gray-500" />
               </div>
@@ -202,7 +226,9 @@ export const CheckoutPage = () => {
           <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">RESUMEN</h2>
           <div className="border border-gray-100 rounded-2xl p-4">
             <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
-              <span className="text-xl">{restaurant?.image_url}</span>
+              <div className="w-6 h-6 rounded-lg overflow-hidden flex items-center justify-center text-base flex-shrink-0">
+                <ProductImage imageUrl={restaurant?.image_url} alt={restaurant?.name || ''} />
+              </div>
               <p className="font-display font-bold text-sm text-secondary">{restaurant?.name}</p>
             </div>
 

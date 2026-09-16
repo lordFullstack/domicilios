@@ -101,12 +101,12 @@ export const CartPage = () => {
             Cancelar
           </Button>
           <Button
-            variant="secondary"
+            variant="danger"
             onClick={() => {
               clear()
               setClearConfirmOpen(false)
             }}
-            className="flex-1 !bg-danger"
+            className="flex-1"
           >
             Vaciar
           </Button>
@@ -115,7 +115,7 @@ export const CartPage = () => {
 
       {restaurant && (
         <p className="px-5 text-xs text-gray-500 mb-4">
-          Pedido de <span className="font-semibold text-secondary">{restaurant.image_url} {restaurant.name}</span>
+          Pedido de <span className="font-semibold text-secondary">{restaurant.name}</span>
         </p>
       )}
 
@@ -186,39 +186,48 @@ const CartItemRow = ({
 }) => {
   if (!product) return null
 
+  // El nombre va en su propia fila a todo el ancho — antes compartía fila
+  // con la imagen, el stepper y el botón de eliminar, y el navegador le
+  // dejaba ~41px reales de ancho (medido en vivo): nombres como "costilla
+  // bbq" quedaban truncados a "cos…" justo en la pantalla donde el
+  // usuario confirma qué está a punto de pagar.
   return (
-    <div className="flex items-center gap-3 border border-gray-100 rounded-2xl p-3">
+    <div className="flex items-start gap-3 border border-gray-100 rounded-2xl p-3">
       <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl flex-shrink-0 overflow-hidden">
         <ProductImage imageUrl={product.image_url} alt={product.name} />
       </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
-        <p className="text-xs font-bold text-coral">{formatCOP(product.price)}</p>
+      <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+        <p className="font-semibold text-sm text-secondary line-clamp-2">{product.name}</p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-xs font-bold text-coral">{formatCOP(product.price)}</p>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-1.5 bg-gray-50 rounded-full px-1.5 py-1">
+              <button
+                onClick={() => onChangeQty(item.productId, -1, item.quantity)}
+                aria-label="Disminuir cantidad"
+                className="touch-target focus-ring w-8 h-8 rounded-full bg-white shadow-card flex items-center justify-center active:scale-90 transition-transform"
+              >
+                <Minus className="w-3 h-3 text-secondary" />
+              </button>
+              <span className="text-sm font-semibold w-4 text-center text-secondary">{item.quantity}</span>
+              <button
+                onClick={() => onChangeQty(item.productId, 1, item.quantity)}
+                aria-label="Aumentar cantidad"
+                className="touch-target focus-ring w-8 h-8 rounded-full flex items-center justify-center text-white bg-coral active:scale-90 transition-transform"
+              >
+                <Plus className="w-3 h-3" />
+              </button>
+            </div>
+            <button
+              onClick={onRemove}
+              aria-label={`Eliminar ${product.name} del carrito`}
+              className="touch-target focus-ring w-8 h-8 rounded-full flex items-center justify-center text-gray-300 hover:text-danger active:scale-90 transition-transform flex-shrink-0"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       </div>
-      <div className="flex items-center gap-1.5 bg-gray-50 rounded-full px-1.5 py-1 flex-shrink-0">
-        <button
-          onClick={() => onChangeQty(item.productId, -1, item.quantity)}
-          aria-label="Disminuir cantidad"
-          className="touch-target focus-ring w-8 h-8 rounded-full bg-white shadow-card flex items-center justify-center active:scale-90 transition-transform"
-        >
-          <Minus className="w-3 h-3 text-secondary" />
-        </button>
-        <span className="text-sm font-semibold w-4 text-center">{item.quantity}</span>
-        <button
-          onClick={() => onChangeQty(item.productId, 1, item.quantity)}
-          aria-label="Aumentar cantidad"
-          className="touch-target focus-ring w-8 h-8 rounded-full flex items-center justify-center text-white bg-coral active:scale-90 transition-transform"
-        >
-          <Plus className="w-3 h-3" />
-        </button>
-      </div>
-      <button
-        onClick={onRemove}
-        aria-label={`Eliminar ${product.name} del carrito`}
-        className="touch-target focus-ring w-8 h-8 rounded-full flex items-center justify-center text-gray-300 hover:text-danger active:scale-90 transition-transform flex-shrink-0"
-      >
-        <Trash2 className="w-4 h-4" />
-      </button>
     </div>
   )
 }
