@@ -33,7 +33,11 @@ export const LoginHero = () => {
       <div className="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-accent/20 blur-3xl" />
       <div className="absolute -bottom-28 -left-20 w-80 h-80 rounded-full bg-white/10 blur-3xl" />
 
-      <div className="relative safe-top px-8 pt-7 pb-5 md:pt-12 md:pb-10 md:min-h-screen md:flex md:flex-col md:py-14">
+      {/* pb-14 en mobile: el panel blanco de LoginPage sube -mt-8 (32px)
+          para superponerse a la esquina redondeada de este hero — con
+          menos padding acá, esa superposición tapaba la mitad inferior
+          de "Tu comida favorita, en minutos" en vez de solo el fondo. */}
+      <div className="relative safe-top px-8 pt-7 pb-14 md:pt-12 md:pb-10 md:min-h-screen md:flex md:flex-col md:py-14">
         {/* 1-2. Logo + marca */}
         <div className="shrink-0 animate-fade-in">
           <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-md flex items-center justify-center shadow-floating">
