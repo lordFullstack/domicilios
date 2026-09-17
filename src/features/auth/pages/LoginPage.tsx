@@ -17,16 +17,26 @@ const ROUTE_BY_ROLE: Record<string, string> = {
   [USER_ROLES.ADMIN]: ROUTES.ADMIN_DASHBOARD,
 }
 
+const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+
 export const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [emailTouched, setEmailTouched] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { login } = useAuth()
 
+  const emailError = emailTouched && email.length > 0 && !isValidEmail(email)
+    ? 'Ingresa un correo válido.'
+    : undefined
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setEmailTouched(true)
+    if (!isValidEmail(email)) return
+
     setError('')
     setLoading(true)
 
@@ -44,7 +54,11 @@ export const LoginPage = () => {
     <div className="min-h-screen bg-white flex flex-col md:grid md:grid-cols-2">
       <LoginHero />
 
-      <div className="relative z-10 -mt-8 md:mt-0 flex flex-col justify-center bg-white rounded-t-[2rem] md:rounded-none px-6 sm:px-8 md:px-12 lg:px-16 py-8 md:py-16 safe-bottom">
+      {/* md:justify-center + min-h-screen dejaba el formulario flotando en
+          ~300px de blanco arriba y abajo en pantallas anchas (medido en
+          1440x900) — se ancla más arriba, con un tope de alto máximo, para
+          que no se sienta perdido en el espacio sobrante. */}
+      <div className="relative z-10 -mt-8 md:mt-0 flex flex-col justify-center md:justify-start bg-white rounded-t-[2rem] md:rounded-none px-6 sm:px-8 md:px-12 lg:px-16 py-8 md:py-20 lg:py-28 safe-bottom">
         <div className="w-full max-w-[400px] mx-auto animate-fade-slide-up">
           <div className="mb-6 md:mb-8">
             <h2 className="font-display text-xl md:text-2xl font-bold text-secondary">
@@ -66,13 +80,20 @@ export const LoginPage = () => {
               icon={Mail}
               label="Email"
               type="email"
+              name="email"
+              autoComplete="email"
+              autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setEmailTouched(true)}
+              error={emailError}
               placeholder="tu@email.com"
               required
             />
             <AuthPasswordInput
               label="Contraseña"
+              name="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
