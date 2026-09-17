@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useMemo, useEffect } from 'react'
-import { ChevronLeft, Heart, AlertTriangle, Soup, UtensilsCrossed, CupSoda, Cake, PlusCircle } from 'lucide-react'
+import { ChevronLeft, Heart, AlertTriangle, Soup, UtensilsCrossed, CupSoda, Cake, PlusCircle, Star, Ban } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
+import { ProductImage } from '@/shared/components/ProductImage'
 import { Badge } from '@/shared/components/Badge'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
@@ -95,7 +96,7 @@ export const RestaurantDetailPage = () => {
   const actuallyAdd = (product: Product, quantity: number) => {
     addItem(product.id, product.price, quantity)
     setDetailProduct(null)
-    showToast(`✓ ${product.name} agregado al carrito`)
+    showToast(`${product.name} agregado al carrito`)
   }
 
   const handleAdd = (product: Product, quantity: number) => {
@@ -182,7 +183,7 @@ export const RestaurantDetailPage = () => {
     return (
       <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center px-6">
         <div className="text-center">
-          <p className="text-4xl mb-3">⛔</p>
+          <Ban className="w-9 h-9 mx-auto mb-3 text-danger" strokeWidth={1.75} />
           <p className="font-display font-bold text-secondary mb-1">Restaurante no disponible</p>
           <p className="text-gray-500 text-sm mb-4">
             Este restaurante está temporalmente suspendido y no puede recibir pedidos.
@@ -207,13 +208,19 @@ export const RestaurantDetailPage = () => {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-7xl">
-            {restaurant.image_url}
-          </div>
+          <ProductImage
+            imageUrl={restaurant.image_url}
+            alt={restaurant.name}
+            emojiClassName="w-full h-full flex items-center justify-center text-7xl"
+          />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
+        {/* Scrim más denso en la mitad inferior: las portadas las sube cada
+            restaurante y pueden traer texto propio (teléfonos, letreros)
+            que antes se mezclaba con el nombre y la calificación. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 via-45% to-black/10" />
 
         <button
+          type="button"
           onClick={() => navigate(-1)}
           aria-label="Volver"
           className="touch-target focus-ring absolute left-4 w-10 h-10 rounded-full glass flex items-center justify-center active:scale-90 transition-transform"
@@ -222,6 +229,7 @@ export const RestaurantDetailPage = () => {
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
         <button
+          type="button"
           onClick={handleToggleFavorite}
           disabled={favPending}
           aria-label={isFavorite(restaurant.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
@@ -241,36 +249,32 @@ export const RestaurantDetailPage = () => {
               {restaurant.cover_url ? (
                 <img src={restaurant.cover_url} alt="" className="w-full h-full object-cover" />
               ) : (
-                restaurant.image_url
+                <ProductImage imageUrl={restaurant.image_url} alt="" />
               )}
             </div>
             <div className="min-w-0 flex-1 pb-0.5">
               <h1 className="font-display text-lg font-bold text-white truncate drop-shadow">
                 {restaurant.name}
               </h1>
-              <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-white/90">
-                <span>
-                  ⭐{' '}
-                  {restaurant.rating_count > 0
-                    ? `${restaurant.rating_avg.toFixed(1)} (${restaurant.rating_count})`
-                    : 'Nuevo'}
-                </span>
-                {/* Tiempo estimado / costo de envío / distancia: el modelo
-                    Restaurant todavía no tiene estos campos — placeholder
-                    visual a propósito, para revisar el diseño antes de
-                    construir esa lógica con datos reales en Supabase. */}
-                <span>· 25-35 min</span>
-                <span>· 🚴 $3.000</span>
-                <span>· 📍 1.2 km</span>
+              {/* Antes aquí había tiempo, costo de envío y distancia fijos
+                  (25-35 min · $3.000 · 1.2 km) idénticos para todos los
+                  restaurantes — el modelo no tiene esos datos, y el costo
+                  contradecía el "Envío gratis" del carrito y el checkout. */}
+              <div className="mt-0.5 flex items-center gap-1 text-xs text-white drop-shadow">
+                <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                {restaurant.rating_count > 0
+                  ? `${restaurant.rating_avg.toFixed(1)} (${restaurant.rating_count})`
+                  : 'Nuevo'}
+                <span className="text-white/80">· Envío gratis</span>
               </div>
             </div>
           </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <Badge variant={restaurantIsOpen ? 'success' : 'danger'}>
-              {restaurantIsOpen ? '🟢 Abierto' : '🔴 Cerrado'}
+              {restaurantIsOpen ? 'Abierto' : 'Cerrado'}
             </Badge>
-            <span className="text-xs text-white/70">{restaurant.category}</span>
+            <span className="text-xs text-white/80">{restaurant.category}</span>
           </div>
         </div>
       </div>
@@ -303,6 +307,8 @@ export const RestaurantDetailPage = () => {
                   return (
                     <button
                       key={cat}
+                      type="button"
+                      aria-pressed={activeCategory === cat}
                       onClick={() => setActiveCategory(cat)}
                       className={`focus-ring flex flex-shrink-0 items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors min-h-[40px] ${
                         activeCategory === cat

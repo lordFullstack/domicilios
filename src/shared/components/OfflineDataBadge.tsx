@@ -1,3 +1,5 @@
+import { WifiOff } from 'lucide-react'
+
 interface OfflineDataBadgeProps {
   /** Timestamp (Date.now()) de cuándo se guardó esta copia local. Si no se
    * pasa, se muestra el mensaje genérico (compatibilidad con usos previos). */
@@ -19,8 +21,8 @@ export const OfflineDataBadge = ({ cachedAt }: OfflineDataBadgeProps) => {
     : null
 
   return (
-    <div className="mb-4 rounded-xl bg-yellow-50 text-yellow-700 text-xs px-3 py-2 flex items-center gap-2">
-      <span>📴</span>
+    <div className="mb-4 rounded-xl bg-warning/10 text-[#92400E] text-xs px-3 py-2 flex items-center gap-2">
+      <WifiOff className="w-3.5 h-3.5 flex-shrink-0" />
       <span>
         Mostrando información guardada — sin conexión
         {syncedLabel && <> · Última sincronización: {syncedLabel}</>}

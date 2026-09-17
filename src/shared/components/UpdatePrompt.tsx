@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { X } from 'lucide-react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import { Button } from './Button'
 
@@ -21,14 +23,30 @@ export const UpdatePrompt = () => {
     },
   })
 
-  if (!needRefresh) return null
+  const [dismissed, setDismissed] = useState(false)
 
+  if (!needRefresh || dismissed) return null
+
+  // Arriba y descartable: abajo tapaba justo la barra del carrito y los
+  // CTAs de pago, que viven en la franja inferior de todas las pantallas.
   return (
-    <div className="fixed bottom-20 left-4 right-4 z-50 max-w-md mx-auto bg-secondary text-white rounded-2xl p-4 shadow-lg flex items-center justify-between gap-3">
-      <p className="text-sm">Hay una nueva versión disponible.</p>
+    <div
+      className="fixed left-4 right-4 z-50 max-w-md mx-auto bg-secondary text-white rounded-2xl py-2.5 pl-4 pr-2 shadow-floating flex items-center justify-between gap-2 animate-fade-slide-up"
+      style={{ top: 'max(0.75rem, env(safe-area-inset-top))' }}
+      role="status"
+    >
+      <p className="text-sm flex-1">Hay una nueva versión disponible.</p>
       <Button size="sm" onClick={() => updateServiceWorker(true)}>
         Actualizar
       </Button>
+      <button
+        type="button"
+        onClick={() => setDismissed(true)}
+        aria-label="Cerrar aviso de actualización"
+        className="touch-target focus-ring w-10 h-10 rounded-full flex items-center justify-center text-white/70 hover:text-white"
+      >
+        <X className="w-4 h-4" />
+      </button>
     </div>
   )
 }

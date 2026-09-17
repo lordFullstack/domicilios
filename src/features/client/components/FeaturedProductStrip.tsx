@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react'
+import { Plus, Flame } from 'lucide-react'
 
 import { Product } from '@/shared/types'
 import { ProductImage } from '@/shared/components/ProductImage'
@@ -23,9 +23,10 @@ export const FeaturedProductStrip = ({
     <section className="mb-5" aria-labelledby="featured-products-title">
       <p
         id="featured-products-title"
-        className="mb-2 font-display text-base font-bold text-secondary"
+        className="mb-2 flex items-center gap-1.5 font-display text-base font-bold text-secondary"
       >
-        🔥 Recomendados
+        <Flame className="h-4 w-4 text-coral" fill="currentColor" />
+        Recomendados
       </p>
 
       <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1">
@@ -40,6 +41,7 @@ export const FeaturedProductStrip = ({
               <button
                 type="button"
                 onClick={() => onOpenDetail(product)}
+                aria-label={`Ver detalles de ${product.name}`}
                 className="focus-ring block w-full text-left active:scale-[0.99] transition-transform"
               >
                 <div className="h-24 w-full overflow-hidden bg-gray-50">
@@ -61,7 +63,7 @@ export const FeaturedProductStrip = ({
                   type="button"
                   onClick={() => onQuickAdd(product)}
                   aria-label={`Agregar ${product.name}`}
-                  className="focus-ring absolute bottom-2.5 right-2.5 flex h-9 w-9 items-center justify-center rounded-full bg-brand-gradient text-white shadow-md active:scale-90 transition-transform"
+                  className="focus-ring absolute bottom-2.5 right-2.5 flex h-9 w-9 items-center justify-center rounded-full bg-coral text-white shadow-sm active:scale-90 transition-transform"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
