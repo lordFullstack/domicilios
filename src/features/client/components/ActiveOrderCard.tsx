@@ -30,18 +30,25 @@ export const ActiveOrderCard = ({ order }: ActiveOrderCardProps) => {
   const navigate = useNavigate()
   const { restaurant } = useRestaurantById(order.restaurant_id)
   const currentStep = stepIndex(order.status)
+  const openOrder = () => navigate(ROUTES.CLIENT_ORDER.replace(':id', order.id))
 
   return (
     <div className="px-5 mb-6">
       <div
         role="button"
         tabIndex={0}
-        onClick={() => navigate(ROUTES.CLIENT_ORDER.replace(':id', order.id))}
-        onKeyDown={(e) => e.key === 'Enter' && navigate(ROUTES.CLIENT_ORDER.replace(':id', order.id))}
+        onClick={openOrder}
+        onKeyDown={(e) => {
+          // role="button" debe responder a Enter y Espacio.
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            openOrder()
+          }
+        }}
         className="focus-ring rounded-2xl p-4 bg-secondary shadow-floating cursor-pointer active:scale-[0.98] transition-transform"
       >
         <div className="flex items-center gap-2 mb-3">
-          <OrderStatusIcon status={order.status} className="w-4 h-4 text-white" />
+          <OrderStatusIcon status={order.status} className="w-4 h-4 text-white" aria-hidden="true" />
           <p className="text-white font-display font-bold text-sm">
             {restaurant?.name || 'Pedido en curso'}
           </p>
@@ -49,7 +56,7 @@ export const ActiveOrderCard = ({ order }: ActiveOrderCardProps) => {
 
         <p className="text-white/60 text-xs mb-3">Pedido #{order.id.substring(0, 8).toUpperCase()}</p>
 
-        <div className="flex items-center gap-1.5 mb-4">
+        <div className="flex items-center gap-1.5 mb-4" aria-hidden="true">
           {STEPS.map((step, i) => (
             <div
               key={step.key}
@@ -61,7 +68,7 @@ export const ActiveOrderCard = ({ order }: ActiveOrderCardProps) => {
         <div className="flex items-center justify-between">
           <span className="text-white text-xs font-medium">{STEPS[currentStep]?.label}</span>
           <span className="text-white text-xs font-semibold flex items-center gap-0.5">
-            Ver seguimiento <ChevronRight className="w-3.5 h-3.5" />
+            Ver seguimiento <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
           </span>
         </div>
       </div>

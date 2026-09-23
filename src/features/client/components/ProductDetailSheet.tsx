@@ -3,6 +3,7 @@ import { Product } from '@/shared/types'
 import { BottomSheet } from '@/shared/components/BottomSheet'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { QuantitySelector } from '@/shared/components/QuantitySelector'
+import { MAX_ITEM_QUANTITY } from '../CartContext'
 import { Button } from '@/shared/components/Button'
 import { formatCOP } from '@/shared/utils/money'
 
@@ -47,12 +48,12 @@ export const ProductDetailSheet = ({
       : `Agregar · ${formatCOP(total)}`
 
   return (
-    <BottomSheet open={open} onClose={onClose}>
+    <BottomSheet open={open} onClose={onClose} ariaLabel={product.name}>
       <div>
         <div className="w-full aspect-video rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center mb-4">
           <ProductImage
             imageUrl={product.image_url}
-            alt={product.name}
+            alt=""
             className="w-full h-full object-cover"
             emojiClassName="text-6xl"
           />
@@ -79,7 +80,7 @@ export const ProductDetailSheet = ({
         {canAdd && (
           <div className="flex items-center justify-between mb-5">
             <span className="text-sm font-semibold text-secondary">Cantidad</span>
-            <QuantitySelector value={quantity} onChange={setQuantity} />
+            <QuantitySelector value={quantity} onChange={setQuantity} max={MAX_ITEM_QUANTITY} />
           </div>
         )}
 

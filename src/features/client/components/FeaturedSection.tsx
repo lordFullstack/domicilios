@@ -40,6 +40,7 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
         <div className="flex items-center justify-between px-5 mb-3">
           <h2 className="font-display font-bold text-sm text-gray-700">{title}</h2>
           <button
+            type="button"
             onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}
             className="focus-ring text-xs font-semibold text-primary rounded-lg"
           >
@@ -49,6 +50,7 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
         <div className="grid grid-cols-2 gap-3 px-5">
           {promotions.map((promo) => (
             <button
+              type="button"
               key={promo.id}
               onClick={() => handleClick(promo.restaurant_id)}
               disabled={!promo.restaurant_id}
@@ -63,11 +65,11 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} />
+                  <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} aria-hidden="true" />
                 )}
               </div>
               <span className="absolute top-2 left-2 flex items-center gap-1 bg-coral text-white text-[10px] font-bold px-2 py-1 rounded-full">
-                <Flame className="w-3 h-3" fill="currentColor" />
+                <Flame className="w-3 h-3" fill="currentColor" aria-hidden="true" />
                 Oferta
               </span>
               <div className="p-3">
@@ -89,6 +91,7 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
       <div className="flex gap-3 px-5 overflow-x-auto scrollbar-hide">
         {promotions.map((promo) => (
           <button
+            type="button"
             key={promo.id}
             onClick={() => handleClick(promo.restaurant_id)}
             disabled={!promo.restaurant_id}
@@ -98,9 +101,9 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
               {promo.image_url ? (
                 <img src={promo.image_url} alt={promo.title} loading="lazy" className="w-full h-full object-cover" />
               ) : type === 'featured_product' ? (
-                <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} />
+                <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} aria-hidden="true" />
               ) : (
-                <Store className="w-7 h-7 text-primary/40" strokeWidth={1.5} />
+                <Store className="w-7 h-7 text-primary/40" strokeWidth={1.5} aria-hidden="true" />
               )}
             </div>
             <div className="p-3">

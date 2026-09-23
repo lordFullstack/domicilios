@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Sparkles } from 'lucide-react'
 import { usePromotions } from '@/shared/hooks/usePromotions'
+import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion'
 import { ROUTES } from '@/config/constants'
 
 const AUTO_ROTATE_MS = 5000
@@ -13,18 +14,23 @@ export const PromoBanner = () => {
   const { promotions, loading } = usePromotions('banner')
   const navigate = useNavigate()
   const [index, setIndex] = useState(0)
+  // Se pausa mientras el usuario lo toca/enfoca (WCAG 2.2.2) y no rota
+  // nunca con prefers-reduced-motion: el bloque CSS de reduced motion no
+  // puede frenar un setInterval de JS.
+  const [paused, setPaused] = useState(false)
+  const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
-    if (promotions.length <= 1) return
+    if (promotions.length <= 1 || paused || reducedMotion) return
     const timer = setInterval(() => {
       setIndex((i) => (i + 1) % promotions.length)
     }, AUTO_ROTATE_MS)
     return () => clearInterval(timer)
-  }, [promotions.length])
+  }, [promotions.length, paused, reducedMotion])
 
   if (loading || promotions.length === 0) return null
 
-  const current = promotions[index]
+  const current = promotions[index % promotions.length]
 
   const handleClick = () => {
     if (current.restaurant_id) {
@@ -33,8 +39,20 @@ export const PromoBanner = () => {
   }
 
   return (
-    <div className="mx-5 mb-6">
+    <div
+      className="mx-5 mb-6"
+      role="region"
+      aria-roledescription="carrusel"
+      aria-label="Promociones"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
+    >
       <button
+        type="button"
         onClick={handleClick}
         disabled={!current.restaurant_id}
         className="w-full text-left rounded-2xl overflow-hidden relative bg-primary/10 active:scale-[0.98] transition-transform"
@@ -52,13 +70,13 @@ export const PromoBanner = () => {
               <p className="font-display font-bold text-sm text-white">{current.title}</p>
               {current.subtitle && <p className="text-xs text-white/80">{current.subtitle}</p>}
             </div>
-            <Sparkles className="w-6 h-6 text-white/70 flex-shrink-0" strokeWidth={1.75} />
+            <Sparkles className="w-6 h-6 text-white/70 flex-shrink-0" strokeWidth={1.75} aria-hidden="true" />
           </div>
         )}
       </button>
 
       {promotions.length > 1 && (
-        <div className="flex justify-center gap-1.5 mt-2">
+        <div className="flex justify-center gap-1.5 mt-2" aria-hidden="true">
           {promotions.map((_, i) => (
             <span
               key={i}

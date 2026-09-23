@@ -52,6 +52,12 @@ export const DeliveryOrderDetailSheet = ({
           <OrderItemsList orderId={order.id} />
         </div>
 
+        {order.delivery_fee > 0 && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-500">Tu tarifa de domicilio</span>
+            <span className="font-semibold text-secondary">{formatCOP(order.delivery_fee)}</span>
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <span className="font-display font-bold text-secondary">Total</span>
           <span className="font-display font-bold text-lg text-primary">{formatCOP(order.total)}</span>

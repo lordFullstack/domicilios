@@ -9,13 +9,15 @@ import { useOrders, useRestaurantById, useProductById, useProducts } from '@/hoo
 import { useCartContext } from '@/shared/hooks/useCartContext'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
-import { ROUTES, ORDER_STATUS, PAYMENT_METHOD } from '@/config/constants'
+import { ROUTES, PAYMENT_METHOD } from '@/config/constants'
 import { PaymentMethod, Product } from '@/shared/types'
 import { formatCOP } from '@/shared/utils/money'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 import { AddressSheet, AddressDraft } from '../components/AddressSheet'
 import { AddressCard } from '../components/AddressCard'
 import { OrderSuccessView } from '../components/OrderSuccessView'
+import { DeliveryFeeRow } from '../components/DeliveryFeeRow'
+import { useDeliveryFee } from '@/shared/hooks/useDeliveryFee'
 
 const EMPTY_ADDRESS: AddressDraft = { street: '', complement: '', reference: '' }
 
@@ -25,6 +27,7 @@ export const CheckoutPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { cart, clear, getTotal } = useCartContext()
+  const { fee: deliveryFee } = useDeliveryFee()
   const { createOrder } = useOrders()
   const connectionStatus = useOnlineStatus()
   const isOffline = connectionStatus === 'offline'
@@ -108,30 +111,22 @@ export const CheckoutPage = () => {
         ? `${address.street}, ${address.complement}`
         : address.street
 
-      const order = {
-        user_id: user.id,
+      // Sin precios ni total: los calcula el servidor (RPC create_order).
+      const { order: newOrder, error: orderError } = await createOrder({
         restaurant_id: restaurant.id,
-        total: getTotal(),
-        status: ORDER_STATUS.PENDING,
         delivery_address: deliveryAddress,
         special_instructions: address.reference,
         payment_method: paymentMethod,
-      }
-
-      const items = cart.map((item) => ({
-        product_id: item.productId,
-        quantity: item.quantity,
-        unit_price: item.unitPrice,
-      }))
-
-      const newOrder = await createOrder(order, items)
-      if (!newOrder) throw new Error('No pudimos confirmar tu pedido. Tu carrito sigue guardado.')
+        items: cart.map((item) => ({ product_id: item.productId, quantity: item.quantity })),
+      })
+      if (!newOrder) throw new Error(orderError || 'No pudimos confirmar tu pedido. Tu carrito sigue guardado.')
 
       // Solo se guarda localmente para autocompletar la próxima vez — no es
       // una tabla de direcciones en el backend.
       localStorageService.set(STORAGE_KEYS.LAST_DELIVERY_ADDRESS, address)
 
-      setCreatedOrder({ id: newOrder.id, restaurantName: restaurant.name, total: order.total })
+      // Total del SERVIDOR (incluye la tarifa vigente al confirmar).
+      setCreatedOrder({ id: newOrder.id, restaurantName: restaurant.name, total: Number(newOrder.total) })
       clear()
       setSubmitState('success')
     } catch (err) {
@@ -152,7 +147,8 @@ export const CheckoutPage = () => {
     )
   }
 
-  const total = getTotal()
+  const subtotal = getTotal()
+  const total = subtotal + (deliveryFee ?? 0)
   const isSubmitting = submitState === 'submitting'
 
   return (
@@ -245,12 +241,9 @@ export const CheckoutPage = () => {
             <div className="pt-3 border-t border-gray-100 space-y-1">
               <div className="flex justify-between text-sm text-gray-500">
                 <span>Subtotal</span>
-                <span>{formatCOP(total)}</span>
+                <span>{formatCOP(subtotal)}</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-500">
-                <span>Envío</span>
-                <span className="text-success font-semibold">Gratis</span>
-              </div>
+              <DeliveryFeeRow fee={deliveryFee} />
             </div>
           </div>
         </div>

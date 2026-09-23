@@ -13,6 +13,7 @@ const makeOrder = (created_at: string): Order => ({
   user_id: 'u1',
   restaurant_id: 'r1',
   total: 20000,
+  delivery_fee: 0,
   status: 'delivered',
   delivery_address: 'Calle 1',
   payment_method: 'cash_on_delivery',

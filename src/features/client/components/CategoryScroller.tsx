@@ -2,17 +2,16 @@ import { useNavigate } from 'react-router-dom'
 import { ROUTES, RESTAURANT_CATEGORIES } from '@/config/constants'
 
 // Un color por categoría (puramente decorativo, igual que el mapa de
-// colores por estado de OrderCard) — ayuda a escanear la fila más rápido
-// que si todos los círculos fueran del mismo tono. Curado dentro de la
-// familia cálida de marca en vez de los pasteles por defecto de Tailwind.
+// colores por estado de OrderCard) — ayuda a escanear la fila más rápido.
+// Los valores viven en tailwind.config.ts (colors.category), no aquí.
 const CATEGORY_COLORS: Record<string, string> = {
-  Pizza: 'bg-[#FDEDE3] text-[#C2470F]',
-  Burgers: 'bg-[#FCE4E1] text-[#B8371F]',
-  Sushi: 'bg-[#E6EEFB] text-[#2E3A8C]',
-  Postres: 'bg-[#FBE8EE] text-[#B23A63]',
-  Bebidas: 'bg-[#E7F3F1] text-[#0E7C6B]',
-  Asados: 'bg-[#FDF1DC] text-[#B4700A]',
-  Mariscos: 'bg-[#E5F3F6] text-[#0E7490]',
+  Pizza: 'bg-category-pizza-bg text-category-pizza-fg',
+  Burgers: 'bg-category-burgers-bg text-category-burgers-fg',
+  Sushi: 'bg-category-sushi-bg text-category-sushi-fg',
+  Postres: 'bg-category-postres-bg text-category-postres-fg',
+  Bebidas: 'bg-category-bebidas-bg text-category-bebidas-fg',
+  Asados: 'bg-category-asados-bg text-category-asados-fg',
+  Mariscos: 'bg-category-mariscos-bg text-category-mariscos-fg',
 }
 
 /**
@@ -34,17 +33,20 @@ export const CategoryScroller = () => {
       >
         {RESTAURANT_CATEGORIES.map((c) => (
           <button
+            type="button"
             key={c.value}
+            aria-label={`Categoría ${c.label}`}
             onClick={() => navigate(ROUTES.CLIENT_CATEGORY.replace(':category', c.value))}
             className="focus-ring flex flex-col items-center gap-1.5 flex-shrink-0 active:scale-[0.94] transition-transform rounded-full"
           >
-            <div
+            <span
+              aria-hidden="true"
               className={`touch-target w-14 h-14 rounded-full flex items-center justify-center ${
                 CATEGORY_COLORS[c.value] || 'bg-gray-50 text-gray-500'
               }`}
             >
-              <c.icon className="w-6 h-6" strokeWidth={1.75} />
-            </div>
+              <c.icon className="w-6 h-6" strokeWidth={1.75} aria-hidden="true" />
+            </span>
             <span className="text-xs text-gray-500">{c.label}</span>
           </button>
         ))}

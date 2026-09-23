@@ -11,19 +11,25 @@ import { InstallAppCard } from '@/shared/components/InstallAppCard'
 import { Input } from '@/shared/components/Input'
 import { Button } from '@/shared/components/Button'
 import { ROUTES } from '@/config/constants'
+import { formatFullName } from '@/shared/utils/format'
 
 export const ClientAccountPage = () => {
   const { user, updateProfile, logout } = useAuth()
   const navigate = useNavigate()
   const { unreadCount } = useNotifications()
 
-  const [name, setName] = useState(user?.name || '')
+  // Solo render: el valor en backend no se reescribe. Si el usuario edita,
+  // se respeta exactamente lo que escriba (sin capitalizar en vivo).
+  const displayName = formatFullName(user?.name)
+  const [name, setName] = useState(displayName)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [logoutSheetOpen, setLogoutSheetOpen] = useState(false)
 
-  const hasChanges = name.trim().length > 0 && name !== user?.name
+  // Contra displayName (no user.name): si no, "jose" → "José" contaría como
+  // cambio y el botón Guardar aparecería sin que el usuario tocara nada.
+  const hasChanges = name.trim().length > 0 && name.trim() !== displayName
 
   const handleSave = async () => {
     setSaving(true)
@@ -49,12 +55,12 @@ export const ClientAccountPage = () => {
       <div className="px-5 pt-6 pb-4 flex items-center gap-3">
         <div className="w-16 h-16 rounded-full bg-brand-gradient flex items-center justify-center flex-shrink-0">
           <span className="text-white font-display font-bold text-xl">
-            {(user?.name || user?.email || '?').charAt(0).toUpperCase()}
+            {Array.from(displayName || user?.email || '?')[0].toUpperCase()}
           </span>
         </div>
         <div className="min-w-0">
           <h1 className="font-display text-lg font-bold text-secondary truncate">
-            {user?.name || 'Mi cuenta'}
+            {displayName || 'Mi cuenta'}
           </h1>
           <p className="text-xs text-gray-500 truncate">{user?.email}</p>
         </div>

@@ -21,7 +21,7 @@ export const OfflineDataBadge = ({ cachedAt }: OfflineDataBadgeProps) => {
     : null
 
   return (
-    <div className="mb-4 rounded-xl bg-warning/10 text-[#92400E] text-xs px-3 py-2 flex items-center gap-2">
+    <div className="mb-4 rounded-xl bg-warning/10 text-warning-strong text-xs px-3 py-2 flex items-center gap-2">
       <WifiOff className="w-3.5 h-3.5 flex-shrink-0" />
       <span>
         Mostrando información guardada — sin conexión

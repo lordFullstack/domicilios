@@ -130,6 +130,12 @@ export const OrderDetailPanel = ({
           <div>
             <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">PRODUCTOS</p>
             <OrderItemsList orderId={order.id} />
+            {order.delivery_fee > 0 && (
+              <div className="flex justify-between text-sm text-gray-500 mt-2">
+                <span>Domicilio</span>
+                <span>{formatCOP(order.delivery_fee)}</span>
+              </div>
+            )}
             <div className="flex justify-between font-display font-bold text-secondary mt-2 pt-2 border-t border-gray-100">
               <span>Total</span>
               <span className="text-primary">{formatCOP(order.total)}</span>

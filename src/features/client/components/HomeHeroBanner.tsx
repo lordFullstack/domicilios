@@ -16,6 +16,7 @@ export const HomeHeroBanner = () => {
   return (
     <div className="mx-5 mb-6">
       <button
+        type="button"
         onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}
         className="relative w-full text-left rounded-3xl overflow-hidden bg-brand-gradient p-5 pr-28 active:scale-[0.98] transition-transform shadow-floating"
       >
@@ -24,7 +25,7 @@ export const HomeHeroBanner = () => {
         </p>
         <span className="inline-flex items-center gap-1.5 mt-4 bg-white text-primary font-semibold text-sm px-4 py-2 rounded-full">
           Explorar
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4" aria-hidden="true" />
         </span>
 
         <RocketMark

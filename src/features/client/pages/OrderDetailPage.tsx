@@ -204,6 +204,7 @@ export const OrderDetailPage = () => {
           restaurantName={restaurant?.name}
           itemCount={orderItems.length}
           total={order.total}
+          deliveryFee={order.delivery_fee}
           onViewDetails={() => setDetailSheetOpen(true)}
         />
 

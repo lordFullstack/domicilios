@@ -2,11 +2,14 @@ import { useNavigate } from 'react-router-dom'
 import { ShoppingBag, ChevronRight } from 'lucide-react'
 import { useCartContext } from '@/shared/hooks/useCartContext'
 import { ROUTES } from '@/config/constants'
+import { formatCOP } from '@/shared/utils/money'
 
 /**
  * CTA flotante que aparece solo cuando hay productos en el carrito.
  * Se posiciona justo encima del BottomNav (que mide ~64px + safe-area),
- * por eso el bottom-24 en vez de bottom-0.
+ * por eso el offset en vez de bottom-0: 6rem en pantallas normales (igual
+ * que el bottom-24 de antes) y más cuando hay home indicator, porque el
+ * BottomNav crece con safe-bottom y en iPhone quedaban casi pegados.
  */
 export const CartFloatingBar = () => {
   const navigate = useNavigate()
@@ -16,17 +19,19 @@ export const CartFloatingBar = () => {
   if (count === 0) return null
 
   return (
-    <div className="fixed bottom-24 left-0 right-0 px-5 z-30 animate-fade-slide-up max-w-md mx-auto">
+    <div className="fixed bottom-[max(6rem,calc(4.5rem+env(safe-area-inset-bottom)))] left-0 right-0 px-5 z-30 animate-fade-slide-up max-w-md mx-auto">
       <button
+        type="button"
         onClick={() => navigate(ROUTES.CLIENT_CART)}
+        aria-label={`Ver carrito, ${count} ${count === 1 ? 'producto' : 'productos'}, ${formatCOP(getTotal())}`}
         className="focus-ring w-full flex items-center justify-between bg-brand-gradient text-white rounded-2xl px-4 py-3.5 shadow-floating active:scale-[0.98] transition-transform"
       >
         <span className="flex items-center gap-2 text-sm font-semibold">
-          <ShoppingBag className="w-4 h-4" />
-          {count} {count === 1 ? 'producto' : 'productos'} · ${getTotal().toLocaleString('es-CO')}
+          <ShoppingBag className="w-4 h-4" aria-hidden="true" />
+          {count} {count === 1 ? 'producto' : 'productos'} · {formatCOP(getTotal())}
         </span>
         <span className="flex items-center gap-0.5 text-sm font-semibold">
-          Ver <ChevronRight className="w-4 h-4" />
+          Ver <ChevronRight className="w-4 h-4" aria-hidden="true" />
         </span>
       </button>
     </div>

@@ -1,179 +1,130 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState, useMemo, useEffect } from 'react'
-import { ChevronLeft, Heart, AlertTriangle, Soup, UtensilsCrossed, CupSoda, Cake, PlusCircle, Star, Ban } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { AlertTriangle, Ban, SearchX } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
-import { ProductImage } from '@/shared/components/ProductImage'
-import { Badge } from '@/shared/components/Badge'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
 import { Toast } from '@/shared/components/Toast'
-import { BottomSheet } from '@/shared/components/BottomSheet'
-import { Skeleton } from '@/shared/components/Skeleton'
-import {
-  useRestaurantById,
-  useProducts,
-  useFavorites,
-  useProductById,
-} from '@/hooks/useLocalData'
-import { useCartContext } from '@/shared/hooks/useCartContext'
+import { useRestaurantById, useProducts, useFavorites } from '@/hooks/useLocalData'
+import { usePromotions } from '@/shared/hooks/usePromotions'
+import { normalizeText } from '@/shared/utils/format'
 import { ROUTES, PRODUCT_CATEGORIES } from '@/config/constants'
 import { Product } from '@/shared/types'
-import { RestaurantDetailSkeleton } from '../components/RestaurantDetailSkeleton'
+import { RestaurantDetailSkeleton, MenuListSkeleton } from '../components/RestaurantDetailSkeleton'
+import { RestaurantHero } from '../components/RestaurantHero'
+import { RestaurantCompactHeader } from '../components/RestaurantCompactHeader'
+import { RestaurantClosedBanner } from '../components/RestaurantClosedBanner'
+import { MenuCategoryNav } from '../components/MenuCategoryNav'
+import { MenuSection } from '../components/MenuSection'
 import { MenuProductCard } from '../components/MenuProductCard'
 import { FeaturedProductStrip } from '../components/FeaturedProductStrip'
 import { ProductDetailSheet } from '../components/ProductDetailSheet'
+import { CartSwitchSheet } from '../components/CartSwitchSheet'
 import { CartFloatingBar } from '../components/CartFloatingBar'
+import { useMenuCart } from '../hooks/useMenuCart'
+import { useScrollSpy } from '../hooks/useScrollSpy'
+import { useStickyHeader } from '../hooks/useStickyHeader'
+import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion'
 
-// Un ícono por cada valor de PRODUCT_CATEGORIES (config/constants.ts).
-// Si se agrega una categoría nueva ahí, hay que sumarle su ícono acá.
-const CATEGORY_ICONS: Record<string, typeof Soup> = {
-  Entradas: Soup,
-  Platos: UtensilsCrossed,
-  Bebidas: CupSoda,
-  Postres: Cake,
-  Adicionales: PlusCircle,
-}
+const MAX_FEATURED = 6
+// Header compacto (3.5rem) + chips (~3.5rem) + aire; en px para el observer.
+const SPY_TOP_OFFSET = 120
+
+const FullScreen = ({ children }: { children: React.ReactNode }) => (
+  <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center px-6">
+    {children}
+  </div>
+)
 
 export const RestaurantDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const reducedMotion = usePrefersReducedMotion()
 
-  const {
-    restaurant,
-    loading: restaurantLoading,
-    error: restaurantError,
-    fromCache: restaurantFromCache,
-    cachedAt: restaurantCachedAt,
-  } = useRestaurantById(id || '')
-  const {
-    products,
-    loading: productsLoading,
-    fromCache: productsFromCache,
-    cachedAt: productsCachedAt,
-  } = useProducts(id)
-  const { cart, addItem, removeItem, updateQuantity, clear } = useCartContext()
+  const restaurantQuery = useRestaurantById(id || '')
+  const { restaurant } = restaurantQuery
+  const productsQuery = useProducts(id)
+  const { products } = productsQuery
+  const { promotions } = usePromotions('featured_product')
   const { isFavorite, toggleFavorite } = useFavorites()
   const [favPending, setFavPending] = useState(false)
-
-  // El carrito no guarda restaurant_id por ítem (ver CheckoutPage, que usa
-  // el mismo truco): se infiere mirando a qué restaurante pertenece el
-  // primer producto que ya está en el carrito.
-  const { product: firstCartProduct } = useProductById(cart[0]?.productId || '')
-  const cartRestaurantId = cart.length > 0 ? firstCartProduct?.restaurant_id : undefined
-
   const [detailProduct, setDetailProduct] = useState<Product | null>(null)
-  const [pendingAdd, setPendingAdd] = useState<{ product: Product; quantity: number } | null>(null)
-  const [switchConfirmOpen, setSwitchConfirmOpen] = useState(false)
-  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ message: string; error?: boolean } | null>(null)
 
-  const showToast = (message: string) => {
-    setToastMessage(message)
-    setTimeout(() => setToastMessage(null), 2000)
+  const showToast = (message: string, error = false) => {
+    setToast({ message, error })
+    setTimeout(() => setToast(null), 2000)
   }
 
-  const availableCategories = useMemo(
-    () => PRODUCT_CATEGORIES.filter((cat) => products.some((p) => p.category === cat)),
+  const menuCart = useMenuCart(restaurant, (product) => showToast(`${product.name} agregado al carrito`))
+  const { sentinelRef, compact } = useStickyHeader()
+
+  // Todas las categorías con productos, en el orden de PRODUCT_CATEGORIES.
+  const sections = useMemo(
+    () =>
+      PRODUCT_CATEGORIES.map((cat) => ({
+        id: `menu-${normalizeText(cat)}`,
+        label: cat as string,
+        items: products.filter((p) => p.category === cat),
+      })).filter((s) => s.items.length > 0),
     [products]
   )
-  const [activeCategory, setActiveCategory] = useState<string>('')
+  const menuReady = !restaurantQuery.loading && !productsQuery.loading && !!restaurant
+  const { activeId, select } = useScrollSpy(sections.map((s) => s.id), SPY_TOP_OFFSET, menuReady)
 
-  useEffect(() => {
-    if (availableCategories.length > 0 && !availableCategories.includes(activeCategory as any)) {
-      setActiveCategory(availableCategories[0])
-    }
-  }, [availableCategories, activeCategory])
+  // Recomendados = productos destacados por el Admin que son de este restaurante.
+  const featured = useMemo(() => {
+    const ids = new Set(promotions.filter((p) => p.active && p.product_id).map((p) => p.product_id))
+    return products.filter((p) => ids.has(p.id)).slice(0, MAX_FEATURED)
+  }, [promotions, products])
 
-  const filteredProducts = products.filter((p) => p.category === activeCategory)
-  const restaurantIsOpen = restaurant?.status === 'open'
-
-  // No hay métrica de ventas en el modelo actual; por eso la franja se
-  // etiqueta "Recomendados" y no "Más vendidos".
-  const featuredProducts = useMemo(
-    () => products.filter((product) => product.available).slice(0, 3),
-    [products]
-  )
-
-  const actuallyAdd = (product: Product, quantity: number) => {
-    addItem(product.id, product.price, quantity)
-    setDetailProduct(null)
-    showToast(`${product.name} agregado al carrito`)
-  }
-
-  const handleAdd = (product: Product, quantity: number) => {
-    if (cartRestaurantId && restaurant && cartRestaurantId !== restaurant.id) {
-      setPendingAdd({ product, quantity })
-      setDetailProduct(null)
-      setSwitchConfirmOpen(true)
-      return
-    }
-    actuallyAdd(product, quantity)
-  }
-
-  const handleQuickAdd = (product: Product) => handleAdd(product, 1)
-
-  const getProductQuantity = (productId: string) =>
-    cart.find((item) => item.productId === productId)?.quantity ?? 0
-
-  const handleIncrement = (product: Product) => {
-    handleAdd(product, 1)
-  }
-
-  const handleDecrement = (product: Product) => {
-    const currentQuantity = getProductQuantity(product.id)
-
-    if (currentQuantity <= 1) {
-      removeItem(product.id)
-      return
-    }
-
-    updateQuantity(product.id, currentQuantity - 1)
-  }
-
-  const confirmSwitch = () => {
-    clear()
-    if (pendingAdd) actuallyAdd(pendingAdd.product, pendingAdd.quantity)
-    setPendingAdd(null)
-    setSwitchConfirmOpen(false)
-  }
-
-  const cancelSwitch = () => {
-    setPendingAdd(null)
-    setSwitchConfirmOpen(false)
+  const goToSection = (sectionId: string) => {
+    select(sectionId)
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
   }
 
   const handleToggleFavorite = async () => {
     if (!restaurant || favPending) return
     setFavPending(true)
-    await toggleFavorite(restaurant.id)
+    const ok = await toggleFavorite(restaurant.id)
     setFavPending(false)
+    if (!ok) showToast('No pudimos guardar tu favorito', true)
   }
 
-  if (restaurantLoading) {
-    return <RestaurantDetailSkeleton />
-  }
+  if (restaurantQuery.loading) return <RestaurantDetailSkeleton />
 
   // Error real de carga (sin internet y sin caché) — distinto de "no existe".
-  if (!restaurant && restaurantError) {
+  if (!restaurant && restaurantQuery.error) {
     return (
-      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center px-6">
+      <FullScreen>
         <EmptyState
+          role="alert"
           icon={AlertTriangle}
           title="No pudimos cargar este restaurante"
           description="Revisa tu conexión e intenta de nuevo."
-          action={<Button onClick={() => window.location.reload()}>Intentar nuevamente</Button>}
+          action={<Button onClick={restaurantQuery.reload}>Reintentar</Button>}
         />
-      </div>
+      </FullScreen>
     )
   }
 
   if (!restaurant) {
     return (
-      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center px-6">
-        <div className="text-center">
-          <p className="text-gray-500 text-sm mb-4">Restaurante no encontrado</p>
-          <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>
-        </div>
-      </div>
+      <FullScreen>
+        <EmptyState
+          icon={SearchX}
+          title="No encontramos este restaurante"
+          description="Puede que el enlace esté mal o que ya no exista."
+          action={
+            <div className="flex flex-col gap-2">
+              <Button onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>Explorar restaurantes</Button>
+              <Button variant="ghost" onClick={() => navigate(ROUTES.CLIENT_HOME)}>
+                Volver al inicio
+              </Button>
+            </div>
+          }
+        />
+      </FullScreen>
     )
   }
 
@@ -181,206 +132,113 @@ export const RestaurantDetailPage = () => {
   // aunque el cliente tenga el link directo (favoritos, historial, etc.)
   if (!restaurant.approved) {
     return (
-      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center px-6">
-        <div className="text-center">
-          <Ban className="w-9 h-9 mx-auto mb-3 text-danger" strokeWidth={1.75} />
-          <p className="font-display font-bold text-secondary mb-1">Restaurante no disponible</p>
-          <p className="text-gray-500 text-sm mb-4">
-            Este restaurante está temporalmente suspendido y no puede recibir pedidos.
-          </p>
-          <Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>
-        </div>
-      </div>
+      <FullScreen>
+        <EmptyState
+          icon={Ban}
+          title="Restaurante no disponible"
+          description="Este restaurante está temporalmente suspendido y no puede recibir pedidos."
+          action={<Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>}
+        />
+      </FullScreen>
+    )
+  }
+
+  const isOpen = restaurant.status === 'open'
+  const cardProps = {
+    restaurantIsOpen: isOpen,
+    onOpenDetail: setDetailProduct,
+    onAdd: (p: Product) => menuCart.add(p),
+  }
+
+  const renderMenu = () => {
+    if (productsQuery.loading) return <MenuListSkeleton />
+    if (productsQuery.error && products.length === 0) {
+      return (
+        <EmptyState
+          role="alert"
+          icon={AlertTriangle}
+          title="No pudimos cargar el menú"
+          description="Revisa tu conexión e intenta de nuevo."
+          action={<Button variant="outline" onClick={productsQuery.reload}>Reintentar</Button>}
+        />
+      )
+    }
+    if (products.length === 0) {
+      return (
+        <EmptyState
+          icon={AlertTriangle}
+          title="Sin productos disponibles"
+          description="Este restaurante todavía no tiene productos disponibles."
+        />
+      )
+    }
+    return (
+      <>
+        <MenuCategoryNav categories={sections} activeId={activeId} onSelect={goToSection} />
+        <FeaturedProductStrip products={featured} getQuantity={menuCart.getQuantity} {...cardProps} />
+        {sections.map((section) => (
+          <MenuSection key={section.id} id={section.id} title={section.label}>
+            {section.items.map((product) => (
+              <MenuProductCard
+                key={product.id}
+                product={product}
+                quantity={menuCart.getQuantity(product.id)}
+                onDecrement={menuCart.decrement}
+                {...cardProps}
+              />
+            ))}
+          </MenuSection>
+        ))}
+      </>
     )
   }
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto pb-44 relative safe-left safe-right">
-      <Toast message={toastMessage} />
+      <Toast message={toast?.message ?? null} variant={toast?.error ? 'error' : 'success'} />
+      <RestaurantCompactHeader restaurant={restaurant} visible={compact} onBack={() => navigate(-1)} />
 
-      {/* Hero — info del restaurante integrada al banner (overlay), sin
-          repetirla debajo. */}
-      <div className="relative h-52 overflow-hidden bg-primary/10">
-        {restaurant.cover_url ? (
-          <img
-            src={restaurant.cover_url}
-            alt={restaurant.name}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <ProductImage
-            imageUrl={restaurant.image_url}
-            alt={restaurant.name}
-            emojiClassName="w-full h-full flex items-center justify-center text-7xl"
-          />
-        )}
-        {/* Scrim más denso en la mitad inferior: las portadas las sube cada
-            restaurante y pueden traer texto propio (teléfonos, letreros)
-            que antes se mezclaba con el nombre y la calificación. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 via-45% to-black/10" />
-
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          aria-label="Volver"
-          className="touch-target focus-ring absolute left-4 w-10 h-10 rounded-full glass flex items-center justify-center active:scale-90 transition-transform"
-          style={{ top: 'max(1rem, env(safe-area-inset-top))' }}
-        >
-          <ChevronLeft className="w-4 h-4 text-secondary" />
-        </button>
-        <button
-          type="button"
-          onClick={handleToggleFavorite}
-          disabled={favPending}
-          aria-label={isFavorite(restaurant.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-          className="touch-target focus-ring absolute right-4 w-10 h-10 rounded-full glass flex items-center justify-center active:scale-90 transition-transform"
-          style={{ top: 'max(1rem, env(safe-area-inset-top))' }}
-        >
-          <Heart
-            className="w-4 h-4"
-            fill={isFavorite(restaurant.id) ? '#E11D48' : 'none'}
-            color={isFavorite(restaurant.id) ? '#E11D48' : '#1A1A1A'}
-          />
-        </button>
-
-        <div className="absolute inset-x-0 bottom-0 p-4">
-          <div className="flex items-end gap-2.5">
-            <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-white/70 bg-white flex items-center justify-center text-2xl shadow-md">
-              {restaurant.cover_url ? (
-                <img src={restaurant.cover_url} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <ProductImage imageUrl={restaurant.image_url} alt="" />
-              )}
-            </div>
-            <div className="min-w-0 flex-1 pb-0.5">
-              <h1 className="font-display text-lg font-bold text-white truncate drop-shadow">
-                {restaurant.name}
-              </h1>
-              {/* Antes aquí había tiempo, costo de envío y distancia fijos
-                  (25-35 min · $3.000 · 1.2 km) idénticos para todos los
-                  restaurantes — el modelo no tiene esos datos, y el costo
-                  contradecía el "Envío gratis" del carrito y el checkout. */}
-              <div className="mt-0.5 flex items-center gap-1 text-xs text-white drop-shadow">
-                <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                {restaurant.rating_count > 0
-                  ? `${restaurant.rating_avg.toFixed(1)} (${restaurant.rating_count})`
-                  : 'Nuevo'}
-                <span className="text-white/80">· Envío gratis</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <Badge variant={restaurantIsOpen ? 'success' : 'danger'}>
-              {restaurantIsOpen ? 'Abierto' : 'Cerrado'}
-            </Badge>
-            <span className="text-xs text-white/80">{restaurant.category}</span>
-          </div>
-        </div>
-      </div>
+      <RestaurantHero
+        restaurant={restaurant}
+        isOpen={isOpen}
+        isFavorite={isFavorite(restaurant.id)}
+        favPending={favPending}
+        onBack={() => navigate(-1)}
+        onToggleFavorite={handleToggleFavorite}
+      />
+      {/* Sentinela: cuando sale por arriba, aparece el header compacto. */}
+      <div ref={sentinelRef} aria-hidden="true" />
 
       {restaurant.description && (
         <p className="px-5 pt-3 text-sm text-gray-500 line-clamp-2">{restaurant.description}</p>
       )}
-
-      {(restaurantFromCache || productsFromCache) && (
+      {!isOpen && <RestaurantClosedBanner />}
+      {(restaurantQuery.fromCache || productsQuery.fromCache) && (
         <div className="px-5 pt-3">
-          <OfflineDataBadge cachedAt={Math.max(restaurantCachedAt || 0, productsCachedAt || 0) || null} />
+          <OfflineDataBadge
+            cachedAt={Math.max(restaurantQuery.cachedAt || 0, productsQuery.cachedAt || 0) || null}
+          />
         </div>
       )}
 
-      {/* Menú */}
-      <div className="px-5 pt-4">
-        {productsLoading ? (
-          <div className="flex flex-col gap-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-20 w-full rounded-2xl" />
-            ))}
-          </div>
-        ) : products.length > 0 ? (
-          <>
-            {/* Categorías */}
-            <div className="sticky top-0 z-20 -mx-5 mb-5 bg-white/95 px-5 py-2 backdrop-blur">
-              <div className="no-scrollbar flex gap-2 overflow-x-auto">
-                {availableCategories.map((cat) => {
-                  const Icon = CATEGORY_ICONS[cat] ?? UtensilsCrossed
-                  return (
-                    <button
-                      key={cat}
-                      type="button"
-                      aria-pressed={activeCategory === cat}
-                      onClick={() => setActiveCategory(cat)}
-                      className={`focus-ring flex flex-shrink-0 items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors min-h-[40px] ${
-                        activeCategory === cat
-                          ? 'bg-brand-gradient text-white'
-                          : 'bg-gray-50 text-gray-500'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                      {cat}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Recomendados */}
-            <FeaturedProductStrip
-              products={featuredProducts}
-              restaurantIsOpen={restaurantIsOpen}
-              onOpenDetail={setDetailProduct}
-              onQuickAdd={handleQuickAdd}
-            />
-
-            <div className="flex flex-col gap-3">
-              {filteredProducts.map((product) => (
-                <MenuProductCard
-                  key={product.id}
-                  product={product}
-                  restaurantIsOpen={restaurantIsOpen}
-                  quantity={getProductQuantity(product.id)}
-                  onOpenDetail={setDetailProduct}
-                  onIncrement={handleIncrement}
-                  onDecrement={handleDecrement}
-                />
-              ))}
-            </div>
-          </>
-        ) : (
-          <EmptyState
-            icon={AlertTriangle}
-            title="Sin productos disponibles"
-            description="Este restaurante todavía no tiene productos disponibles."
-          />
-        )}
-      </div>
+      <div className="px-5 pt-4">{renderMenu()}</div>
 
       <ProductDetailSheet
         product={detailProduct}
         open={!!detailProduct}
-        restaurantIsOpen={restaurantIsOpen}
+        restaurantIsOpen={isOpen}
         onClose={() => setDetailProduct(null)}
-        onAdd={handleAdd}
+        onAdd={(product, quantity) => {
+          setDetailProduct(null)
+          menuCart.add(product, quantity)
+        }}
       />
-
       <CartFloatingBar />
-
-      {/* Confirmación al mezclar productos de otro restaurante — el carrito
-          actual (ver useCartContext) solo soporta un restaurante a la vez. */}
-      <BottomSheet open={switchConfirmOpen} onClose={cancelSwitch} title="¿Cambiar de restaurante?">
-        <p className="text-sm text-gray-500 mb-5">
-          Tu carrito tiene productos de otro restaurante. Si continúas, vamos a vaciarlo y agregar
-          este producto en su lugar.
-        </p>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={cancelSwitch} className="flex-1">
-            Cancelar
-          </Button>
-          <Button onClick={confirmSwitch} className="flex-1">
-            Vaciar y agregar
-          </Button>
-        </div>
-      </BottomSheet>
+      <CartSwitchSheet
+        open={menuCart.switchPending}
+        onCancel={menuCart.cancelSwitch}
+        onConfirm={menuCart.confirmSwitch}
+      />
     </div>
   )
 }

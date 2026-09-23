@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useState, useEffect, useRef, ReactNode } from 'react'
 import { supabase } from '@/shared/utils/supabase'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 
@@ -17,6 +17,9 @@ interface CartContextType {
   clear: () => boolean
   getTotal: () => number
 }
+
+/** Tope por producto: evita overflow visual y pedidos absurdos por error. */
+export const MAX_ITEM_QUANTITY = 99
 
 export const CartContext = createContext<CartContextType | undefined>(undefined)
 
@@ -39,8 +42,18 @@ interface CartProviderProps {
  * comparten el mismo estado y se actualizan al mismo tiempo.
  */
 export const CartProvider = ({ children }: CartProviderProps) => {
-  const [cart, setCart] = useState<CartItem[]>([])
+  const [cart, setCartState] = useState<CartItem[]>([])
   const [loading, setLoading] = useState(true)
+
+  // Fuente de verdad síncrona: varias operaciones seguidas en el mismo
+  // evento (ej. "Vaciar y agregar" = clear() + addItem()) leían el `cart`
+  // del render anterior; addItem volvía a meter los productos que clear()
+  // acababa de borrar. Todas las operaciones leen de aquí.
+  const cartRef = useRef<CartItem[]>([])
+  const setCart = (next: CartItem[]) => {
+    cartRef.current = next
+    setCartState(next)
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -89,14 +102,17 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
   const addItem = (productId: string, unitPrice: number, quantity: number = 1) => {
     try {
-      const updated = [...cart]
-      const existing = updated.find((item) => item.productId === productId)
-
-      if (existing) {
-        existing.quantity += quantity
-      } else {
-        updated.push({ productId, quantity, unitPrice })
-      }
+      // Inmutable: antes hacía `existing.quantity += quantity`, que mutaba
+      // el objeto del estado anterior (React podía no enterarse del cambio
+      // y cualquier copia vieja del carrito quedaba alterada).
+      const exists = cartRef.current.some((item) => item.productId === productId)
+      const updated = exists
+        ? cartRef.current.map((item) =>
+            item.productId === productId
+              ? { ...item, quantity: Math.min(MAX_ITEM_QUANTITY, item.quantity + quantity) }
+              : item
+          )
+        : [...cartRef.current, { productId, quantity: Math.min(MAX_ITEM_QUANTITY, quantity), unitPrice }]
 
       localStorageService.set(STORAGE_KEYS.CART, updated)
       setCart(updated)
@@ -109,7 +125,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
   const removeItem = (productId: string) => {
     try {
-      const updated = cart.filter((item) => item.productId !== productId)
+      const updated = cartRef.current.filter((item) => item.productId !== productId)
       localStorageService.set(STORAGE_KEYS.CART, updated)
       setCart(updated)
       return true
@@ -121,9 +137,9 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
   const updateQuantity = (productId: string, quantity: number) => {
     try {
-      const updated = cart.map((item) => {
+      const updated = cartRef.current.map((item) => {
         if (item.productId === productId) {
-          return { ...item, quantity }
+          return { ...item, quantity: Math.min(MAX_ITEM_QUANTITY, quantity) }
         }
         return item
       })

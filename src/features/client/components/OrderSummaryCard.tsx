@@ -5,6 +5,8 @@ interface OrderSummaryCardProps {
   restaurantName?: string
   itemCount: number
   total: number
+  /** Tarifa cobrada en este pedido; solo se muestra si es > 0. */
+  deliveryFee?: number
   onViewDetails: () => void
 }
 
@@ -13,6 +15,7 @@ export const OrderSummaryCard = ({
   restaurantName,
   itemCount,
   total,
+  deliveryFee = 0,
   onViewDetails,
 }: OrderSummaryCardProps) => (
   <div className="border border-gray-100 rounded-2xl p-4 mb-4">
@@ -26,6 +29,12 @@ export const OrderSummaryCard = ({
       </div>
     </div>
 
+    {deliveryFee > 0 && (
+      <div className="flex items-center justify-between mb-1 text-sm text-gray-500">
+        <span>Envío</span>
+        <span>{formatCOP(deliveryFee)}</span>
+      </div>
+    )}
     <div className="flex items-center justify-between mb-3">
       <span className="font-display font-bold text-secondary">Total</span>
       <span className="font-display font-bold text-lg text-coral">{formatCOP(total)}</span>

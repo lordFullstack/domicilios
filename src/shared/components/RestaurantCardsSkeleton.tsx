@@ -1,4 +1,5 @@
 import { Skeleton } from './Skeleton'
+import { RESTAURANT_GRID_CLASSES } from '@/shared/constants/grid'
 
 interface RestaurantCardsSkeletonProps {
   count?: number
@@ -6,14 +7,14 @@ interface RestaurantCardsSkeletonProps {
 
 /**
  * Grid de skeletons con la misma geometría que RestaurantGridCard
- * (aspect-[4/3] + dos líneas de texto), para que no haya salto de layout
- * cuando llegan los datos reales. Usado por el Home (LOOP 02) y por
- * Explorar (LOOP 03) — antes vivía duplicado dentro de RestaurantsGrid.
+ * (aspect-[4/3] + dos líneas de texto) y las mismas clases de grid, para
+ * que no haya salto de layout cuando llegan los datos reales. Usado por el
+ * Home y por Restaurantes.
  */
 export const RestaurantCardsSkeleton = ({ count = 4 }: RestaurantCardsSkeletonProps) => (
-  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 px-5" aria-hidden="true">
+  <div role="status" aria-label="Cargando restaurantes" className={RESTAURANT_GRID_CLASSES}>
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i}>
+      <div key={i} aria-hidden="true">
         <Skeleton className="aspect-[4/3] rounded-2xl mb-2" />
         <Skeleton className="h-3 w-3/4 rounded mb-1" />
         <Skeleton className="h-3 w-1/2 rounded" />

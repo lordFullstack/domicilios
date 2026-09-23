@@ -50,10 +50,26 @@ export default {
           900: '#1C1917',
         },
         accent:  '#F59E0B',
-        success: '#10B981',
-        warning: '#F59E0B',
+        // DEFAULT = color de fondo/ícono; `strong` = variante para TEXTO
+        // sobre blanco (el DEFAULT no pasa WCAG AA como texto: 2.5:1 y
+        // 2.15:1). strong: #047857 → 5.5:1, #92400E → 7.1:1.
+        success: { DEFAULT: '#10B981', strong: '#047857' },
+        warning: { DEFAULT: '#F59E0B', strong: '#92400E' },
         danger:  '#EF4444',
         info:    '#0EA5E9',
+
+        // Tintes por categoría (fila de categorías del Home). Antes eran
+        // hex arbitrarios dentro de CategoryScroller; ahora viven aquí para
+        // que el config siga siendo la única fuente de color.
+        category: {
+          pizza:    { bg: '#FDEDE3', fg: '#C2470F' },
+          burgers:  { bg: '#FCE4E1', fg: '#B8371F' },
+          sushi:    { bg: '#E6EEFB', fg: '#2E3A8C' },
+          postres:  { bg: '#FBE8EE', fg: '#B23A63' },
+          bebidas:  { bg: '#E7F3F1', fg: '#0E7C6B' },
+          asados:   { bg: '#FDF1DC', fg: '#B4700A' },
+          mariscos: { bg: '#E5F3F6', fg: '#0E7490' },
+        },
 
         // Aliases legacy — mantienen compatibilidad con componentes actuales
         primary: '#2E3A8C',

@@ -100,7 +100,10 @@ const PageLoader = () => (
 
 export const Router = () => {
   return (
-    <BrowserRouter>
+    // Future flags de v7: solo apagan los 2 warnings de consola que salían
+    // en cada carga. No cambian rutas: la app solo navega con rutas
+    // absolutas (ROUTES.*) y el único splat es el fallback a LOGIN.
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Suspense fallback={<PageLoader />}>
         <Routes>
         {/* Public */}

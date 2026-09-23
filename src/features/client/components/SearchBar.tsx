@@ -14,10 +14,11 @@ export const SearchBar = () => {
   return (
     <div className="px-5 pb-4">
       <button
+        type="button"
         onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}
         className="touch-target focus-ring w-full flex items-center gap-2 bg-gray-50 rounded-2xl px-4 py-3.5 text-left active:scale-[0.98] transition-transform"
       >
-        <Search className="w-4 h-4 text-gray-500 flex-shrink-0" />
+        <Search className="w-4 h-4 text-gray-500 flex-shrink-0" aria-hidden="true" />
         <span className="text-sm text-gray-500">Buscar restaurantes, platos...</span>
       </button>
     </div>

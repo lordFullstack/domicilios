@@ -11,6 +11,7 @@ import { InstallAppCard } from '@/shared/components/InstallAppCard'
 import { LogoutConfirmSheet } from '@/shared/components/LogoutConfirmSheet'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { supabase } from '@/shared/utils/supabase'
+import { formatFullName } from '@/shared/utils/format'
 
 export const DeliveryProfilePage = () => {
   const navigate = useNavigate()
@@ -104,7 +105,7 @@ export const DeliveryProfilePage = () => {
             {uploadingPhoto ? (
               <Loader2 className="w-6 h-6 text-primary animate-spin" />
             ) : user?.avatar_url ? (
-              <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
+              <img src={user.avatar_url} alt={formatFullName(user.name)} className="w-full h-full object-cover" />
             ) : (
               <span className="text-3xl font-display font-bold text-gray-300">
                 {user?.name?.charAt(0).toUpperCase() || '?'}

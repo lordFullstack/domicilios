@@ -15,17 +15,40 @@
    textareas, scrollbars nativos del navegador) mientras el resto
    de la UI, que usa clases de Tailwind explícitas, se quedaba
    clara — una mezcla inconsistente, no un dark mode real. */
+/* ============================================================
+   DESIGN TOKENS ↔ TAILWIND MAPPING
+   ============================================================
+   Fuente única de verdad: este archivo + tailwind.config.ts.
+   Las variables CSS solo existen para lo que Tailwind no cubre
+   (foco, selección, scrollbar, skeleton, glass) y DEBEN reflejar
+   los mismos valores del config:
+
+   var(--brand)          ↔  brand-700  (#1C2459)  → foco, selección
+   var(--brand-soft)     ↔  brand-500  (#2E3A8C)  → hover, activo (= primary)
+   var(--brand-gradient) ↔  bg-brand-gradient     → acentos, texto degradado
+   var(--fg)             ↔  ink / gray-900 (#1C1917)
+   var(--fg-muted)       ↔  ink-muted / gray-500 (#78716C)
+   var(--border)         ↔  surface-border / gray-200 (#E7E5E4)
+   var(--bg-soft)        ↔  surface-soft / gray-50 (#FAFAF9)
+   var(--bg-muted)       ↔  surface-muted / gray-100 (#F5F5F4)
+
+   Antes --brand era #2F5EFF y los neutros eran slate (fríos): una
+   paleta legacy distinta a la de marca que pintaba el foco, la
+   selección y el skeleton de un azul que ya no es el del cohete.
+   ============================================================ */
 :root {
-  --bg:            #FFFFFF;
-  --bg-soft:       #F8FAFC;
-  --bg-muted:      #F1F5F9;
-  --fg:            #0F172A;
-  --fg-muted:      #64748B;
-  --border:        #E2E8F0;
-  --brand:         #2F5EFF;
-  --glass-bg:      rgba(255, 255, 255, 0.72);
-  --glass-border:  rgba(255, 255, 255, 0.5);
-  --scrollbar:     rgba(15, 23, 42, 0.18);
+  --bg:             #FFFFFF;
+  --bg-soft:        #FAFAF9;
+  --bg-muted:       #F5F5F4;
+  --fg:             #1C1917;
+  --fg-muted:       #78716C;
+  --border:         #E7E5E4;
+  --brand:          #1C2459;
+  --brand-soft:     #2E3A8C;
+  --brand-gradient: linear-gradient(135deg, #1C2459 0%, #F4652C 62%, #FFC24B 100%);
+  --glass-bg:       rgba(255, 255, 255, 0.72);
+  --glass-border:   rgba(255, 255, 255, 0.5);
+  --scrollbar:      rgba(28, 25, 23, 0.18);
 }
 
 /* ============================================================
@@ -58,7 +81,7 @@
   }
 
   ::selection {
-    background: rgba(47, 94, 255, 0.25);
+    background: rgba(28, 36, 89, 0.20);
     color: var(--fg);
   }
 }
@@ -117,7 +140,7 @@
   background: linear-gradient(
     90deg,
     var(--bg-muted) 0%,
-    rgba(100, 116, 139, 0.08) 50%,
+    rgba(120, 113, 108, 0.08) 50%,
     var(--bg-muted) 100%
   );
   background-size: 1000px 100%;
@@ -129,7 +152,7 @@
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, var(--brand) 0%, #5A85FF 100%);
+  background: var(--brand-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

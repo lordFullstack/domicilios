@@ -11,10 +11,13 @@ import { EmptyState } from '@/shared/components/EmptyState'
 import { formatCOP } from '@/shared/utils/money'
 import { ROUTES } from '@/config/constants'
 import { Product } from '@/shared/types'
+import { useDeliveryFee } from '@/shared/hooks/useDeliveryFee'
+import { DeliveryFeeRow } from '../components/DeliveryFeeRow'
 
 export const CartPage = () => {
   const navigate = useNavigate()
   const { cart, removeItem, updateQuantity, clear, getTotal } = useCartContext()
+  const { fee: deliveryFee } = useDeliveryFee()
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false)
 
   // El carrito no guarda restaurant_id por ítem — se infiere del primer
@@ -64,7 +67,8 @@ export const CartPage = () => {
     )
   }
 
-  const total = getTotal()
+  const subtotal = getTotal()
+  const total = subtotal + (deliveryFee ?? 0)
 
   return (
     <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right pb-44">
@@ -147,12 +151,9 @@ export const CartPage = () => {
       <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 px-5 pt-4 pb-6 safe-bottom">
         <div className="flex justify-between text-sm text-gray-500 mb-1">
           <span>Subtotal</span>
-          <span>{formatCOP(total)}</span>
+          <span>{formatCOP(subtotal)}</span>
         </div>
-        <div className="flex justify-between text-sm text-gray-500 mb-3">
-          <span>Envío</span>
-          <span className="text-success font-semibold">Gratis</span>
-        </div>
+        <DeliveryFeeRow fee={deliveryFee} className="mb-3" />
         <div className="flex justify-between font-display font-bold mb-4 text-secondary">
           <span>Total</span>
           <span className="text-coral">{formatCOP(total)}</span>

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Search, AlertTriangle, ArrowRight } from 'lucide-react'
 import { Restaurant } from '@/shared/types'
-import { RestaurantGridCard } from './RestaurantGridCard'
+import { RestaurantGrid } from './RestaurantGrid'
 import { RestaurantCardsSkeleton } from '@/shared/components/RestaurantCardsSkeleton'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { Button } from '@/shared/components/Button'
@@ -27,6 +27,7 @@ export const RestaurantsGrid = ({ restaurants, loading, error, onRetry }: Restau
         <RestaurantCardsSkeleton />
       ) : error ? (
         <EmptyState
+          role="alert"
           icon={AlertTriangle}
           title="Algo salió mal"
           description="No pudimos cargar los restaurantes."
@@ -34,19 +35,16 @@ export const RestaurantsGrid = ({ restaurants, loading, error, onRetry }: Restau
         />
       ) : restaurants.length > 0 ? (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 px-5">
-            {restaurants.map((restaurant) => (
-              <RestaurantGridCard key={restaurant.id} restaurant={restaurant} />
-            ))}
-          </div>
+          <RestaurantGrid restaurants={restaurants} />
           {/* Cierre del scroll: sin esto la lista terminaba en una tarjeta
               plana sin ninguna invitación a seguir explorando. */}
           <button
+            type="button"
             onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}
             className="focus-ring w-full flex items-center justify-center gap-1.5 mt-4 mb-2 text-sm font-semibold text-primary"
           >
             Ver todos los restaurantes de Riohacha
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </button>
         </>
       ) : (

@@ -16,6 +16,14 @@ const timeAgo = (dateStr: string) => {
   return `hace ${Math.round(hours / 24)} d`
 }
 
+/** El número visible es decorativo: el conteo real va en el aria-label. */
+export const bellLabel = (count: number) =>
+  count <= 0
+    ? 'Notificaciones'
+    : count > 99
+      ? 'Notificaciones, más de 99 sin leer'
+      : `Notificaciones, ${count} sin leer`
+
 interface NotificationBellProps {
   // Color del ícono/badge cuando el fondo detrás es oscuro (ej: hero del dashboard)
   variant?: 'light' | 'dark'
@@ -50,19 +58,32 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
 
   return (
     <div className="relative" ref={panelRef}>
+      {/* Botón de 48×48 (área táctil) con el círculo visual de 36px de
+          siempre adentro; el -m-1.5 compensa para no mover el header. */}
       <button
+        type="button"
         onClick={() => {
           setOpen((v) => !v)
           requestNotificationPermission()
         }}
-        className={`relative w-9 h-9 rounded-full flex items-center justify-center active:scale-90 transition-transform ${
-          variant === 'light' ? 'bg-white/10' : 'bg-gray-50'
-        }`}
+        aria-label={bellLabel(unreadCount)}
+        aria-expanded={open}
+        aria-haspopup="true"
+        className="focus-ring relative w-12 h-12 -m-1.5 rounded-full flex items-center justify-center active:scale-90 transition-transform"
       >
-        <Bell className={`w-4 h-4 ${iconColor}`} />
+        <span
+          className={`w-9 h-9 rounded-full flex items-center justify-center ${
+            variant === 'light' ? 'bg-white/10' : 'bg-gray-50'
+          }`}
+        >
+          <Bell className={`w-4 h-4 ${iconColor}`} aria-hidden="true" />
+        </span>
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 min-w-[19px] h-[19px] px-1 bg-danger rounded-full flex items-center justify-center text-[11px] font-bold text-white border-2 border-white">
-            {unreadCount > 9 ? '9+' : unreadCount}
+          <span
+            aria-hidden="true"
+            className="absolute top-1 right-1 min-w-[19px] h-[19px] px-1 bg-danger rounded-full flex items-center justify-center text-[11px] font-bold text-white border-2 border-white"
+          >
+            {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
       </button>
@@ -73,10 +94,11 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
             <p className="font-display font-bold text-sm text-secondary">Notificaciones</p>
             {unreadCount > 0 && (
               <button
+                type="button"
                 onClick={markAllAsRead}
                 className="flex items-center gap-1 text-xs font-semibold text-primary"
               >
-                <Check className="w-3 h-3" />
+                <Check className="w-3 h-3" aria-hidden="true" />
                 Marcar leídas
               </button>
             )}
@@ -90,6 +112,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
             ) : (
               notifications.slice(0, 8).map((n) => (
                 <button
+                  type="button"
                   key={n.id}
                   onClick={() => handleNotificationClick(n.id, n.order_id)}
                   className={`w-full text-left px-4 py-3 border-b border-gray-50 last:border-0 transition-colors ${
@@ -101,7 +124,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-secondary">{n.title}</p>
                       <p className="text-xs text-gray-500 mt-0.5">{n.body}</p>
-                      <p className="text-[11px] text-gray-300 mt-1">{timeAgo(n.created_at)}</p>
+                      <p className="text-[11px] text-gray-500 mt-1">{timeAgo(n.created_at)}</p>
                     </div>
                   </div>
                 </button>
@@ -110,6 +133,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
           </div>
 
           <button
+            type="button"
             onClick={() => {
               setOpen(false)
               navigate(ROUTES.NOTIFICATIONS)

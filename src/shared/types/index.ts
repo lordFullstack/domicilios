@@ -79,6 +79,8 @@ export interface Order {
   special_instructions?: string
   payment_method: PaymentMethod
   payment_status: PaymentStatus
+  /** Tarifa de domicilio cobrada en este pedido (COP). total = items + delivery_fee. */
+  delivery_fee: number
   current_lat?: number | null
   current_lng?: number | null
   location_updated_at?: string | null

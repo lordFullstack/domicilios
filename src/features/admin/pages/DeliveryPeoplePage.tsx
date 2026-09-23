@@ -11,6 +11,7 @@ import { Card } from '@/shared/components/Card'
 import { USER_ROLES, ORDER_STATUS } from '@/config/constants'
 import { User } from '@/shared/types'
 import { AdminListSkeleton } from '../components/AdminListSkeleton'
+import { DeliveryFeeCard } from '../components/DeliveryFeeCard'
 
 type QuickFilter = 'all' | 'active_now' | 'disabled'
 
@@ -78,6 +79,8 @@ export const AdminDeliveryPeoplePage = () => {
         <p className="text-sm text-gray-500 mb-6">
           {filteredList.length} de {deliveryPeople.length} domiciliario(s)
         </p>
+
+        <DeliveryFeeCard />
 
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <input

@@ -196,11 +196,24 @@ export const useNotifications = () => {
 // suspendido por Admin (restaurants.approved = false) desaparezca del
 // home/listado, mientras que el dueño del restaurante sigue pudiendo
 // entrar a su propio panel sin este filtro (por eso es opcional).
+/** Para elegir el copy del error sin mostrar nunca el mensaje crudo. */
+export type LoadErrorKind = 'network' | 'permission' | 'unknown'
+
+const classifyLoadError = (err: { code?: string; message?: string }): LoadErrorKind => {
+  // 42501 = insufficient_privilege (RLS); PGRST301/302 = JWT inválido/ausente
+  if (err.code === '42501' || err.code === 'PGRST301' || err.code === 'PGRST302') return 'permission'
+  if ((typeof navigator !== 'undefined' && !navigator.onLine) || /fetch|network/i.test(err.message || '')) {
+    return 'network'
+  }
+  return 'unknown'
+}
+
 export const useRestaurants = (options?: { approvedOnly?: boolean }) => {
   const approvedOnly = options?.approvedOnly ?? false
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [errorKind, setErrorKind] = useState<LoadErrorKind | null>(null)
 
   const reload = useCallback(async () => {
     setLoading(true)
@@ -217,8 +230,13 @@ export const useRestaurants = (options?: { approvedOnly?: boolean }) => {
 
     if (error) {
       setError('Error cargando restaurantes')
+      setErrorKind(classifyLoadError(error))
       console.error(error)
     } else {
+      // Antes el error nunca se limpiaba: tras un "Reintentar" exitoso la
+      // pantalla seguía mostrando el estado de error.
+      setError(null)
+      setErrorKind(null)
       setRestaurants(data || [])
     }
     setLoading(false)
@@ -228,7 +246,7 @@ export const useRestaurants = (options?: { approvedOnly?: boolean }) => {
     reload()
   }, [reload])
 
-  return { restaurants, loading, error, reload }
+  return { restaurants, loading, error, errorKind, reload }
 }
 
 // ============================================
@@ -325,6 +343,10 @@ export const useRestaurantById = (id: string) => {
   const [error, setError] = useState<string | null>(null)
   const [fromCache, setFromCache] = useState(false)
   const [cachedAt, setCachedAt] = useState<number | null>(null)
+  // Contador para "Reintentar": re-ejecuta el efecto sin recargar la app
+  // (antes la pantalla usaba window.location.reload()).
+  const [attempt, setAttempt] = useState(0)
+  const reload = useCallback(() => setAttempt((n) => n + 1), [])
 
   useEffect(() => {
     if (!id) {
@@ -356,6 +378,7 @@ export const useRestaurantById = (id: string) => {
           console.error(error)
         }
       } else {
+        setError(null)
         setRestaurant(data)
         setFromCache(false)
         setCachedAt(null)
@@ -367,9 +390,9 @@ export const useRestaurantById = (id: string) => {
     return () => {
       cancelled = true
     }
-  }, [id])
+  }, [id, attempt])
 
-  return { restaurant, loading, error, fromCache, cachedAt }
+  return { restaurant, loading, error, fromCache, cachedAt, reload }
 }
 
 // ============================================
@@ -405,6 +428,7 @@ export const useProducts = (restaurantId?: string) => {
         console.error(error)
       }
     } else {
+      setError(null)
       setProducts(data || [])
       setFromCache(false)
       setCachedAt(null)
@@ -469,6 +493,7 @@ export const useProducts = (restaurantId?: string) => {
     error,
     fromCache,
     cachedAt,
+    reload,
     createProduct,
     updateProduct,
     deleteProduct,
@@ -629,6 +654,23 @@ export const useOrderLocation = (orderId: string | undefined) => {
 // HOOK: useOrders (con CRUD)
 // ============================================
 
+// Códigos que lanza la RPC create_order → copy para el cliente.
+const CREATE_ORDER_ERRORS: Record<string, string> = {
+  not_authenticated: 'Tu sesión expiró. Vuelve a iniciar sesión para confirmar el pedido.',
+  invalid_address: 'Revisa la dirección de entrega: necesitamos al menos la calle y el número.',
+  invalid_payment_method: 'Elige un método de pago válido.',
+  restaurant_unavailable: 'Este restaurante no está recibiendo pedidos en este momento.',
+  restaurant_closed: 'El restaurante acaba de cerrar. Tu carrito sigue guardado.',
+  empty_cart: 'Tu carrito está vacío.',
+  invalid_quantity: 'Revisa las cantidades: máximo 99 por producto.',
+  invalid_products: 'Uno o más productos ya no están disponibles. Revisa tu carrito.',
+}
+
+export const createOrderErrorMessage = (raw?: string) => {
+  const code = Object.keys(CREATE_ORDER_ERRORS).find((c) => raw?.includes(c))
+  return code ? CREATE_ORDER_ERRORS[code] : 'No pudimos confirmar tu pedido. Tu carrito sigue guardado.'
+}
+
 export const useOrders = (userId?: string) => {
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(true)
@@ -700,38 +742,31 @@ export const useOrders = (userId?: string) => {
     }
   }, [reload, userId])
 
-  const createOrder = async (
-    order: {
-      user_id: string
-      restaurant_id: string
-      total: number
-      status: string
-      delivery_address: string
-      special_instructions?: string
-      payment_method?: string
-    },
-    items: { product_id: string; quantity: number; unit_price: number }[]
-  ): Promise<Order | null> => {
-    const { data: newOrder, error: orderError } = await supabase
-      .from('orders')
-      .insert(order)
-      .select()
-      .single()
+  // Crea el pedido con la RPC `create_order`: el servidor valida el
+  // restaurante y los productos, toma los precios de `products`, suma la
+  // tarifa de domicilio de `app_settings` y guarda pedido + items en una
+  // sola transacción. El cliente ya NO manda precios ni total.
+  // Devuelve { order } o { error } con un mensaje listo para mostrar.
+  const createOrder = async (input: {
+    restaurant_id: string
+    delivery_address: string
+    special_instructions?: string
+    payment_method: string
+    items: { product_id: string; quantity: number }[]
+  }): Promise<{ order: Order | null; error?: string }> => {
+    const { data: newOrder, error: orderError } = await supabase.rpc('create_order', {
+      p_restaurant_id: input.restaurant_id,
+      p_delivery_address: input.delivery_address,
+      p_special_instructions: input.special_instructions ?? '',
+      p_payment_method: input.payment_method,
+      p_items: input.items,
+    })
 
     if (orderError || !newOrder) {
       console.error('Error creating order:', orderError)
-      setError('Error al crear orden')
-      return null
-    }
-
-    if (items.length > 0) {
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(items.map((item) => ({ ...item, order_id: newOrder.id })))
-
-      if (itemsError) {
-        console.error('Error creating order items:', itemsError)
-      }
+      const message = createOrderErrorMessage(orderError?.message)
+      setError(message)
+      return { order: null, error: message }
     }
 
     // Avisa al restaurante que tiene un pedido nuevo por aceptar. No se
@@ -740,7 +775,7 @@ export const useOrders = (userId?: string) => {
     supabase
       .from('restaurants')
       .select('owner_id')
-      .eq('id', order.restaurant_id)
+      .eq('id', input.restaurant_id)
       .maybeSingle()
       .then(({ data: restaurantRow }) => {
         if (restaurantRow?.owner_id) {
@@ -749,7 +784,7 @@ export const useOrders = (userId?: string) => {
       })
 
     await reload()
-    return newOrder
+    return { order: newOrder as Order }
   }
 
 
@@ -1016,30 +1051,24 @@ export const useFavorites = () => {
     reload()
   }, [reload])
 
+  // Optimista: el corazón cambia al instante y, si Supabase falla, vuelve
+  // al estado anterior. Ya no hace reload() completo tras cada toque.
   const toggleFavorite = async (restaurantId: string) => {
     if (!user) return false
     const isFav = favorites.includes(restaurantId)
+    const without = (list: string[]) => list.filter((id) => id !== restaurantId)
+    setFavorites((cur) => (isFav ? without(cur) : [...without(cur), restaurantId]))
 
-    if (isFav) {
-      const { error } = await supabase
-        .from('favorites')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('restaurant_id', restaurantId)
-      if (error) {
-        console.error('Error removing favorite:', error)
-        return false
-      }
-    } else {
-      const { error } = await supabase
-        .from('favorites')
-        .insert({ user_id: user.id, restaurant_id: restaurantId })
-      if (error) {
-        console.error('Error adding favorite:', error)
-        return false
-      }
+    const { error } = isFav
+      ? await supabase.from('favorites').delete().eq('user_id', user.id).eq('restaurant_id', restaurantId)
+      : await supabase.from('favorites').insert({ user_id: user.id, restaurant_id: restaurantId })
+
+    if (error) {
+      console.error(isFav ? 'Error removing favorite:' : 'Error adding favorite:', error)
+      // Rollback solo de ESTE restaurante (no pisa otros toques en curso).
+      setFavorites((cur) => (isFav ? [...without(cur), restaurantId] : without(cur)))
+      return false
     }
-    await reload()
     return true
   }
 

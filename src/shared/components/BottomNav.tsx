@@ -69,18 +69,25 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
         <div className="max-w-md mx-auto flex items-center justify-between px-2">
           {items.map(({ icon: Icon, label, path, cartBadge }) => {
             const isActive = location.pathname === path
+            const showCount = cartBadge && cartCount > 0
             return (
               <button
+                type="button"
                 key={path}
                 onClick={() => navigate(path)}
-                aria-label={label}
+                // El conteo del carrito va en el nombre accesible: antes el
+                // aria-label="Carrito" tapaba el número del badge.
+                aria-label={showCount ? `${label}, ${cartCount} ${cartCount === 1 ? 'producto' : 'productos'}` : label}
                 aria-current={isActive ? 'page' : undefined}
                 className={`touch-target focus-ring flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 relative rounded-full transition-all duration-150 active:scale-[0.94] ${
                   isActive ? 'bg-primary/10' : ''
                 }`}
               >
+                {/* gray-500 (4.8:1) en vez de gray-400 (2.5:1): los íconos
+                    necesitan ≥ 3:1 (WCAG 1.4.11). */}
                 <Icon
-                  className={`w-5 h-5 ${isActive ? 'text-primary' : 'text-gray-400'}`}
+                  aria-hidden="true"
+                  className={`w-5 h-5 ${isActive ? 'text-primary' : 'text-gray-500'}`}
                   strokeWidth={isActive ? 2.5 : 2}
                 />
                 <span
@@ -90,9 +97,12 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
                 >
                   {label}
                 </span>
-                {cartBadge && cartCount > 0 && (
-                  <span className="absolute top-0 right-1 bg-primary text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                    {cartCount}
+                {showCount && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute top-0 right-1 bg-primary text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center"
+                  >
+                    {cartCount > 99 ? '99+' : cartCount}
                   </span>
                 )}
               </button>
