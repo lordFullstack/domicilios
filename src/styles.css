@@ -49,6 +49,9 @@
   --glass-bg:       rgba(255, 255, 255, 0.72);
   --glass-border:   rgba(255, 255, 255, 0.5);
   --scrollbar:      rgba(28, 25, 23, 0.18);
+  /* Iconografía propia (src/shared/icons) */
+  --icon-tint:      #FFE3D1;  /* ↔ icon-tint: relleno del estado activo */
+  --icon-accent:    #F4652C;  /* naranja del gradiente: llamas, cereza */
 }
 
 /* ============================================================

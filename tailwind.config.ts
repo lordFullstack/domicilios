@@ -61,6 +61,8 @@ export default {
         // Tintes por categoría (fila de categorías del Home). Antes eran
         // hex arbitrarios dentro de CategoryScroller; ahora viven aquí para
         // que el config siga siendo la única fuente de color.
+        // Iconografía propia: relleno atardecer del estado activo.
+        'icon-tint': '#FFE3D1',
         category: {
           pizza:    { bg: '#FDEDE3', fg: '#C2470F' },
           burgers:  { bg: '#FCE4E1', fg: '#B8371F' },
@@ -131,6 +133,8 @@ export default {
         '2xl': '1.25rem',
         '3xl': '1.75rem',
         '4xl': '2.25rem',
+        // Forma de marca "gota": esquina en punta arriba-derecha (nariz del cohete).
+        drop:  '50% 12% 50% 50%',
       },
 
       spacing: {
