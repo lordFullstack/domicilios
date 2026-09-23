@@ -1,6 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react'
 import { Button } from './Button'
-import { Icon, Drop } from '@/shared/icons'
+import { Illustration } from '@/shared/illustrations'
 
 interface Props {
   children: ReactNode
@@ -40,12 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen bg-white flex items-center justify-center px-8 text-center">
           <div>
-            {/* Cohete de marca en vez de un emoji triste. */}
-            <div className="mb-4 flex justify-center">
-              <Drop size={72} className="bg-icon-tint text-brand-700">
-                <Icon name="rocket" size={40} variant="onDrop" />
-              </Drop>
-            </div>
+            <Illustration name="sad" size="md" className="mb-2" />
             <h1 className="font-display font-bold text-lg text-secondary mb-2">Algo salió mal</h1>
             <p className="text-sm text-gray-500 mb-6">
               Estamos intentando recuperar la aplicación.

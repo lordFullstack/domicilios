@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Plus, Minus, Trash2, ShoppingBag } from 'lucide-react'
+import { ChevronLeft, Plus, Minus, Trash2 } from 'lucide-react'
 import { useProductById, useRestaurantById, useProducts } from '@/hooks/useLocalData'
 import { useCartContext } from '@/shared/hooks/useCartContext'
 import { Button } from '@/shared/components/Button'
@@ -56,7 +56,7 @@ export const CartPage = () => {
         </div>
 
         <EmptyState
-          icon={ShoppingBag}
+          illustration="emptyCart"
           title="Tu carrito está vacío"
           description="Explora restaurantes y encuentra algo delicioso."
           action={<Button onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>Explorar restaurantes</Button>}

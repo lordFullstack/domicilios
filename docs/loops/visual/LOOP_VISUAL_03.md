@@ -2,7 +2,7 @@
 
 **Categoría:** VISUAL
 **Tipo:** Feature visual / Identidad
-**Estado:** 🟢 Aprobado — listo para ejecutar
+**Estado:** 🟢 Ejecutado (ver LOOP_VISUAL_03_REPORTE.md)
 **Objetivo:** Convertir el cohete en el hilo conductor visual de la app con un núcleo coherente de **6 ilustraciones** integradas en las pantallas que existen HOY: carrito vacío, sin resultados, error, confirmación de pedido y 404. Las 6 restantes y las integraciones que dependen de pantallas aún inexistentes van a **LOOP_VISUAL_03B**.
 **NO ES SOBRE:** animación (LOOP_VISUAL_07), iconos de 24px (LOOP_VISUAL_01 / LOOP_ICONOS_01), fotografías (LOOP_VISUAL_02).
 

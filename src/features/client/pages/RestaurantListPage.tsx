@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, SearchX, Store } from 'lucide-react'
+import { ChevronLeft, Store } from 'lucide-react'
 import { useRestaurants } from '@/hooks/useLocalData'
 import { AppShell } from '@/shared/components/AppShell'
 import { BottomNav } from '@/shared/components/BottomNav'
@@ -59,7 +59,7 @@ export const RestaurantListPage = () => {
     if (results.length === 0) {
       return (
         <EmptyState
-          icon={SearchX}
+          illustration="noResults"
           title="No encontramos restaurantes con esos filtros"
           description={term ? `Nada coincide con "${term}". Prueba otra palabra o quita filtros.` : 'Prueba quitando algún filtro.'}
           action={<Button variant="outline" onClick={clearAll}>Limpiar filtros</Button>}

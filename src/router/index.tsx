@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 import { ProtectedRoute } from './ProtectedRoute'
+import { NotFound } from '@/shared/pages/NotFound'
 
 // Auth Pages (eager: son el punto de entrada, no vale la pena diferirlas)
 import { LoginPage } from '@/features/auth/pages/LoginPage'
@@ -324,7 +325,7 @@ export const Router = () => {
 
         {/* Fallback */}
         <Route path="/" element={<Navigate to={ROUTES.LOGIN} replace />} />
-        <Route path="*" element={<Navigate to={ROUTES.LOGIN} replace />} />
+        <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
