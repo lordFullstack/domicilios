@@ -223,7 +223,7 @@ export const CheckoutPage = () => {
           <div className="border border-gray-100 rounded-2xl p-4">
             <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
               <div className="w-6 h-6 rounded-lg overflow-hidden flex items-center justify-center text-base flex-shrink-0">
-                <ProductImage imageUrl={restaurant?.image_url} alt={restaurant?.name || ''} />
+                <ProductImage imageUrl={restaurant?.image_url} alt={restaurant?.name || ''} width={48} />
               </div>
               <p className="font-display font-bold text-sm text-secondary">{restaurant?.name}</p>
             </div>

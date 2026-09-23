@@ -195,7 +195,7 @@ const CartItemRow = ({
   return (
     <div className="flex items-start gap-3 border border-gray-100 rounded-2xl p-3">
       <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl flex-shrink-0 overflow-hidden">
-        <ProductImage imageUrl={product.image_url} alt={product.name} />
+        <ProductImage imageUrl={product.image_url} alt={product.name} width={48} />
       </div>
       <div className="flex-1 min-w-0 flex flex-col gap-1.5">
         <p className="font-semibold text-sm text-secondary line-clamp-2">{product.name}</p>

@@ -4,6 +4,7 @@ import { Star } from 'lucide-react'
 import { Icon as BrandIcon } from '@/shared/icons'
 import { Restaurant } from '@/shared/types'
 import { ProductImage } from '@/shared/components/ProductImage'
+import { supabaseImageUrl } from '@/shared/utils/supabaseImage'
 import { Badge } from '@/shared/components/Badge'
 import { Toast } from '@/shared/components/Toast'
 import { useDeliveryFee, deliveryFeeLabel } from '@/shared/hooks/useDeliveryFee'
@@ -63,9 +64,10 @@ export const RestaurantGridCard = ({ restaurant }: RestaurantGridCardProps) => {
       <div className="relative aspect-[4/3] bg-primary/10">
         {restaurant.cover_url ? (
           <img
-            src={restaurant.cover_url}
+            src={supabaseImageUrl(restaurant.cover_url, { width: 400 })}
             alt={restaurant.name}
             loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
         ) : (

@@ -76,7 +76,7 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
       <div className="flex gap-4">
         {/* Antes imprimía image_url como TEXTO (con foto real salía la URL). */}
         <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
-          <ProductImage imageUrl={restaurant?.image_url} alt="" fallbackIconSize={24} />
+          <ProductImage imageUrl={restaurant?.image_url} alt="" fallbackIconSize={24} width={48} />
         </div>
 
         <div className="flex-1 min-w-0">

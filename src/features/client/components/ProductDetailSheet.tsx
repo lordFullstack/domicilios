@@ -56,6 +56,7 @@ export const ProductDetailSheet = ({
             alt=""
             className="w-full h-full object-cover"
             emojiClassName="text-6xl"
+            width={400}
           />
         </div>
 

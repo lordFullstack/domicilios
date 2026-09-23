@@ -3,6 +3,7 @@ import { Flame, UtensilsCrossed, Store } from 'lucide-react'
 import { usePromotions } from '@/shared/hooks/usePromotions'
 import { ROUTES } from '@/config/constants'
 import { PromotionType } from '@/shared/types'
+import { supabaseImageUrl } from '@/shared/utils/supabaseImage'
 
 interface FeaturedSectionProps {
   type: Extract<PromotionType, 'featured_restaurant' | 'featured_product'>
@@ -56,12 +57,13 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
               disabled={!promo.restaurant_id}
               className="relative text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
             >
-              <div className="h-24 bg-primary/10 overflow-hidden flex items-center justify-center">
+              <div className="aspect-[4/3] bg-primary/10 overflow-hidden flex items-center justify-center">
                 {promo.image_url ? (
                   <img
-                    src={promo.image_url}
+                    src={supabaseImageUrl(promo.image_url, { width: 300 })}
                     alt={promo.title}
                     loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -97,9 +99,15 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
             disabled={!promo.restaurant_id}
             className="flex-shrink-0 w-64 text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
           >
-            <div className="h-28 bg-primary/10 overflow-hidden flex items-center justify-center">
+            <div className="aspect-[4/3] bg-primary/10 overflow-hidden flex items-center justify-center">
               {promo.image_url ? (
-                <img src={promo.image_url} alt={promo.title} loading="lazy" className="w-full h-full object-cover" />
+                <img
+                  src={supabaseImageUrl(promo.image_url, { width: 400 })}
+                  alt={promo.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover"
+                />
               ) : type === 'featured_product' ? (
                 <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} aria-hidden="true" />
               ) : (

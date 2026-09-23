@@ -56,7 +56,7 @@ export const MenuProductCard = ({
             className="focus-ring flex min-w-0 flex-1 items-center gap-3 text-left active:scale-[0.99] transition-transform"
           >
             <span className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50 flex items-center justify-center text-4xl">
-              <ProductImage imageUrl={product.image_url} alt="" />
+              <ProductImage imageUrl={product.image_url} alt="" width={96} />
             </span>
             <span className="min-w-0 flex-1">
               {/* <span> y no <h3>/<p>: van dentro de un <button>, que solo admite

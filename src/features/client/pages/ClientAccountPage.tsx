@@ -11,6 +11,7 @@ import { NotificationPermissionCard } from '@/shared/components/NotificationPerm
 import { InstallAppCard } from '@/shared/components/InstallAppCard'
 import { Input } from '@/shared/components/Input'
 import { Button } from '@/shared/components/Button'
+import { Avatar } from '@/shared/components/Avatar'
 import { ROUTES } from '@/config/constants'
 import { formatFullName } from '@/shared/utils/format'
 
@@ -54,11 +55,7 @@ export const ClientAccountPage = () => {
   return (
     <AppShell>
       <div className="px-5 pt-6 pb-4 flex items-center gap-3">
-        <div className="w-16 h-16 rounded-full bg-brand-gradient flex items-center justify-center flex-shrink-0">
-          <span className="text-white font-display font-bold text-xl">
-            {Array.from(displayName || user?.email || '?')[0].toUpperCase()}
-          </span>
-        </div>
+        <Avatar src={user?.avatar_url} name={displayName || user?.email} size="lg" />
         <div className="min-w-0">
           <h1 className="font-display text-lg font-bold text-secondary truncate">
             {displayName || 'Mi cuenta'}

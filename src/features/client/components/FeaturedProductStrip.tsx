@@ -33,7 +33,7 @@ const FeaturedCard = ({ product, quantity, restaurantIsOpen, onOpenDetail, onAdd
         className="focus-ring block w-full text-left active:scale-[0.99] transition-transform"
       >
         <span className="flex h-24 w-full items-center justify-center overflow-hidden bg-gray-50 text-3xl">
-          <ProductImage imageUrl={product.image_url} alt="" />
+          <ProductImage imageUrl={product.image_url} alt="" width={152} />
         </span>
         <span className="block p-2.5 pr-12">
           <span className="block truncate font-display text-xs font-bold text-secondary">{product.name}</span>

@@ -3,7 +3,9 @@ import { Icon as BrandIcon } from '@/shared/icons'
 import { Restaurant } from '@/shared/types'
 import { Badge } from '@/shared/components/Badge'
 import { ProductImage } from '@/shared/components/ProductImage'
+import { ImageOverlay } from '@/shared/components/ImageOverlay'
 import { useDeliveryFee, deliveryFeeLabel } from '@/shared/hooks/useDeliveryFee'
+import { supabaseImageUrl } from '@/shared/utils/supabaseImage'
 
 interface RestaurantHeroProps {
   restaurant: Restaurant
@@ -37,9 +39,11 @@ export const RestaurantHero = ({
     <div className="relative h-52 overflow-hidden bg-primary/10">
       {restaurant.cover_url ? (
         <img
-          src={restaurant.cover_url}
+          src={supabaseImageUrl(restaurant.cover_url, { width: 800 })}
           alt={`Portada de ${restaurant.name}`}
+          loading="eager"
           decoding="async"
+          fetchPriority="high"
           className="w-full h-full object-cover"
         />
       ) : (
@@ -52,7 +56,7 @@ export const RestaurantHero = ({
       )}
       {/* Scrim más denso en la mitad inferior: las portadas las sube cada
         restaurante y pueden traer texto propio que se mezclaba con el nombre. */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 via-45% to-black/10" />
+      <ImageOverlay variant="bottom-gradient" />
 
       <button
         type="button"
@@ -89,7 +93,13 @@ export const RestaurantHero = ({
             className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-white/70 bg-white flex items-center justify-center text-2xl shadow-md"
           >
             {restaurant.cover_url ? (
-              <img src={restaurant.cover_url} alt="" className="w-full h-full object-cover" />
+              <img
+                src={supabaseImageUrl(restaurant.cover_url, { width: 96 })}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover"
+              />
             ) : (
               <ProductImage imageUrl={restaurant.image_url} alt="" />
             )}

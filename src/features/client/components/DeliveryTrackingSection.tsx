@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { Phone, MessageCircle, Bike } from 'lucide-react'
+import { Avatar } from '@/shared/components/Avatar'
 
 // Leaflet pesa ~155kB — antes se importaba directo, así que se descargaba
 // en CADA apertura de un detalle de pedido (entregado, cancelado, etc.),
@@ -32,20 +33,7 @@ export const DeliveryTrackingSection = ({ deliveryPerson, liveLocation }: Delive
 
     {deliveryPerson && (
       <div className="flex items-center gap-3 border border-gray-100 rounded-2xl p-3 mb-3">
-        <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center overflow-hidden flex-shrink-0">
-          {deliveryPerson.avatar_url ? (
-            <img
-              src={deliveryPerson.avatar_url}
-              alt={deliveryPerson.name}
-              loading="lazy"
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <span className="text-lg font-display font-bold text-gray-300">
-              {deliveryPerson.name?.charAt(0).toUpperCase() || '?'}
-            </span>
-          )}
-        </div>
+        <Avatar src={deliveryPerson.avatar_url} name={deliveryPerson.name} size="md" />
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm text-secondary truncate">{deliveryPerson.name}</p>
           {deliveryPerson.vehicle_type && (
