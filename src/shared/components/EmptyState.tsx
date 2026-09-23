@@ -1,8 +1,8 @@
-import { ReactNode } from 'react'
-import { LucideIcon } from 'lucide-react'
+import { ElementType, ReactNode } from 'react'
 
 interface EmptyStateProps {
-  icon: LucideIcon
+  /** Ícono de lucide o de la iconografía propia (`brandIcon('restaurants')`). */
+  icon: ElementType
   title: string
   description?: string
   action?: ReactNode

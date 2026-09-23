@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LogOut, ChevronRight, Bell, ClipboardList } from 'lucide-react'
+import { LogOut, ChevronRight, Check } from 'lucide-react'
+import { Icon as BrandIcon } from '@/shared/icons'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useNotifications } from '@/hooks/useLocalData'
 import { AppShell } from '@/shared/components/AppShell'
@@ -76,7 +77,13 @@ export const ClientAccountPage = () => {
 
           {hasChanges && (
             <Button size="sm" loading={saving} onClick={handleSave} className="mt-3">
-              {saved ? '✓ Guardado' : 'Guardar cambios'}
+              {saved ? (
+                <span className="inline-flex items-center gap-1">
+                  <Check className="h-4 w-4" aria-hidden="true" /> Guardado
+                </span>
+              ) : (
+                'Guardar cambios'
+              )}
             </Button>
           )}
         </div>
@@ -93,7 +100,7 @@ export const ClientAccountPage = () => {
           className="focus-ring w-full flex items-center justify-between border border-gray-100 rounded-2xl p-4 mt-2"
         >
           <span className="flex items-center gap-2 text-sm font-semibold text-secondary">
-            <Bell className="w-4 h-4 text-gray-500" />
+            <BrandIcon name="bell" size="sm" className="text-gray-500" />
             Notificaciones
             {unreadCount > 0 && (
               <span className="bg-coral text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -109,7 +116,7 @@ export const ClientAccountPage = () => {
           className="focus-ring w-full flex items-center justify-between border border-gray-100 rounded-2xl p-4 mt-2"
         >
           <span className="flex items-center gap-2 text-sm font-semibold text-secondary">
-            <ClipboardList className="w-4 h-4 text-gray-500" />
+            <BrandIcon name="orders" size="sm" className="text-gray-500" />
             Mis pedidos
           </span>
           <ChevronRight className="w-4 h-4 text-gray-300" />

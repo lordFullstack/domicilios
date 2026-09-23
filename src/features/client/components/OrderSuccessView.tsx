@@ -1,4 +1,4 @@
-import { CheckCircle2 } from 'lucide-react'
+import { Icon, Drop } from '@/shared/icons'
 import { Button } from '@/shared/components/Button'
 import { formatCOP } from '@/shared/utils/money'
 
@@ -18,8 +18,10 @@ export const OrderSuccessView = ({
   onKeepShopping,
 }: OrderSuccessViewProps) => (
   <div className="min-h-screen bg-white max-w-md mx-auto flex flex-col items-center justify-center px-8 text-center safe-top safe-bottom">
-    <div className="w-16 h-16 rounded-full bg-success/10 flex items-center justify-center mb-4">
-      <CheckCircle2 className="w-8 h-8 text-success" />
+    <div className="mb-4">
+      <Drop size={80} className="bg-icon-tint text-brand-700">
+        <Icon name="rocketSuccess" size={48} variant="onDrop" />
+      </Drop>
     </div>
     <h1 className="font-display text-xl font-bold text-secondary mb-1">¡Pedido confirmado!</h1>
     <p className="text-sm text-gray-500 mb-6">

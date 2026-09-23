@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
-import { MapPin, ChevronDown } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { NotificationBell } from '@/shared/components/NotificationBell'
-import { RocketMark } from '@/shared/components/RocketMark'
+import { Icon, Drop } from '@/shared/icons'
 import { formatFirstName } from '@/shared/utils/format'
 import { getDeliveryLabel } from '../utils/deliveryLabel'
 
@@ -20,7 +20,10 @@ export const HomeHeader = () => {
     <div className="px-5 pt-[max(1.5rem,env(safe-area-inset-top))] pb-1">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <RocketMark variant="square" size={36} className="rounded-xl" />
+          {/* Logo: cohete de marca sobre gota azul (iconografía propia). */}
+          <Drop size={36} className="bg-brand-700 text-white">
+            <Icon name="rocket" size={22} variant="onDark" />
+          </Drop>
           <div className="leading-tight">
             <p className="font-display font-bold text-base text-secondary">Domicilios</p>
             <p className="text-[11px] text-gray-500">Tu comida, más cerca</p>
@@ -34,7 +37,7 @@ export const HomeHeader = () => {
           desde el Home queda para un LOOP futuro; el chevron se conserva
           porque el layout de este LOOP está congelado. */}
       <p className="flex items-center gap-1 min-h-[48px] mb-3 text-xs">
-        <MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" aria-hidden="true" />
+        <Icon name="pin" size={16} className="text-primary flex-shrink-0" />
         <span className="text-gray-500">Entregar en</span>
         <span className="font-semibold text-secondary truncate">{deliveryLabel}</span>
         <ChevronDown className="w-3 h-3 text-gray-500 flex-shrink-0" aria-hidden="true" />

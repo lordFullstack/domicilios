@@ -1,4 +1,5 @@
-import { MapPin, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
+import { Icon as BrandIcon } from '@/shared/icons'
 import { AddressDraft } from './AddressSheet'
 
 interface AddressCardProps {
@@ -16,7 +17,9 @@ export const AddressCard = ({ draft, onEdit }: AddressCardProps) => {
         onClick={onEdit}
         className="focus-ring w-full text-left border-2 border-dashed border-gray-200 rounded-2xl p-4 active:scale-[0.98] transition-transform"
       >
-        <p className="font-display font-bold text-sm text-secondary mb-1">📍 ¿Dónde entregamos?</p>
+        <p className="font-display font-bold text-sm text-secondary mb-1 flex items-center gap-1.5">
+          <BrandIcon name="pin" size="sm" className="text-primary" /> ¿Dónde entregamos?
+        </p>
         <p className="text-xs text-gray-500 mb-2">
           Agrega una dirección para continuar con tu pedido.
         </p>
@@ -31,7 +34,7 @@ export const AddressCard = ({ draft, onEdit }: AddressCardProps) => {
       onClick={onEdit}
       className="focus-ring w-full text-left border border-gray-100 rounded-2xl p-4 flex items-start gap-3 active:scale-[0.98] transition-transform"
     >
-      <MapPin className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+      <BrandIcon name="pin" size="sm" className="text-primary flex-shrink-0" />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-secondary truncate">
           {draft.street}

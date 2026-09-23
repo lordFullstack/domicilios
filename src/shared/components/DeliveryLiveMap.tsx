@@ -1,10 +1,13 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
+import { iconToSvgString } from '@/shared/icons/svgString'
 
 // Usamos un ícono propio en vez del marcador por defecto de Leaflet,
 // porque el marcador default no carga bien con Vite (rutas rotas).
+// Marcador: moto de la iconografía propia sobre gota azul (antes emoji 🛵).
+// Leaflet no renderiza React, por eso el SVG va como string.
 const bikeIcon = L.divIcon({
-  html: `<div style="background:#1C2459;width:32px;height:32px;border-radius:9999px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3);border:2px solid white;font-size:16px;">🛵</div>`,
+  html: `<div style="background:#1C2459;width:32px;height:32px;border-radius:50% 12% 50% 50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3);border:2px solid white;">${iconToSvgString({ name: 'moto', size: 18, color: '#FFFFFF', variant: 'onDark' })}</div>`,
   className: '',
   iconSize: [32, 32],
   iconAnchor: [16, 16],

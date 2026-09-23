@@ -1,4 +1,5 @@
-import { ChevronLeft, Heart, Star } from 'lucide-react'
+import { ChevronLeft, Star } from 'lucide-react'
+import { Icon as BrandIcon } from '@/shared/icons'
 import { Restaurant } from '@/shared/types'
 import { Badge } from '@/shared/components/Badge'
 import { ProductImage } from '@/shared/components/ProductImage'
@@ -46,6 +47,7 @@ export const RestaurantHero = ({
           imageUrl={restaurant.image_url}
           alt=""
           emojiClassName="w-full h-full flex items-center justify-center text-7xl"
+          fallbackIconSize={64}
         />
       )}
       {/* Scrim más denso en la mitad inferior: las portadas las sube cada
@@ -72,10 +74,11 @@ export const RestaurantHero = ({
         className="touch-target focus-ring absolute right-4 w-10 h-10 rounded-full glass flex items-center justify-center active:scale-90 transition-transform"
         style={{ top: 'max(1rem, env(safe-area-inset-top))' }}
       >
-        <Heart
-          aria-hidden="true"
-          className={`w-4 h-4 ${isFavorite ? 'text-rose-600' : 'text-secondary'}`}
-          fill={isFavorite ? 'currentColor' : 'none'}
+        <BrandIcon
+          name="heart"
+          size={18}
+          variant={isFavorite ? 'active' : 'line'}
+          className={isFavorite ? 'text-rose-600' : 'text-secondary'}
         />
       </button>
 

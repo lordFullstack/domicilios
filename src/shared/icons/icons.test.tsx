@@ -59,5 +59,9 @@ describe('iconToSvgString', () => {
     const html = iconToSvgString({ name: 'moto', size: 20, color: '#FFFFFF' })
     expect(html.startsWith('<svg color="#FFFFFF"')).toBe(true)
     expect(html).toContain('viewBox="0 0 24 24"')
+    expect(html).toContain('<circle cx="6" cy="17.5" r="2.75"></circle>')
+    // se puede parsear como SVG válido
+    const doc = new DOMParser().parseFromString(html, 'image/svg+xml')
+    expect(doc.querySelector('parsererror')).toBeNull()
   })
 })

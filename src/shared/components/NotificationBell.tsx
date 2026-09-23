@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Bell, Check } from 'lucide-react'
+import { Check } from 'lucide-react'
+import { Icon as BrandIcon } from '@/shared/icons'
 import { useNotifications } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { requestNotificationPermission } from '@/shared/utils/notificationSound'
@@ -76,7 +77,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
             variant === 'light' ? 'bg-white/10' : 'bg-gray-50'
           }`}
         >
-          <Bell className={`w-4 h-4 ${iconColor}`} aria-hidden="true" />
+          <BrandIcon name="bell" size={20} className={iconColor} />
         </span>
         {unreadCount > 0 && (
           <span

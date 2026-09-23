@@ -12,11 +12,13 @@ export const ConnectionBanner = () => {
     status === 'offline'
       ? {
           bg: 'bg-red-500',
-          text: '🔴 Sin conexión — algunas funciones están limitadas',
+          dot: 'bg-white',
+          text: 'Sin conexión — algunas funciones están limitadas',
         }
       : {
           bg: 'bg-yellow-500',
-          text: '🟡 Conexión restaurada — sincronizando...',
+          dot: 'bg-white/70',
+          text: 'Conexión restaurada — sincronizando...',
         }
 
   return (
@@ -24,7 +26,10 @@ export const ConnectionBanner = () => {
       className={`fixed top-0 left-0 right-0 z-50 ${config.bg} text-white text-xs font-medium text-center py-2 px-4`}
       style={{ paddingTop: 'calc(env(safe-area-inset-top) + 0.5rem)' }}
     >
-      {config.text}
+      <span className="inline-flex items-center gap-2">
+        <span aria-hidden="true" className={`h-2 w-2 rounded-full ${config.dot}`} />
+        {config.text}
+      </span>
     </div>
   )
 }

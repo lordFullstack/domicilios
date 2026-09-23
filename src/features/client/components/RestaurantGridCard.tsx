@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Star, Heart } from 'lucide-react'
+import { Star } from 'lucide-react'
+import { Icon as BrandIcon } from '@/shared/icons'
 import { Restaurant } from '@/shared/types'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { Badge } from '@/shared/components/Badge'
@@ -85,10 +86,11 @@ export const RestaurantGridCard = ({ restaurant }: RestaurantGridCardProps) => {
           disabled={pending}
           className="touch-target focus-ring absolute top-1 right-1 w-9 h-9 rounded-full glass flex items-center justify-center active:scale-[0.9] transition-transform"
         >
-          <Heart
-            aria-hidden="true"
-            className={`w-4 h-4 ${fav ? 'text-rose-600' : 'text-gray-500'}`}
-            fill={fav ? 'currentColor' : 'none'}
+          <BrandIcon
+            name="heart"
+            size={18}
+            variant={fav ? 'active' : 'line'}
+            className={fav ? 'text-rose-600' : 'text-gray-500'}
           />
         </button>
 

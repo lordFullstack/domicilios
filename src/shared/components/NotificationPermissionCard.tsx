@@ -1,4 +1,5 @@
 import { usePushNotifications } from '@/shared/hooks/usePushNotifications'
+import { Icon, Drop } from '@/shared/icons'
 
 // Se muestra en pantallas donde tiene sentido pedir el permiso con contexto
 // (ej: justo después de confirmar un pedido, o en "Mis Órdenes") — nunca al
@@ -12,9 +13,12 @@ export const NotificationPermissionCard = () => {
 
   return (
     <div className="mx-5 mb-4 rounded-2xl bg-primary/5 border border-primary/10 p-4">
-      <p className="text-sm text-secondary mb-3">
-        🔔 Activa las notificaciones para recibir actualizaciones de tus pedidos.
-      </p>
+      <div className="flex items-start gap-3 mb-3">
+        <Drop size={36} className="bg-icon-tint text-brand-700">
+          <Icon name="bell" size={20} variant="onDrop" />
+        </Drop>
+        <p className="text-sm text-secondary">Activa las notificaciones para recibir actualizaciones de tus pedidos.</p>
+      </div>
       <button
         onClick={activate}
         disabled={subscribing}

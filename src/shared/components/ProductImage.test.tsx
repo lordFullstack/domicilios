@@ -8,7 +8,18 @@ describe('<ProductImage />', () => {
     fireEvent.error(screen.getByRole('img', { name: 'Costilla BBQ' }))
     const fallback = screen.getByRole('img', { name: 'Costilla BBQ' })
     expect(fallback.tagName).toBe('SPAN')
-    expect(fallback).toHaveTextContent('🍽️')
+    // Respaldo con ícono propio (ya no el emoji 🍽️)
+    expect(fallback.querySelector('svg[data-icon="restaurants"]')).not.toBeNull()
+  })
+
+  it('sin imagen muestra el ícono de respaldo', () => {
+    const { container } = render(<ProductImage imageUrl={undefined} alt="" />)
+    expect(container.querySelector('svg[data-icon="restaurants"]')).not.toBeNull()
+  })
+
+  it('emoji guardado por el restaurante se respeta (es contenido)', () => {
+    render(<ProductImage imageUrl="🍕" alt="" />)
+    expect(screen.getByText('🍕')).toBeInTheDocument()
   })
 
   it('emoji decorativo cuando alt está vacío', () => {

@@ -130,7 +130,7 @@ export const OrderDetailPage = () => {
     showToast(
       skipped > 0
         ? `Se agregaron ${added} productos · ${skipped} ya no están disponibles`
-        : `✓ ${added} productos agregados a tu carrito`
+        : `${added} productos agregados a tu carrito`
     )
     navigate(ROUTES.CLIENT_CART)
   }

@@ -4,6 +4,7 @@ import { useRestaurantById } from '@/hooks/useLocalData'
 import { OrderStatusIcon } from '@/shared/constants/icons'
 import { ORDER_STATUS } from '@/config/constants'
 import { formatCOP } from '@/shared/utils/money'
+import { ProductImage } from '@/shared/components/ProductImage'
 
 interface OrderCardProps {
   order: Order
@@ -73,8 +74,9 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
   return (
     <Card hoverable onClick={onClick}>
       <div className="flex gap-4">
-        <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0">
-          {restaurant?.image_url || '🏪'}
+        {/* Antes imprimía image_url como TEXTO (con foto real salía la URL). */}
+        <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
+          <ProductImage imageUrl={restaurant?.image_url} alt="" fallbackIconSize={24} />
         </div>
 
         <div className="flex-1 min-w-0">

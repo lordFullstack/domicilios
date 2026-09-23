@@ -1,18 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { ROUTES, RESTAURANT_CATEGORIES } from '@/config/constants'
-
-// Un color por categoría (puramente decorativo, igual que el mapa de
-// colores por estado de OrderCard) — ayuda a escanear la fila más rápido.
-// Los valores viven en tailwind.config.ts (colors.category), no aquí.
-const CATEGORY_COLORS: Record<string, string> = {
-  Pizza: 'bg-category-pizza-bg text-category-pizza-fg',
-  Burgers: 'bg-category-burgers-bg text-category-burgers-fg',
-  Sushi: 'bg-category-sushi-bg text-category-sushi-fg',
-  Postres: 'bg-category-postres-bg text-category-postres-fg',
-  Bebidas: 'bg-category-bebidas-bg text-category-bebidas-fg',
-  Asados: 'bg-category-asados-bg text-category-asados-fg',
-  Mariscos: 'bg-category-mariscos-bg text-category-mariscos-fg',
-}
+import { Icon, Drop, CATEGORY_ICON, CATEGORY_DROP_CLASS } from '@/shared/icons'
 
 /**
  * Búsqueda rápida por categoría — cada botón navega a CategoryResultsPage.
@@ -37,16 +25,12 @@ export const CategoryScroller = () => {
             key={c.value}
             aria-label={`Categoría ${c.label}`}
             onClick={() => navigate(ROUTES.CLIENT_CATEGORY.replace(':category', c.value))}
-            className="focus-ring flex flex-col items-center gap-1.5 flex-shrink-0 active:scale-[0.94] transition-transform rounded-full"
+            className="focus-ring flex flex-col items-center gap-1.5 flex-shrink-0 active:scale-[0.94] transition-transform motion-reduce:transition-none rounded-2xl"
           >
-            <span
-              aria-hidden="true"
-              className={`touch-target w-14 h-14 rounded-full flex items-center justify-center ${
-                CATEGORY_COLORS[c.value] || 'bg-gray-50 text-gray-500'
-              }`}
-            >
-              <c.icon className="w-6 h-6" strokeWidth={1.75} aria-hidden="true" />
-            </span>
+            {/* Gota de color por categoría (iconografía propia). */}
+            <Drop size={56} className={CATEGORY_DROP_CLASS[c.value]}>
+              <Icon name={CATEGORY_ICON[c.value]} size={26} />
+            </Drop>
             <span className="text-xs text-gray-500">{c.label}</span>
           </button>
         ))}

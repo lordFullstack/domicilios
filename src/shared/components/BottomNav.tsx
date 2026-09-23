@@ -5,20 +5,25 @@ import { useAuth } from '@/shared/hooks/useAuth'
 import { useCartContext } from '@/shared/hooks/useCartContext'
 import { ROUTES } from '@/config/constants'
 import { LogoutConfirmSheet } from './LogoutConfirmSheet'
+import { Icon as BrandIcon, Drop, type IconName } from '@/shared/icons'
 
 interface NavItem {
   icon: LucideIcon
+  /** Ícono propio (estilo gota). Si está, se usa en vez de `icon`. */
+  iconName?: IconName
   label: string
   path: string
   cartBadge?: boolean
 }
 
 const CLIENT_ITEMS: NavItem[] = [
-  { icon: Home, label: 'Inicio', path: ROUTES.CLIENT_HOME },
-  { icon: UtensilsCrossed, label: 'Restaurantes', path: ROUTES.CLIENT_RESTAURANTS },
-  { icon: ShoppingCart, label: 'Carrito', path: ROUTES.CLIENT_CART, cartBadge: true },
-  { icon: ClipboardList, label: 'Pedidos', path: ROUTES.CLIENT_ORDERS },
-  { icon: User, label: 'Cuenta', path: ROUTES.CLIENT_ACCOUNT },
+  // Cliente: iconografía propia (LOOP_ICONOS_01). Restaurante y
+  // domiciliario siguen con lucide hasta LOOP_ICONOS_02.
+  { icon: Home, iconName: 'home', label: 'Inicio', path: ROUTES.CLIENT_HOME },
+  { icon: UtensilsCrossed, iconName: 'restaurants', label: 'Restaurantes', path: ROUTES.CLIENT_RESTAURANTS },
+  { icon: ShoppingCart, iconName: 'bag', label: 'Carrito', path: ROUTES.CLIENT_CART, cartBadge: true },
+  { icon: ClipboardList, iconName: 'orders', label: 'Pedidos', path: ROUTES.CLIENT_ORDERS },
+  { icon: User, iconName: 'profile', label: 'Cuenta', path: ROUTES.CLIENT_ACCOUNT },
 ]
 
 const RESTAURANT_ITEMS: NavItem[] = [
@@ -67,7 +72,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
         }`}
       >
         <div className="max-w-md mx-auto flex items-center justify-between px-2">
-          {items.map(({ icon: Icon, label, path, cartBadge }) => {
+          {items.map(({ icon: Icon, iconName, label, path, cartBadge }) => {
             const isActive = location.pathname === path
             const showCount = cartBadge && cartCount > 0
             return (
@@ -79,20 +84,32 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
                 // aria-label="Carrito" tapaba el número del badge.
                 aria-label={showCount ? `${label}, ${cartCount} ${cartCount === 1 ? 'producto' : 'productos'}` : label}
                 aria-current={isActive ? 'page' : undefined}
-                className={`touch-target focus-ring flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 relative rounded-full transition-all duration-150 active:scale-[0.94] ${
-                  isActive ? 'bg-primary/10' : ''
+                className={`touch-target focus-ring flex flex-col items-center justify-center gap-0.5 px-3 py-1.5 relative rounded-full transition-all duration-150 active:scale-[0.94] motion-reduce:transition-none ${
+                  isActive && !iconName ? 'bg-primary/10' : ''
                 }`}
               >
-                {/* gray-500 (4.8:1) en vez de gray-400 (2.5:1): los íconos
-                    necesitan ≥ 3:1 (WCAG 1.4.11). */}
-                <Icon
-                  aria-hidden="true"
-                  className={`w-5 h-5 ${isActive ? 'text-primary' : 'text-gray-500'}`}
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
+                {/* Íconos propios: activo = gota atardecer detrás del ícono.
+                    gray-500 (4.8:1) en reposo: los íconos necesitan ≥ 3:1. */}
+                {iconName ? (
+                  isActive ? (
+                    <Drop size={32} className="bg-icon-tint text-brand-700">
+                      <BrandIcon name={iconName} size={20} variant="onDrop" />
+                    </Drop>
+                  ) : (
+                    <span className="flex h-8 w-8 items-center justify-center text-gray-500">
+                      <BrandIcon name={iconName} size={22} />
+                    </span>
+                  )
+                ) : (
+                  <Icon
+                    aria-hidden="true"
+                    className={`w-5 h-5 ${isActive ? 'text-primary' : 'text-gray-500'}`}
+                    strokeWidth={isActive ? 2.5 : 2}
+                  />
+                )}
                 <span
-                  className={`text-xs font-medium ${
-                    isActive ? 'text-primary' : 'text-gray-500'
+                  className={`text-xs ${
+                    isActive ? (iconName ? 'text-brand-700 font-bold' : 'text-primary font-medium') : 'text-gray-500 font-medium'
                   }`}
                 >
                   {label}

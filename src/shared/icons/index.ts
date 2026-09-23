@@ -5,7 +5,7 @@
  */
 export { Icon, ICON_SIZES, type IconProps, type IconSize, type IconVariant } from './Icon'
 export { Drop } from './Drop'
+export { brandIcon } from './brandIcon'
 export { GLYPHS, ICON_NAMES, type IconName } from './glyphs'
 export { CATEGORY_ICON, CATEGORY_DROP_CLASS } from './categories'
-// iconToSvgString NO se re-exporta aquí: arrastra react-dom/server. Importar
-// directo desde '@/shared/icons/svgString' solo donde se necesite (Leaflet).
+// iconToSvgString se importa directo desde '@/shared/icons/svgString' (solo Leaflet).

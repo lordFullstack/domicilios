@@ -2,6 +2,8 @@ import { useState, useEffect, ReactNode } from 'react'
 import { BottomSheet } from '@/shared/components/BottomSheet'
 import { Button } from '@/shared/components/Button'
 import { RESTAURANT_CATEGORIES } from '@/config/constants'
+import type { RestaurantCategory } from '@/shared/types'
+import { Icon, CATEGORY_ICON } from '@/shared/icons'
 import { RestaurantFilters, DEFAULT_FILTERS, SORT_OPTIONS } from '../utils/filters'
 
 interface ExploreFilterSheetProps {
@@ -41,10 +43,10 @@ const RadioRow = ({
   </button>
 )
 
-const categoryLabel = (emoji: string, label: string) => (
-  <>
-    <span aria-hidden="true">{emoji}</span> {label}
-  </>
+const categoryLabel = (value: RestaurantCategory, label: string) => (
+  <span className="inline-flex items-center gap-2">
+    <Icon name={CATEGORY_ICON[value]} size="sm" className="text-gray-600" /> {label}
+  </span>
 )
 
 // Los cambios se guardan en un borrador local y solo se aplican de verdad
@@ -94,7 +96,7 @@ export const ExploreFilterSheet = ({ open, filters, onClose, onApply }: ExploreF
           {RESTAURANT_CATEGORIES.map((c) => (
             <RadioRow
               key={c.value}
-              label={categoryLabel(c.emoji, c.label)}
+              label={categoryLabel(c.value, c.label)}
               selected={draft.category === c.value}
               onSelect={() => setDraft({ ...draft, category: c.value })}
             />

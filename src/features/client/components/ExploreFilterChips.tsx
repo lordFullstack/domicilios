@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion'
+import { Icon, CATEGORY_ICON } from '@/shared/icons'
 import { RESTAURANT_CATEGORIES } from '@/config/constants'
 import { RestaurantFilters, countActiveFilters } from '../utils/filters'
 
@@ -49,7 +50,7 @@ export const ExploreFilterChips = ({ filters, onChange, onOpenSheet }: ExploreFi
         className={`${chipBase} ${filters.onlyOpen ? 'bg-primary text-white' : 'bg-gray-50 text-gray-600'}`}
         aria-pressed={filters.onlyOpen}
       >
-        <span aria-hidden="true">🟢</span> Abiertos
+        <span aria-hidden="true" className="h-2 w-2 rounded-full bg-success" /> Abiertos
       </button>
 
       {RESTAURANT_CATEGORIES.map((c) => {
@@ -63,7 +64,7 @@ export const ExploreFilterChips = ({ filters, onChange, onOpenSheet }: ExploreFi
             aria-pressed={active}
             data-category-active={active}
           >
-            <span aria-hidden="true">{c.emoji}</span> {c.label}
+            <Icon name={CATEGORY_ICON[c.value]} size="xs" /> {c.label}
           </button>
         )
       })}

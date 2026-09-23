@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import { ShoppingBag, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
+import { Icon as BrandIcon } from '@/shared/icons'
 import { useCartContext } from '@/shared/hooks/useCartContext'
 import { ROUTES } from '@/config/constants'
 import { formatCOP } from '@/shared/utils/money'
@@ -27,7 +28,7 @@ export const CartFloatingBar = () => {
         className="focus-ring w-full flex items-center justify-between bg-brand-gradient text-white rounded-2xl px-4 py-3.5 shadow-floating active:scale-[0.98] transition-transform"
       >
         <span className="flex items-center gap-2 text-sm font-semibold">
-          <ShoppingBag className="w-4 h-4" aria-hidden="true" />
+          <BrandIcon name="bag" size="sm" variant="onDark" />
           {count} {count === 1 ? 'producto' : 'productos'} · {formatCOP(getTotal())}
         </span>
         <span className="flex items-center gap-0.5 text-sm font-semibold">

@@ -1,5 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { ChevronLeft, UtensilsCrossed } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
+import { Icon, Drop, brandIcon, CATEGORY_ICON, CATEGORY_DROP_CLASS } from '@/shared/icons'
+import { ProductImage } from '@/shared/components/ProductImage'
 import { useProductsByCategory } from '@/hooks/useLocalData'
 import { AppShell } from '@/shared/components/AppShell'
 import { BottomNav } from '@/shared/components/BottomNav'
@@ -29,9 +31,12 @@ export const CategoryResultsPage = () => {
         >
           <ChevronLeft className="w-5 h-5 text-gray-600" />
         </button>
-        <h1 className="font-display text-xl font-bold text-secondary">
-          {categoryInfo?.emoji} {categoryInfo?.label || 'Resultados'}
-        </h1>
+        {categoryInfo && (
+          <Drop size={40} className={CATEGORY_DROP_CLASS[categoryInfo.value]}>
+            <Icon name={CATEGORY_ICON[categoryInfo.value]} size={20} />
+          </Drop>
+        )}
+        <h1 className="font-display text-xl font-bold text-secondary">{categoryInfo?.label || 'Resultados'}</h1>
       </div>
 
       <div className="px-5">
@@ -56,11 +61,9 @@ export const CategoryResultsPage = () => {
                 className="focus-ring flex items-center gap-3 text-left rounded-2xl border border-gray-100 shadow-card p-3 active:scale-[0.98] transition-transform"
               >
                 <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
-                  {product.image_url ? (
-                    <img src={product.image_url} alt={product.name} loading="lazy" className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-2xl">🍽️</span>
-                  )}
+                  {/* ProductImage: foto real, emoji guardado por el restaurante o
+                      ícono de respaldo. Antes un emoji terminaba en <img src="🍕">. */}
+                  <ProductImage imageUrl={product.image_url} alt="" emojiClassName="text-2xl" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-secondary truncate">{product.name}</p>
@@ -81,7 +84,7 @@ export const CategoryResultsPage = () => {
           </div>
         ) : (
           <EmptyState
-            icon={UtensilsCrossed}
+            icon={brandIcon('restaurants')}
             title="No encontramos productos"
             description={`Todavía no hay productos de ${categoryInfo?.label.toLowerCase() || 'esta categoría'} disponibles.`}
           />

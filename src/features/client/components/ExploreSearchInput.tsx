@@ -1,4 +1,5 @@
-import { Search, X } from 'lucide-react'
+import { X } from 'lucide-react'
+import { Icon as BrandIcon } from '@/shared/icons'
 
 interface ExploreSearchInputProps {
   value: string
@@ -9,7 +10,7 @@ export const ExploreSearchInput = ({ value, onChange }: ExploreSearchInputProps)
   return (
     <div className="px-5 pb-3">
       <div className="relative">
-        <Search className="w-4 h-4 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
+        <BrandIcon name="search" size="sm" className="text-gray-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="search"
           inputMode="search"

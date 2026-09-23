@@ -23,6 +23,10 @@ vi.mock('@/hooks/useLocalData', () => ({
   useFavorites: () => ({ isFavorite: () => false, toggleFavorite: vi.fn() }),
   useProductById: () => ({ product: firstCartProduct }),
 }))
+vi.mock('@/shared/hooks/useDeliveryFee', () => ({
+  useDeliveryFee: () => ({ fee: 0 }),
+  deliveryFeeLabel: (fee: number | null) => (fee === 0 ? 'Envío gratis' : null),
+}))
 vi.mock('@/shared/hooks/usePromotions', () => ({ usePromotions: () => ({ promotions: promos, loading: false }) }))
 vi.mock('@/shared/utils/supabase', () => ({
   supabase: { from: () => ({ select: () => ({ in: (_: string, ids: string[]) => Promise.resolve({ data: ids.map((id) => ({ id })) }) }) }) },
