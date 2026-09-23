@@ -31,7 +31,7 @@ export const RestaurantsGrid = ({ restaurants, loading, error, onRetry }: Restau
           icon={AlertTriangle}
           title="Algo salió mal"
           description="No pudimos cargar los restaurantes."
-          action={<Button variant="outline" onClick={onRetry}>Intentar nuevamente</Button>}
+          action={<Button variant="tertiary" onClick={onRetry}>Intentar nuevamente</Button>}
         />
       ) : restaurants.length > 0 ? (
         <>

@@ -59,7 +59,7 @@ export const CartPage = () => {
           illustration="emptyCart"
           title="Tu carrito está vacío"
           description="Explora restaurantes y encuentra algo delicioso."
-          action={<Button onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>Explorar restaurantes</Button>}
+          action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>Explorar restaurantes</Button>}
         />
 
         <BottomNav />
@@ -101,7 +101,7 @@ export const CartPage = () => {
           Se eliminarán los {cart.length} {cart.length === 1 ? 'producto' : 'productos'} de tu carrito.
         </p>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setClearConfirmOpen(false)} className="flex-1">
+          <Button variant="tertiary" onClick={() => setClearConfirmOpen(false)} className="flex-1">
             Cancelar
           </Button>
           <Button
@@ -156,7 +156,7 @@ export const CartPage = () => {
         <DeliveryFeeRow fee={deliveryFee} className="mb-3" />
         <div className="flex justify-between font-display font-bold mb-4 text-secondary">
           <span>Total</span>
-          <span className="text-coral">{formatCOP(total)}</span>
+          <span className="text-brand-700">{formatCOP(total)}</span>
         </div>
         <Button
           variant="gradient"
@@ -200,7 +200,7 @@ const CartItemRow = ({
       <div className="flex-1 min-w-0 flex flex-col gap-1.5">
         <p className="font-semibold text-sm text-secondary line-clamp-2">{product.name}</p>
         <div className="flex items-center justify-between gap-2">
-          <p className="text-xs font-bold text-coral">{formatCOP(product.price)}</p>
+          <p className="text-xs text-ink font-semibold">{formatCOP(product.price)}</p>
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className="flex items-center gap-1.5 bg-gray-50 rounded-full px-1.5 py-1">
               <button
@@ -214,7 +214,7 @@ const CartItemRow = ({
               <button
                 onClick={() => onChangeQty(item.productId, 1, item.quantity)}
                 aria-label="Aumentar cantidad"
-                className="touch-target focus-ring w-8 h-8 rounded-full flex items-center justify-center text-white bg-coral active:scale-90 transition-transform"
+                className="touch-target focus-ring w-8 h-8 rounded-full flex items-center justify-center text-white bg-brand-700 active:scale-90 transition-transform"
               >
                 <Plus className="w-3 h-3" />
               </button>

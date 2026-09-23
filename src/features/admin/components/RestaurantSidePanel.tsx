@@ -105,7 +105,7 @@ export const RestaurantSidePanel = ({ restaurant, onClose, onSave }: RestaurantS
           </p>
         </div>
 
-        {error && <p className="text-danger text-xs px-6">{error}</p>}
+        {error && <p className="text-danger text-sm px-6">{error}</p>}
 
         <div className="flex gap-3 p-6 border-t border-gray-100">
           <Button variant="outline" fullWidth onClick={onClose} disabled={saving}>

@@ -95,7 +95,7 @@ export const DeliveryFeeCard = () => {
             </div>
           )}
 
-          <p id="delivery-fee-help" className={`text-xs mt-2 ${valid ? 'text-gray-500' : 'text-danger'}`}>
+          <p id="delivery-fee-help" className={`text-sm mt-2 ${valid ? 'text-gray-500' : 'text-danger'}`}>
             {valid
               ? `Entero entre $0 y ${formatCOP(MAX_DELIVERY_FEE)}.`
               : `Escribe un valor entero entre $0 y ${formatCOP(MAX_DELIVERY_FEE)}.`}

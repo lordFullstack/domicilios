@@ -11,9 +11,9 @@ const STATUS_LABEL: Record<string, { label: string; color: string }> = {
   [ORDER_STATUS.PENDING]: { label: 'Pendiente', color: 'text-gray-500 bg-gray-100' },
   [ORDER_STATUS.CONFIRMED]: { label: 'Confirmada', color: 'text-primary bg-primary/10' },
   [ORDER_STATUS.PREPARING]: { label: 'Preparando', color: 'text-primary bg-primary/10' },
-  [ORDER_STATUS.READY]: { label: 'Lista', color: 'text-warning bg-warning/10' },
-  [ORDER_STATUS.IN_DELIVERY]: { label: 'En camino', color: 'text-warning bg-warning/10' },
-  [ORDER_STATUS.DELIVERED]: { label: 'Entregada', color: 'text-success bg-success/10' },
+  [ORDER_STATUS.READY]: { label: 'Lista', color: 'text-warning-strong bg-warning/10' },
+  [ORDER_STATUS.IN_DELIVERY]: { label: 'En camino', color: 'text-warning-strong bg-warning/10' },
+  [ORDER_STATUS.DELIVERED]: { label: 'Entregada', color: 'text-success-strong bg-success/10' },
   [ORDER_STATUS.CANCELLED]: { label: 'Cancelada', color: 'text-danger bg-danger/10' },
 }
 

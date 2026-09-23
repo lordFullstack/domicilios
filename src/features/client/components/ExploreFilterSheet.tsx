@@ -122,10 +122,10 @@ export const ExploreFilterSheet = ({ open, filters, onClose, onApply }: ExploreF
         </button>
 
         <div className="flex gap-3 mt-5">
-          <Button variant="outline" onClick={handleClear} className="flex-1">
+          <Button variant="tertiary" onClick={handleClear} className="flex-1">
             Limpiar
           </Button>
-          <Button onClick={handleApply} className="flex-1">
+          <Button variant="solid" onClick={handleApply} className="flex-1">
             Aplicar filtros
           </Button>
         </div>

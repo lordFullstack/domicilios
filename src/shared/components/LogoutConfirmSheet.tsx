@@ -32,7 +32,7 @@ export const LogoutConfirmSheet = ({ open, onClose, onConfirm }: LogoutConfirmSh
           onClick={handleConfirm}
           loading={loggingOut}
           disabled={loggingOut}
-          className="flex-1 !bg-danger"
+          className="flex-1 !bg-danger !font-bold"
         >
           Cerrar sesión
         </Button>

@@ -34,7 +34,7 @@ export const ConfirmDialog = ({
           </Button>
           <Button
             variant={danger ? 'primary' : 'primary'}
-            className={danger ? 'bg-danger hover:bg-danger/90' : ''}
+            className={danger ? 'bg-danger hover:bg-danger/90 !font-bold' : ''}
             fullWidth
             loading={loading}
             onClick={onConfirm}

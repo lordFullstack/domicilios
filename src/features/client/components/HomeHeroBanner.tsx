@@ -23,7 +23,7 @@ export const HomeHeroBanner = () => {
         <p className="font-display font-extrabold text-lg text-white leading-snug max-w-[70%]">
           Los mejores sabores en un solo lugar
         </p>
-        <span className="inline-flex items-center gap-1.5 mt-4 bg-white text-primary font-semibold text-sm px-4 py-2 rounded-full">
+        <span className="inline-flex items-center gap-1.5 mt-4 bg-white text-brand-700 font-semibold text-sm px-4 py-2 rounded-full">
           Explorar
           <ArrowRight className="w-4 h-4" aria-hidden="true" />
         </span>

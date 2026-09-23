@@ -142,7 +142,7 @@ export const DeliveryProfilePage = () => {
       </div>
 
       {message && (
-        <div className="mx-5 mb-4 bg-green-50 text-success text-sm font-semibold rounded-2xl p-3">
+        <div className="mx-5 mb-4 bg-green-50 text-success-strong text-sm font-semibold rounded-2xl p-3">
           {message}
         </div>
       )}

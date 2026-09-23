@@ -55,7 +55,7 @@ export const AdminOrdersPage = () => {
           {orders.length} de {allOrders.length} pedido(s)
         </p>
         {mayBeIncomplete && (
-          <p className="text-xs text-warning mb-4">
+          <p className="text-xs text-warning-strong mb-4">
             Mostrando hasta 200 pedidos más recientes — el total real podría ser mayor.
           </p>
         )}

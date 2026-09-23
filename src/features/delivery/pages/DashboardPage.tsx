@@ -179,12 +179,12 @@ export const DeliveryDashboard = () => {
           <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Mi Entrega Actual</h2>
 
           {locationError ? (
-            <div className="flex items-center gap-2 bg-red-50 text-danger text-xs font-semibold rounded-2xl p-3 mb-3" role="alert">
+            <div className="flex items-center gap-2 bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3 mb-3" role="alert">
               <MapPinOff className="w-4 h-4 flex-shrink-0" />
               {locationError}
             </div>
           ) : sharingLocation ? (
-            <div className="flex items-center gap-2 bg-green-50 text-success text-xs font-semibold rounded-2xl p-3 mb-3">
+            <div className="flex items-center gap-2 bg-green-50 text-success-strong text-xs font-semibold rounded-2xl p-3 mb-3">
               <MapPin className="w-4 h-4 flex-shrink-0" />
               Compartiendo tu ubicación con el cliente
             </div>
@@ -237,7 +237,7 @@ export const DeliveryDashboard = () => {
                   <p className="text-xs text-gray-500 truncate">{order.delivery_address}</p>
                 </div>
                 <div className="text-right flex-shrink-0 ml-2">
-                  <p className="text-success font-semibold text-xs">Entregada</p>
+                  <p className="text-success-strong font-semibold text-xs">Entregada</p>
                   <p className="text-xs text-gray-500">{formatCOP(order.total)}</p>
                 </div>
               </div>

@@ -82,7 +82,7 @@ export const AdminUsersPage = () => {
                     <td className="px-4 py-3">
                       <span
                         className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                          u.active ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
+                          u.active ? 'bg-success/10 text-success-strong' : 'bg-danger/10 text-danger'
                         }`}
                       >
                         {u.active ? 'Activo' : 'Desactivado'}

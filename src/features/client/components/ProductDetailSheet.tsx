@@ -87,6 +87,7 @@ export const ProductDetailSheet = ({
         )}
 
         <Button
+          variant="solid"
           fullWidth
           size="lg"
           disabled={!canAdd}

@@ -45,7 +45,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-sm text-gray-500 mb-6">
               Estamos intentando recuperar la aplicación.
             </p>
-            <Button onClick={this.handleRetry}>Reintentar</Button>
+            <Button variant="gradient" onClick={this.handleRetry}>Reintentar</Button>
           </div>
         </div>
       )

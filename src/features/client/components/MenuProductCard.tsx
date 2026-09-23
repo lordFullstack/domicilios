@@ -65,7 +65,7 @@ export const MenuProductCard = ({
                 {product.name}
               </span>
               <span className="mt-1 line-clamp-2 text-xs leading-5 text-gray-500">{product.description}</span>
-              <span className="mt-2 block text-base font-bold text-coral">{price}</span>
+              <span className="mt-2 block text-base font-semibold text-ink">{price}</span>
             </span>
           </button>
 
@@ -103,7 +103,7 @@ export const MenuProductCard = ({
                 onClick={add}
                 disabled={quantity >= MAX_ITEM_QUANTITY}
                 aria-label={`Agregar otra unidad de ${product.name}, ${price}`}
-                className="touch-target focus-ring flex h-8 w-8 items-center justify-center rounded-full bg-coral text-white shadow-sm active:scale-90 transition-transform disabled:opacity-40"
+                className="touch-target focus-ring flex h-8 w-8 items-center justify-center rounded-full bg-brand-700 text-white shadow-sm active:scale-90 transition-transform disabled:opacity-40"
               >
                 {flash ? <Check className="h-4 w-4" aria-hidden="true" /> : <Plus className="h-4 w-4" aria-hidden="true" />}
               </button>
@@ -113,7 +113,7 @@ export const MenuProductCard = ({
               type="button"
               onClick={add}
               aria-label={`Agregar ${product.name} al carrito, ${price}`}
-              className="touch-target focus-ring flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-coral text-white shadow-sm active:scale-90 transition-transform"
+              className="touch-target focus-ring flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-brand-700 text-white shadow-sm active:scale-90 transition-transform"
             >
               <Plus className="h-5 w-5" aria-hidden="true" />
             </button>

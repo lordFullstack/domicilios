@@ -20,7 +20,7 @@ export const RestaurantsCardList = ({ restaurants, onEdit, onToggleApproval }: R
           <div className="flex flex-col items-end gap-1">
             <span
               className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                r.status === 'open' ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'
+                r.status === 'open' ? 'bg-success/10 text-success-strong' : 'bg-gray-100 text-gray-500'
               }`}
             >
               {r.status === 'open' ? '🟢 Abierto' : '🔴 Cerrado'}

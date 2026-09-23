@@ -57,7 +57,7 @@ export const RestaurantAccountPage = () => {
           <Input label="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
           <p className="text-xs text-gray-500 mt-2">{user?.email}</p>
 
-          {error && <p className="text-danger text-xs mt-2">{error}</p>}
+          {error && <p className="text-danger text-sm mt-2">{error}</p>}
 
           {hasChanges && (
             <Button size="sm" loading={saving} onClick={handleSave} className="mt-3">

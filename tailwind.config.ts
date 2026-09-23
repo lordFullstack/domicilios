@@ -56,6 +56,7 @@ export default {
         success: { DEFAULT: '#10B981', strong: '#047857' },
         warning: { DEFAULT: '#F59E0B', strong: '#92400E' },
         danger:  '#EF4444',
+        // DEPRECATED (LOOP_VISUAL_04): sin usos; no falla AA como texto (2.77:1). No usar.
         info:    '#0EA5E9',
 
         // Tintes por categoría (fila de categorías del Home). Antes eran

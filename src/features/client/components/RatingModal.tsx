@@ -68,10 +68,11 @@ export const RatingModal = ({
       />
 
       <div className="flex gap-3">
-        <Button variant="outline" onClick={onClose} className="flex-1">
+        <Button variant="tertiary" onClick={onClose} className="flex-1">
           Ahora no
         </Button>
         <Button
+          variant="solid"
           onClick={() => onSubmit(restaurantRating, deliveryRating || undefined, comment)}
           disabled={!canSubmit || submitting}
           className="flex-1"

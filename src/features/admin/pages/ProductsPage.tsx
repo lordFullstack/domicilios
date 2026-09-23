@@ -192,7 +192,7 @@ export const AdminProductsPage = () => {
                                   {deleteConfirmId === product.id ? (
                                     <button
                                       onClick={() => handleDelete(product.id)}
-                                      className="text-xs font-semibold text-white bg-danger px-2 rounded-full"
+                                      className="text-xs font-bold text-white bg-danger px-2 rounded-full"
                                     >
                                       Confirmar
                                     </button>

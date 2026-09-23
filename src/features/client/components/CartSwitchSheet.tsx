@@ -18,10 +18,10 @@ export const CartSwitchSheet = ({ open, onCancel, onConfirm }: CartSwitchSheetPr
       producto en su lugar.
     </p>
     <div className="flex gap-3">
-      <Button variant="outline" onClick={onCancel} className="flex-1">
+      <Button variant="tertiary" onClick={onCancel} className="flex-1">
         Cancelar
       </Button>
-      <Button onClick={onConfirm} className="flex-1">
+      <Button variant="solid" onClick={onConfirm} className="flex-1">
         Vaciar y agregar
       </Button>
     </div>

@@ -37,7 +37,7 @@ export const OrderSummaryCard = ({
     )}
     <div className="flex items-center justify-between mb-3">
       <span className="font-display font-bold text-secondary">Total</span>
-      <span className="font-display font-bold text-lg text-coral">{formatCOP(total)}</span>
+      <span className="font-display font-semibold text-lg text-ink">{formatCOP(total)}</span>
     </div>
 
     <button onClick={onViewDetails} className="focus-ring text-sm font-semibold text-primary">

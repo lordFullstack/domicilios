@@ -18,15 +18,15 @@ export const CancelOrderSheet = ({ open, cancelling, error, onClose, onConfirm }
     )}
 
     <div className="flex gap-3">
-      <Button variant="outline" onClick={onClose} disabled={cancelling} className="flex-1">
+      <Button variant="tertiary" onClick={onClose} disabled={cancelling} className="flex-1">
         Volver
       </Button>
       <Button
-        variant="secondary"
+        variant="danger"
         onClick={onConfirm}
         loading={cancelling}
         disabled={cancelling}
-        className="flex-1 !bg-danger"
+        className="flex-1"
       >
         {cancelling ? 'Cancelando...' : 'Cancelar pedido'}
       </Button>

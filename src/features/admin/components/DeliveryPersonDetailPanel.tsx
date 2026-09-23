@@ -19,9 +19,9 @@ interface DeliveryPersonDetailPanelProps {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  [ORDER_STATUS.DELIVERED]: 'bg-success/10 text-success',
+  [ORDER_STATUS.DELIVERED]: 'bg-success/10 text-success-strong',
   [ORDER_STATUS.CANCELLED]: 'bg-danger/10 text-danger',
-  [ORDER_STATUS.IN_DELIVERY]: 'bg-warning/10 text-warning',
+  [ORDER_STATUS.IN_DELIVERY]: 'bg-warning/10 text-warning-strong',
 }
 
 export const DeliveryPersonDetailPanel = ({
@@ -100,7 +100,7 @@ export const DeliveryPersonDetailPanel = ({
             )}
             <span
               className={`inline-block mt-2 px-2 py-0.5 rounded-full text-xs font-semibold ${
-                deliveryPerson.active ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
+                deliveryPerson.active ? 'bg-success/10 text-success-strong' : 'bg-danger/10 text-danger'
               }`}
             >
               {deliveryPerson.active ? 'Activo' : 'Desactivado'}
@@ -115,7 +115,7 @@ export const DeliveryPersonDetailPanel = ({
                 <p className="text-[11px] text-gray-500">Entregas</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">
-                <p className="font-display font-bold text-warning">{stats.activeOrders.length}</p>
+                <p className="font-display font-bold text-warning-strong">{stats.activeOrders.length}</p>
                 <p className="text-[11px] text-gray-500">En camino</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">

@@ -102,7 +102,7 @@ export const RestaurantDetailPage = () => {
           icon={AlertTriangle}
           title="No pudimos cargar este restaurante"
           description="Revisa tu conexión e intenta de nuevo."
-          action={<Button onClick={restaurantQuery.reload}>Reintentar</Button>}
+          action={<Button variant="gradient" onClick={restaurantQuery.reload}>Reintentar</Button>}
         />
       </FullScreen>
     )
@@ -117,7 +117,7 @@ export const RestaurantDetailPage = () => {
           description="Puede que el enlace esté mal o que ya no exista."
           action={
             <div className="flex flex-col gap-2">
-              <Button onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>Explorar restaurantes</Button>
+              <Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>Explorar restaurantes</Button>
               <Button variant="ghost" onClick={() => navigate(ROUTES.CLIENT_HOME)}>
                 Volver al inicio
               </Button>
@@ -137,7 +137,7 @@ export const RestaurantDetailPage = () => {
           icon={Ban}
           title="Restaurante no disponible"
           description="Este restaurante está temporalmente suspendido y no puede recibir pedidos."
-          action={<Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>}
+          action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>}
         />
       </FullScreen>
     )
@@ -159,7 +159,7 @@ export const RestaurantDetailPage = () => {
           icon={AlertTriangle}
           title="No pudimos cargar el menú"
           description="Revisa tu conexión e intenta de nuevo."
-          action={<Button variant="outline" onClick={productsQuery.reload}>Reintentar</Button>}
+          action={<Button variant="tertiary" onClick={productsQuery.reload}>Reintentar</Button>}
         />
       )
     }

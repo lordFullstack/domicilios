@@ -22,7 +22,7 @@ export default defineConfig({
         name: 'Domicilios Riohacha',
         short_name: 'Domicilios',
         description: 'Pide a domicilio en Riohacha — rápido, fácil y sin filas.',
-        theme_color: '#2F5EFF',
+        theme_color: '#1C2459',
         background_color: '#FFFFFF',
         display: 'standalone',
         orientation: 'portrait',

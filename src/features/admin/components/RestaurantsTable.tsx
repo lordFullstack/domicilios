@@ -28,7 +28,7 @@ export const RestaurantsTable = ({ restaurants, onEdit, onToggleApproval }: Rest
           <td className="py-3 px-2">
             <span
               className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                r.status === 'open' ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-500'
+                r.status === 'open' ? 'bg-success/10 text-success-strong' : 'bg-gray-100 text-gray-500'
               }`}
             >
               {r.status === 'open' ? '🟢 Abierto' : '🔴 Cerrado'}

@@ -15,7 +15,7 @@ interface ClientDetailPanelProps {
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  [ORDER_STATUS.DELIVERED]: 'bg-success/10 text-success',
+  [ORDER_STATUS.DELIVERED]: 'bg-success/10 text-success-strong',
   [ORDER_STATUS.CANCELLED]: 'bg-danger/10 text-danger',
 }
 
@@ -80,7 +80,7 @@ export const ClientDetailPanel = ({
             </p>
             <span
               className={`inline-block mt-2 px-2 py-0.5 rounded-full text-xs font-semibold ${
-                client.active ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
+                client.active ? 'bg-success/10 text-success-strong' : 'bg-danger/10 text-danger'
               }`}
             >
               {client.active ? 'Activo' : 'Desactivado'}

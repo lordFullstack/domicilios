@@ -59,7 +59,7 @@ export const AdminReportsPage = () => {
             <h1 className="font-display text-2xl font-bold text-secondary mb-1">Finanzas y Reportes</h1>
             <p className="text-sm text-gray-500">Ventas, pedidos y desempeño reales de la plataforma</p>
             {mayBeIncomplete && (
-              <p className="text-xs text-warning mt-1">
+              <p className="text-xs text-warning-strong mt-1">
                 Mostrando hasta 200 pedidos más recientes — el total real podría ser mayor.
               </p>
             )}
@@ -86,7 +86,7 @@ export const AdminReportsPage = () => {
               <KpiCard value={formatCOP(stats.totalRevenue)} label="Ventas (entregados)" colorClass="text-primary" />
               <KpiCard value={stats.totalOrders} label="Pedidos en el periodo" />
               <KpiCard value={formatCOP(Math.round(stats.averageTicket))} label="Ticket promedio" />
-              <KpiCard value={stats.deliveredOrders.length} label="Domicilios completados" colorClass="text-success" />
+              <KpiCard value={stats.deliveredOrders.length} label="Domicilios completados" colorClass="text-success-strong" />
             </div>
 
             <div className="grid md:grid-cols-2 gap-6 mb-8">

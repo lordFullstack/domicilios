@@ -54,7 +54,7 @@ export const AddressSheet = ({ open, initialDraft, onClose, onSave }: AddressShe
             onChange={(e) => setDraft({ ...draft, street: e.target.value })}
           />
           {touched && !isValid && (
-            <p className="text-xs text-danger mt-1">
+            <p className="text-sm text-danger mt-1">
               Escribe una dirección más específica (mínimo 5 caracteres).
             </p>
           )}
@@ -81,7 +81,7 @@ export const AddressSheet = ({ open, initialDraft, onClose, onSave }: AddressShe
           />
         </div>
 
-        <Button fullWidth size="lg" onClick={handleSave}>
+        <Button variant="solid" fullWidth size="lg" onClick={handleSave}>
           Guardar dirección
         </Button>
       </div>

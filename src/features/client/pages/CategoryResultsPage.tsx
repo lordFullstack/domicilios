@@ -74,7 +74,7 @@ export const CategoryResultsPage = () => {
                 </div>
                 <span
                   className={`text-xs flex-shrink-0 ${
-                    product.restaurant.status === 'open' ? 'text-success' : 'text-danger'
+                    product.restaurant.status === 'open' ? 'text-success-strong' : 'text-danger'
                   }`}
                 >
                   {product.restaurant.status === 'open' ? 'Abierto' : 'Cerrado'}

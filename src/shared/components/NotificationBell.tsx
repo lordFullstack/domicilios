@@ -117,11 +117,11 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
                   key={n.id}
                   onClick={() => handleNotificationClick(n.id, n.order_id)}
                   className={`w-full text-left px-4 py-3 border-b border-gray-50 last:border-0 transition-colors ${
-                    n.read ? 'bg-white' : 'bg-coral/5'
+                    n.read ? 'bg-white' : 'bg-danger/10'
                   }`}
                 >
                   <div className="flex items-start gap-2">
-                    {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-coral mt-1.5 flex-shrink-0" />}
+                    {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-danger mt-1.5 flex-shrink-0" />}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-secondary">{n.title}</p>
                       <p className="text-xs text-gray-500 mt-0.5">{n.body}</p>

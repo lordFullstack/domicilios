@@ -37,7 +37,7 @@ const FeaturedCard = ({ product, quantity, restaurantIsOpen, onOpenDetail, onAdd
         </span>
         <span className="block p-2.5 pr-12">
           <span className="block truncate font-display text-xs font-bold text-secondary">{product.name}</span>
-          <span className="mt-0.5 block text-xs font-bold text-coral">{price}</span>
+          <span className="mt-0.5 block text-xs font-semibold text-ink">{price}</span>
         </span>
       </button>
 
@@ -48,7 +48,7 @@ const FeaturedCard = ({ product, quantity, restaurantIsOpen, onOpenDetail, onAdd
           aria-label={`Agregar ${product.name} al carrito, ${price}${quantity > 0 ? `. Ya tienes ${quantity}` : ''}`}
           className="touch-target focus-ring absolute bottom-1.5 right-1.5 flex items-center justify-center rounded-full active:scale-90 transition-transform"
         >
-          <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-coral text-white shadow-sm">
+          <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-brand-700 text-white shadow-sm">
             {flash ? <Check className="h-4 w-4" aria-hidden="true" /> : <Plus className="h-4 w-4" aria-hidden="true" />}
             {quantity > 0 && (
               <span
@@ -79,7 +79,7 @@ export const FeaturedProductStrip = ({ products, getQuantity, ...rest }: Feature
         id="featured-products-title"
         className="mb-2 flex items-center gap-1.5 font-display text-base font-bold text-secondary"
       >
-        <Flame className="h-4 w-4 text-coral" fill="currentColor" aria-hidden="true" />
+        <Flame className="h-4 w-4 text-brand-700" fill="currentColor" aria-hidden="true" />
         Recomendados
       </h2>
       <ul role="list" className="no-scrollbar flex gap-3 overflow-x-auto pb-1">

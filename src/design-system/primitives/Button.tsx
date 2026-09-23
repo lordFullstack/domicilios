@@ -30,7 +30,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   ghost:
     'bg-transparent text-ink-muted hover:bg-surface-muted hover:text-ink dark:hover:bg-white/[0.06] dark:hover:text-white',
   danger:
-    'bg-danger text-white shadow-[0_4px_12px_rgba(239,68,68,0.25)] hover:bg-red-600',
+    'bg-danger text-white !font-bold shadow-[0_4px_12px_rgba(239,68,68,0.25)] hover:bg-red-600',
   gradient:
     'bg-brand-gradient text-white shadow-[0_8px_24px_rgba(244,101,44,0.35)] hover:opacity-95',
 }

@@ -2,17 +2,16 @@ import { HTMLAttributes } from 'react'
 import clsx from 'clsx'
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'promo'
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'promo'
 }
 
 const variants = {
   default: 'bg-gray-100 text-gray-600',
-  success: 'bg-success/10 text-success',
-  warning: 'bg-warning/10 text-warning',
+  success: 'bg-success/10 text-success-strong',
+  warning: 'bg-warning/10 text-warning-strong',
   danger: 'bg-danger/10 text-danger',
-  info: 'bg-info/10 text-info',
-  // Acento coral — badges de promo/destacado ("Más pedido", "Nuevo").
-  promo: 'bg-coral/10 text-coral',
+  // Acento de marca — badges de promo/destacado ("Más pedido", "Nuevo").
+  promo: 'bg-brand-50 text-brand-700',
 }
 
 /**

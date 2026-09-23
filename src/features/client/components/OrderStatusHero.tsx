@@ -38,7 +38,7 @@ interface OrderStatusHeroProps {
 }
 
 const colorByStatus = (status: OrderStatus) => {
-  if (status === ORDER_STATUS.DELIVERED) return 'bg-success/10 text-success'
+  if (status === ORDER_STATUS.DELIVERED) return 'bg-success/10 text-success-strong'
   if (status === ORDER_STATUS.CANCELLED) return 'bg-danger/10 text-danger'
   return 'bg-primary/10 text-primary'
 }

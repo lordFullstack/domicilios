@@ -82,7 +82,7 @@ export const CheckoutPage = () => {
           icon={ShoppingBag}
           title="Tu carrito está vacío"
           description="No hay productos para ordenar."
-          action={<Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>}
+          action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>}
         />
       </div>
     )
@@ -256,14 +256,14 @@ export const CheckoutPage = () => {
       {/* CTA fijo abajo, con el total siempre visible */}
       <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 px-5 pt-3 pb-5 safe-bottom">
         {isOffline && (
-          <div className="flex items-center gap-2 bg-red-50 text-danger text-xs font-semibold rounded-xl p-2.5 mb-3" role="alert">
+          <div className="flex items-center gap-2 bg-red-50 text-danger text-sm font-semibold rounded-xl p-2.5 mb-3" role="alert">
             <WifiOff className="w-3.5 h-3.5 flex-shrink-0" />
             Sin conexión — tu carrito está guardado
           </div>
         )}
         <div className="flex justify-between font-display font-bold mb-3 text-secondary">
           <span>Total</span>
-          <span className="text-coral">{formatCOP(total)}</span>
+          <span className="text-brand-700">{formatCOP(total)}</span>
         </div>
         <Button
           variant="gradient"

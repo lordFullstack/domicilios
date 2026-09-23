@@ -21,11 +21,11 @@ export const DeliveryStatsGrid = ({ availableCount, activeCount, completedToday 
         <p className="text-gray-500 text-xs mt-1">Disponibles</p>
       </div>
       <div className="border border-gray-100 rounded-2xl text-center py-4">
-        <p className="text-2xl font-display font-bold text-warning">{activeCount}</p>
+        <p className="text-2xl font-display font-bold text-warning-strong">{activeCount}</p>
         <p className="text-gray-500 text-xs mt-1">En camino</p>
       </div>
       <div className="border border-gray-100 rounded-2xl text-center py-4">
-        <p className="text-2xl font-display font-bold text-success">{completedToday.length}</p>
+        <p className="text-2xl font-display font-bold text-success-strong">{completedToday.length}</p>
         <p className="text-gray-500 text-xs mt-1">Entregadas hoy</p>
       </div>
       <div className="border border-gray-100 rounded-2xl text-center py-4">

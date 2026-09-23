@@ -229,7 +229,7 @@ export const RestaurantDashboard = () => {
       {/* Estadísticas */}
       <div className="grid grid-cols-2 gap-3 px-5 mb-4 md:grid-cols-4 md:max-w-4xl md:mx-auto md:px-0">
         <Card className="text-center py-4">
-          <p className="text-2xl font-display font-bold text-warning">{pendingOrders.length}</p>
+          <p className="text-2xl font-display font-bold text-warning-strong">{pendingOrders.length}</p>
           <p className="text-gray-500 text-xs mt-1">Pendientes</p>
         </Card>
         <Card className="text-center py-4">
@@ -237,7 +237,7 @@ export const RestaurantDashboard = () => {
           <p className="text-gray-500 text-xs mt-1">Activas</p>
         </Card>
         <Card className="text-center py-4">
-          <p className="text-2xl font-display font-bold text-success">{deliveredToday.length}</p>
+          <p className="text-2xl font-display font-bold text-success-strong">{deliveredToday.length}</p>
           <p className="text-gray-500 text-xs mt-1">Entregadas hoy</p>
         </Card>
         <Card className="text-center py-4">

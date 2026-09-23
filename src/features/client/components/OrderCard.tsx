@@ -49,7 +49,7 @@ const getStatusColor = (status: string): string => {
     case ORDER_STATUS.IN_DELIVERY:
       return 'bg-primary/10 text-primary'
     case ORDER_STATUS.DELIVERED:
-      return 'bg-success/10 text-success'
+      return 'bg-success/10 text-success-strong'
     case ORDER_STATUS.CANCELLED:
       return 'bg-danger/10 text-danger'
     default:
@@ -105,7 +105,7 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
             <span className="text-xs text-gray-500">
               {order.delivery_person_id ? 'Domiciliario asignado' : 'Sin domiciliario'}
             </span>
-            <span className="font-display font-bold text-coral">{formatCOP(order.total)}</span>
+            <span className="font-display font-semibold text-ink">{formatCOP(order.total)}</span>
           </div>
         </div>
       </div>

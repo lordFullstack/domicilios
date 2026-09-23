@@ -40,7 +40,7 @@ export const RestaurantLoadError = ({ kind, onRetry, retrying }: RestaurantLoadE
       title={title}
       description={description}
       action={
-        <Button variant="outline" onClick={onRetry} loading={retrying}>
+        <Button variant="tertiary" onClick={onRetry} loading={retrying}>
           Reintentar
         </Button>
       }

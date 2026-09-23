@@ -70,10 +70,10 @@ export const ClientAccountPage = () => {
         <div className="border border-gray-100 rounded-2xl p-4">
           <Input label="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
 
-          {error && <p className="text-danger text-xs mt-2">{error}</p>}
+          {error && <p className="text-danger text-sm mt-2">{error}</p>}
 
           {hasChanges && (
-            <Button size="sm" loading={saving} onClick={handleSave} className="mt-3">
+            <Button variant="solid" size="sm" loading={saving} onClick={handleSave} className="mt-3">
               {saved ? (
                 <span className="inline-flex items-center gap-1">
                   <Check className="h-4 w-4" aria-hidden="true" /> Guardado
@@ -100,7 +100,7 @@ export const ClientAccountPage = () => {
             <BrandIcon name="bell" size="sm" className="text-gray-500" />
             Notificaciones
             {unreadCount > 0 && (
-              <span className="bg-coral text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="bg-danger text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}

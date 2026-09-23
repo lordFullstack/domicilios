@@ -76,7 +76,7 @@ export const OrderDetailPage = () => {
     return (
       <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex flex-col items-center justify-center px-8 text-center">
         <p className="text-gray-500 text-sm mb-4">Orden no encontrada</p>
-        <Button onClick={() => navigate(ROUTES.CLIENT_ORDERS)}>Volver a mis órdenes</Button>
+        <Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_ORDERS)}>Volver a mis órdenes</Button>
       </div>
     )
   }
@@ -210,7 +210,7 @@ export const OrderDetailPage = () => {
 
         {/* Acciones según estado */}
         {canCancel && (
-          <Button variant="outline" fullWidth onClick={() => setCancelSheetOpen(true)} className="mb-4">
+          <Button variant="dangerOutline" fullWidth onClick={() => setCancelSheetOpen(true)} className="mb-4">
             Cancelar pedido
           </Button>
         )}
@@ -218,7 +218,7 @@ export const OrderDetailPage = () => {
         {isDelivered && !ratingLoading && (
           <div className="flex flex-col gap-3">
             <Button
-              variant="outline"
+              variant="tertiary"
               fullWidth
               onClick={handleReorder}
             >
@@ -265,10 +265,11 @@ export const OrderDetailPage = () => {
           este pedido en su lugar.
         </p>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => setReorderConfirmOpen(false)} className="flex-1">
+          <Button variant="tertiary" onClick={() => setReorderConfirmOpen(false)} className="flex-1">
             Cancelar
           </Button>
           <Button
+            variant="solid"
             onClick={() => {
               clear()
               actuallyReorder()

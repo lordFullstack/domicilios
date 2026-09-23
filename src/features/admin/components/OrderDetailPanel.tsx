@@ -196,7 +196,7 @@ export const OrderDetailPanel = ({
                 <Button
                   fullWidth
                   loading={saving}
-                  className="!bg-danger"
+                  className="!bg-danger !font-bold"
                   onClick={() => {
                     setConfirmCancel(false)
                     applyChanges()

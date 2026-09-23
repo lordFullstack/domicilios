@@ -113,7 +113,7 @@ export const AdminClientsPage = () => {
                     <div className="text-right flex-shrink-0">
                       <p className="text-sm font-semibold text-secondary">{clientOrders.length} pedidos</p>
                       <span
-                        className={`text-xs font-semibold ${client.active ? 'text-success' : 'text-danger'}`}
+                        className={`text-sm font-semibold ${client.active ? 'text-success-strong' : 'text-danger'}`}
                       >
                         {client.active ? 'Activo' : 'Desactivado'}
                       </span>

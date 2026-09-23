@@ -22,11 +22,11 @@ export const NotFound = () => {
       </p>
       {!loading &&
         (isAuthenticated ? (
-          <Button size="lg" onClick={() => navigate(ROUTES.CLIENT_HOME, { replace: true })}>
+          <Button variant="gradient" size="lg" onClick={() => navigate(ROUTES.CLIENT_HOME, { replace: true })}>
             Volver al inicio
           </Button>
         ) : (
-          <Button size="lg" onClick={() => navigate(ROUTES.LOGIN, { replace: true })}>
+          <Button variant="gradient" size="lg" onClick={() => navigate(ROUTES.LOGIN, { replace: true })}>
             Iniciar sesión
           </Button>
         ))}

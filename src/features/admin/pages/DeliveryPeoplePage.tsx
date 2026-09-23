@@ -158,7 +158,7 @@ export const AdminDeliveryPeoplePage = () => {
                             {d.rating_avg.toFixed(1)}
                           </span>
                         )}
-                        <span className={`text-xs font-semibold ${d.active ? 'text-success' : 'text-danger'}`}>
+                        <span className={`text-sm font-semibold ${d.active ? 'text-success-strong' : 'text-danger'}`}>
                           {d.active ? 'Activo' : 'Desactivado'}
                         </span>
                       </div>

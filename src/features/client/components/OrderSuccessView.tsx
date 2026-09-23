@@ -31,7 +31,7 @@ export const OrderSuccessView = ({
       <p className="font-display font-bold text-lg text-primary">{formatCOP(total)}</p>
     </div>
 
-    <Button fullWidth size="lg" onClick={onViewOrder} className="mb-3">
+    <Button variant="gradient" fullWidth size="lg" onClick={onViewOrder} className="mb-3">
       Ver pedido
     </Button>
     <Button fullWidth variant="ghost" onClick={onKeepShopping}>

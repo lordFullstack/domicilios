@@ -36,7 +36,7 @@ export const OrdersPage = () => {
       {/* Contenido */}
       <div className="px-5">
         {successMessage && (
-          <div className="mb-4 bg-success/10 text-success text-sm font-semibold rounded-2xl p-3">
+          <div className="mb-4 bg-success/10 text-success-strong text-sm font-semibold rounded-2xl p-3">
             {successMessage}
           </div>
         )}
@@ -72,7 +72,7 @@ export const OrdersPage = () => {
             icon={ClipboardList}
             title="No tienes órdenes"
             description="Realiza tu primera orden ahora."
-            action={<Button onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>}
+            action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>}
           />
         )}
       </div>

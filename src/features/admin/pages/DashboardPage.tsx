@@ -47,7 +47,7 @@ export const AdminDashboard = () => {
           </h1>
           <p className="text-sm text-gray-500">Visión general de la plataforma</p>
           {mayBeIncomplete && (
-            <p className="text-xs text-warning mt-1">
+            <p className="text-xs text-warning-strong mt-1">
               Mostrando hasta 200 pedidos más recientes — el total real podría ser mayor.
             </p>
           )}
@@ -84,8 +84,8 @@ export const AdminDashboard = () => {
             <h2 className="text-lg font-bold text-secondary mb-4">📦 Órdenes en el periodo</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <KpiCard value={stats.totalOrders} label="Total órdenes" colorClass="text-primary" />
-              <KpiCard value={stats.activeOrders.length} label="🔄 Activas" colorClass="text-warning" />
-              <KpiCard value={stats.deliveredOrders.length} label="✅ Entregadas" colorClass="text-success" />
+              <KpiCard value={stats.activeOrders.length} label="🔄 Activas" colorClass="text-warning-strong" />
+              <KpiCard value={stats.deliveredOrders.length} label="✅ Entregadas" colorClass="text-success-strong" />
               <KpiCard value={stats.cancelledOrders.length} label="❌ Canceladas" colorClass="text-danger" />
             </div>
 

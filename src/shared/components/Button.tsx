@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react'
 import clsx from 'clsx'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'gradient' | 'danger'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'gradient' | 'danger' | 'solid' | 'tertiary' | 'dangerOutline'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
   fullWidth?: boolean
@@ -26,7 +26,13 @@ export const Button = ({
     secondary: 'bg-secondary text-white hover:bg-secondary/90 active:scale-[0.97] disabled:bg-gray-300',
     outline: 'border-2 border-primary text-primary hover:bg-primary/5 active:scale-[0.97] disabled:border-gray-300 disabled:text-gray-500',
     ghost: 'text-primary hover:bg-primary/5 active:scale-[0.97] disabled:text-gray-500',
-    danger: 'bg-danger text-white hover:bg-red-600 active:scale-[0.97] disabled:bg-gray-300',
+    danger: 'bg-danger text-white !font-bold hover:bg-red-600 active:scale-[0.97] disabled:bg-gray-300',
+    // Criterio de CTA (docs/design-system/COLORS.md): 1 principal por pantalla
+    // en gradient; varios del mismo peso en solid; terciario en tertiary;
+    // destructivo en dangerOutline o danger.
+    solid: 'bg-brand-700 text-white hover:bg-brand-500 active:scale-[0.97] disabled:bg-gray-300',
+    tertiary: 'bg-white border-2 border-brand-700 text-brand-700 hover:bg-brand-50 active:scale-[0.97] disabled:border-gray-300 disabled:text-gray-500',
+    dangerOutline: 'bg-white border-2 border-danger text-danger hover:bg-danger/10 active:scale-[0.97] disabled:border-gray-300 disabled:text-gray-500',
     // Reservado para CTAs realmente destacados (promo hero, checkout final).
     // No usar como reemplazo general de "primary" — ver LOOP_01.
     gradient: 'bg-brand-gradient text-white hover:opacity-90 active:scale-[0.97] disabled:bg-none disabled:bg-gray-300',

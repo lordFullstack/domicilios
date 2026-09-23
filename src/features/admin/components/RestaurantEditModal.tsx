@@ -51,7 +51,7 @@ export const RestaurantEditModal = ({ restaurant, onClose, onSave }: RestaurantE
           </div>
         </div>
 
-        {error && <p className="text-danger text-xs mt-3">{error}</p>}
+        {error && <p className="text-danger text-sm mt-3">{error}</p>}
 
         <div className="flex gap-3 mt-5">
           <Button variant="outline" fullWidth onClick={onClose} disabled={saving}>
