@@ -39,7 +39,7 @@ export const RestaurantHero = ({
     <div className="relative h-52 overflow-hidden bg-primary/10">
       {restaurant.cover_url ? (
         <img
-          src={supabaseImageUrl(restaurant.cover_url, { width: 800 })}
+          src={supabaseImageUrl(restaurant.cover_url, { width: 800, height: 416 })}
           alt={`Portada de ${restaurant.name}`}
           loading="eager"
           decoding="async"

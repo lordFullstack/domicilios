@@ -64,7 +64,7 @@ export const RestaurantGridCard = ({ restaurant }: RestaurantGridCardProps) => {
       <div className="relative aspect-[4/3] bg-primary/10">
         {restaurant.cover_url ? (
           <img
-            src={supabaseImageUrl(restaurant.cover_url, { width: 400 })}
+            src={supabaseImageUrl(restaurant.cover_url, { width: 400, height: 300 })}
             alt={restaurant.name}
             loading="lazy"
             decoding="async"

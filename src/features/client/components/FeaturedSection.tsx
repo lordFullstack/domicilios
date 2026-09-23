@@ -60,7 +60,7 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
               <div className="aspect-[4/3] bg-primary/10 overflow-hidden flex items-center justify-center">
                 {promo.image_url ? (
                   <img
-                    src={supabaseImageUrl(promo.image_url, { width: 300 })}
+                    src={supabaseImageUrl(promo.image_url, { width: 300, height: 225 })}
                     alt={promo.title}
                     loading="lazy"
                     decoding="async"
@@ -102,7 +102,7 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
             <div className="aspect-[4/3] bg-primary/10 overflow-hidden flex items-center justify-center">
               {promo.image_url ? (
                 <img
-                  src={supabaseImageUrl(promo.image_url, { width: 400 })}
+                  src={supabaseImageUrl(promo.image_url, { width: 400, height: 300 })}
                   alt={promo.title}
                   loading="lazy"
                   decoding="async"
