@@ -1,12 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 const rpc = vi.fn()
+const invoke = vi.fn()
 vi.mock('@/shared/utils/supabase', () => ({
-  supabase: { rpc: (...args: unknown[]) => rpc(...args) },
-}))
-const push = vi.fn()
-vi.mock('@/services/pushNotifications.service', () => ({
-  triggerOrderPushNotification: (...args: unknown[]) => push(...args),
+  supabase: { rpc: (...args: unknown[]) => rpc(...args), functions: { invoke: (...args: unknown[]) => invoke(...args) } },
 }))
 
 import {
@@ -28,7 +25,7 @@ const order = (extra: Record<string, unknown> = {}) => ({ id: 'o1', user_id: 'u1
 describe('orderActions (RPC del servidor — LOOP_SECURITY_01)', () => {
   beforeEach(() => {
     rpc.mockReset()
-    push.mockReset()
+    invoke.mockReset()
     vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
@@ -56,11 +53,11 @@ describe('orderActions (RPC del servidor — LOOP_SECURITY_01)', () => {
     expect(orderActionErrorMessage(undefined)).toMatch(/No pudimos completar/)
   })
 
-  it('asignar avisa por push al domiciliario asignado', async () => {
+  it('asignar devuelve el pedido con su domiciliario', async () => {
     rpc.mockResolvedValue({ data: order({ delivery_person_id: 'd1' }), error: null })
     const res = await restaurantAssignDelivery('o1')
     expect(res.ok).toBe(true)
-    expect(push).toHaveBeenCalledWith('d1', 'assigned', 'o1')
+    expect(res.order?.delivery_person_id).toBe('d1')
   })
 
   it('"Enviar": si nadie es elegible, abre UNA nueva ronda', async () => {
@@ -79,23 +76,13 @@ describe('orderActions (RPC del servidor — LOOP_SECURITY_01)', () => {
     expect(res.code).toBe('order_unavailable')
   })
 
-  it('aceptar y completar avisan al cliente; rechazar avisa solo si se reasignó', async () => {
-    rpc.mockResolvedValueOnce({ data: order(), error: null })
+  it('ninguna acción dispara push desde el navegador (lo hace la base de datos, LOOP_SECURITY_02)', async () => {
+    rpc.mockResolvedValue({ data: order({ delivery_person_id: 'd2' }), error: null })
+    await restaurantAssignDelivery('o1')
     await deliveryAcceptOrder('o1')
-    expect(push).toHaveBeenLastCalledWith('u1', 'in_delivery', 'o1')
-
-    rpc.mockResolvedValueOnce({ data: order(), error: null })
+    await deliveryRejectOrder('o1')
     await deliveryCompleteOrder('o1')
-    expect(push).toHaveBeenLastCalledWith('u1', 'delivered', 'o1')
-
-    push.mockReset()
-    rpc.mockResolvedValueOnce({ data: order({ delivery_person_id: null }), error: null })
-    await deliveryRejectOrder('o1')
-    expect(push).not.toHaveBeenCalled()
-
-    rpc.mockResolvedValueOnce({ data: order({ delivery_person_id: 'd2' }), error: null })
-    await deliveryRejectOrder('o1')
-    expect(push).toHaveBeenCalledWith('d2', 'assigned', 'o1')
+    expect(invoke).not.toHaveBeenCalled()
   })
 
   it('turno: manda p_on_shift y devuelve el valor del servidor', async () => {

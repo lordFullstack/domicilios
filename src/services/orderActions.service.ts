@@ -1,5 +1,4 @@
 import { supabase } from '@/shared/utils/supabase'
-import { triggerOrderPushNotification } from '@/services/pushNotifications.service'
 import type { Order } from '@/shared/types'
 
 /**
@@ -48,11 +47,8 @@ const callOrderRpc = async (fn: string, args: Record<string, unknown>): Promise<
   return { ok: true, order: (data as Order | null) ?? null }
 }
 
-// Los avisos push los sigue disparando el navegador de quien actúa (hasta
-// LOOP_SECURITY_02): fire-and-forget, un fallo aquí nunca rompe la acción.
-const notifyAssigned = (order: Order | null) => {
-  if (order?.delivery_person_id) void triggerOrderPushNotification(order.delivery_person_id, 'assigned', order.id)
-}
+// Los avisos push (asignado, en camino, entregado...) los dispara la base de datos a partir de las
+// notificaciones que genera cada cambio de pedido (LOOP_SECURITY_02): aquí no se envía nada.
 
 // ---------------- Restaurante ----------------
 
@@ -62,17 +58,11 @@ export const restaurantAdvanceOrder = (orderId: string) =>
 export const restaurantCancelOrder = (orderId: string) =>
   callOrderRpc('restaurant_cancel_order', { p_order_id: orderId })
 
-export const restaurantAssignDelivery = async (orderId: string) => {
-  const res = await callOrderRpc('restaurant_assign_delivery', { p_order_id: orderId })
-  if (res.ok) notifyAssigned(res.order)
-  return res
-}
+export const restaurantAssignDelivery = (orderId: string) =>
+  callOrderRpc('restaurant_assign_delivery', { p_order_id: orderId })
 
-export const restaurantRetryAssignment = async (orderId: string) => {
-  const res = await callOrderRpc('restaurant_retry_assignment', { p_order_id: orderId })
-  if (res.ok) notifyAssigned(res.order)
-  return res
-}
+export const restaurantRetryAssignment = (orderId: string) =>
+  callOrderRpc('restaurant_retry_assignment', { p_order_id: orderId })
 
 /**
  * "Enviar": asigna al siguiente domiciliario disponible. Si nadie es elegible
@@ -95,23 +85,14 @@ export const deliverySetShift = async (onShift: boolean): Promise<{ ok: boolean;
   return { ok: true, onShift: data === true }
 }
 
-export const deliveryAcceptOrder = async (orderId: string) => {
-  const res = await callOrderRpc('delivery_accept_order', { p_order_id: orderId })
-  if (res.ok && res.order) void triggerOrderPushNotification(res.order.user_id, 'in_delivery', res.order.id)
-  return res
-}
+export const deliveryAcceptOrder = (orderId: string) =>
+  callOrderRpc('delivery_accept_order', { p_order_id: orderId })
 
-export const deliveryRejectOrder = async (orderId: string) => {
-  const res = await callOrderRpc('delivery_reject_order', { p_order_id: orderId })
-  if (res.ok) notifyAssigned(res.order) // si se reasignó a otro, se le avisa
-  return res
-}
+export const deliveryRejectOrder = (orderId: string) =>
+  callOrderRpc('delivery_reject_order', { p_order_id: orderId })
 
-export const deliveryCompleteOrder = async (orderId: string) => {
-  const res = await callOrderRpc('delivery_complete_order', { p_order_id: orderId })
-  if (res.ok && res.order) void triggerOrderPushNotification(res.order.user_id, 'delivered', res.order.id)
-  return res
-}
+export const deliveryCompleteOrder = (orderId: string) =>
+  callOrderRpc('delivery_complete_order', { p_order_id: orderId })
 
 /** GPS: silencioso (se manda muy seguido); devuelve si el servidor lo aceptó. */
 export const deliveryUpdateLocation = async (orderId: string, lat: number, lng: number): Promise<boolean> => {

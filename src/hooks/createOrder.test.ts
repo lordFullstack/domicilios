@@ -17,7 +17,6 @@ vi.mock('@/shared/utils/supabase', () => ({
     removeChannel: vi.fn(),
   },
 }))
-vi.mock('@/services/pushNotifications.service', () => ({ triggerOrderPushNotification: vi.fn() }))
 vi.mock('@/shared/hooks/useAuth', () => ({ useAuth: () => ({ user: { id: 'u1' } }) }))
 
 import { useOrders, createOrderErrorMessage } from './useLocalData'

@@ -11,7 +11,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/shared/utils/supabase'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 import { offlineCache } from '@/services/offlineCache.service'
-import { triggerOrderPushNotification } from '@/services/pushNotifications.service'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { playNotificationSound, showBrowserNotification } from '@/shared/utils/notificationSound'
 import { Restaurant, Product, Order, AppNotification, OrderRating } from '@/shared/types'
@@ -711,19 +710,8 @@ export const useOrders = (userId?: string) => {
       return { order: null, error: message }
     }
 
-    // Avisa al restaurante que tiene un pedido nuevo por aceptar. No se
-    // espera esta llamada ni se deja que un fallo aquí rompa la creación
-    // del pedido — el pedido ya quedó guardado, la notificación es un plus.
-    supabase
-      .from('restaurants')
-      .select('owner_id')
-      .eq('id', input.restaurant_id)
-      .maybeSingle()
-      .then(({ data: restaurantRow }) => {
-        if (restaurantRow?.owner_id) {
-          triggerOrderPushNotification(restaurantRow.owner_id, 'new_order', newOrder.id)
-        }
-      })
+    // El aviso al restaurante ("pedido nuevo") lo genera y lo empuja la base de datos
+    // (trigger sobre orders -> notifications -> send-push): el navegador no participa.
 
     await reload()
     return { order: newOrder as Order }

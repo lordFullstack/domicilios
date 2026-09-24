@@ -1,7 +1,5 @@
 import { supabase } from '@/shared/utils/supabase'
 
-export type PushNotificationType = 'new_order' | 'assigned' | 'ready' | 'in_delivery' | 'delivered'
-
 // Convierte la VAPID public key (base64url) al formato Uint8Array que pide
 // la Push API del navegador.
 const urlBase64ToUint8Array = (base64String: string) => {
@@ -13,6 +11,9 @@ const urlBase64ToUint8Array = (base64String: string) => {
 
 export const isPushSupported = () =>
   typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window
+
+// Los avisos push los dispara la base de datos (trigger sobre `notifications` + función Edge
+// `send-push`, LOOP_SECURITY_02): el navegador solo se suscribe y se desuscribe.
 
 // Activa las notificaciones para el usuario actual: pide permiso (si el
 // navegador ya lo negó antes, no vuelve a preguntar — eso lo controla el
@@ -66,20 +67,4 @@ export const unsubscribeFromPush = async () => {
 
   await supabase.from('push_subscriptions').delete().eq('endpoint', subscription.endpoint)
   await subscription.unsubscribe()
-}
-
-// Dispara el envío de una notificación a otro usuario (ej: al restaurante
-// cuando entra un pedido nuevo, al domiciliario cuando se le asigna uno).
-// Se llama "fire and forget" desde useLocalData — si falla, no debe romper
-// el flujo de crear/actualizar el pedido en sí.
-export const triggerOrderPushNotification = async (
-  userId: string,
-  type: PushNotificationType,
-  orderId: string
-) => {
-  try {
-    await supabase.functions.invoke('send-push', { body: { userId, type, orderId } })
-  } catch (e) {
-    console.error('Error disparando notificación push:', e)
-  }
 }
