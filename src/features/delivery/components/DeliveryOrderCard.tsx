@@ -7,9 +7,11 @@ interface DeliveryOrderCardProps {
   order: Order
   restaurant?: Restaurant
   onOpenDetail: (order: Order) => void
+  /** Asignado a mí y sin aceptar: la dirección del cliente no se muestra todavía. */
+  pendingAcceptance?: boolean
 }
 
-export const DeliveryOrderCard = ({ order, restaurant, onOpenDetail }: DeliveryOrderCardProps) => {
+export const DeliveryOrderCard = ({ order, restaurant, onOpenDetail, pendingAcceptance = false }: DeliveryOrderCardProps) => {
   return (
     <button
       onClick={() => onOpenDetail(order)}
@@ -18,7 +20,9 @@ export const DeliveryOrderCard = ({ order, restaurant, onOpenDetail }: DeliveryO
       <span className="text-2xl flex-shrink-0">{restaurant?.image_url || '🏪'}</span>
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-sm text-secondary truncate">{restaurant?.name}</p>
-        <p className="text-xs text-gray-500 truncate">Entregar: {order.delivery_address}</p>
+        <p className="text-xs text-gray-500 truncate">
+          {pendingAcceptance ? 'Pedido asignado — ábrelo para aceptar o rechazar' : `Entregar: ${order.delivery_address}`}
+        </p>
       </div>
       <div className="text-right flex-shrink-0">
         <p className="font-display font-bold text-sm text-primary">{formatCOP(order.total)}</p>

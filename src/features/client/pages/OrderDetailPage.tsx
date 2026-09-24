@@ -18,6 +18,7 @@ import {
   useProducts,
   useProductById,
 } from '@/hooks/useLocalData'
+import { clientCancelOrder } from '@/services/orderActions.service'
 import { useCartContext } from '@/shared/hooks/useCartContext'
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
 import { OrderStatusHero } from '../components/OrderStatusHero'
@@ -33,7 +34,7 @@ import { ORDER_STATUS, ROUTES } from '@/config/constants'
 export const OrderDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { orders, loading, updateOrder } = useOrders()
+  const { orders, loading, reload } = useOrders()
   const connectionStatus = useOnlineStatus()
   const isOffline = connectionStatus === 'offline'
 
@@ -113,12 +114,13 @@ export const OrderDetailPage = () => {
   const handleCancelConfirm = async () => {
     setCancelling(true)
     setCancelError(null)
-    const ok = await updateOrder(order.id, { status: ORDER_STATUS.CANCELLED })
+    const result = await clientCancelOrder(order.id)
+    await reload()
     setCancelling(false)
-    if (ok) {
+    if (result.ok) {
       setCancelSheetOpen(false)
     } else {
-      setCancelError('No pudimos cancelar el pedido. Intenta nuevamente.')
+      setCancelError(result.code ? result.reason ?? null : 'No pudimos cancelar el pedido. Intenta nuevamente.')
     }
   }
 

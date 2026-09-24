@@ -13,6 +13,8 @@ export interface User {
   vehicle_type?: 'moto' | 'bici' | null
   vehicle_plate?: string | null
   active: boolean
+  /** Domiciliario "En turno": solo así recibe pedidos asignados automáticamente. */
+  on_shift?: boolean
   rating_avg: number
   rating_count: number
   created_at: string
@@ -81,6 +83,8 @@ export interface Order {
   payment_status: PaymentStatus
   /** Tarifa de domicilio cobrada en este pedido (COP). total = items + delivery_fee. */
   delivery_fee: number
+  /** Ronda de asignación de domiciliario (sube con "Buscar otra vez"). */
+  assignment_round?: number
   current_lat?: number | null
   current_lng?: number | null
   location_updated_at?: string | null

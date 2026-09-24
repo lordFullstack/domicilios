@@ -2,12 +2,13 @@ import { Order } from '@/shared/types'
 import { formatCOP } from '@/shared/utils/money'
 
 interface DeliveryStatsGridProps {
-  availableCount: number
+  /** Pedidos asignados a mí que aún no acepté. */
+  assignedCount: number
   activeCount: number
   completedToday: Order[]
 }
 
-export const DeliveryStatsGrid = ({ availableCount, activeCount, completedToday }: DeliveryStatsGridProps) => {
+export const DeliveryStatsGrid = ({ assignedCount, activeCount, completedToday }: DeliveryStatsGridProps) => {
   // Antes esto mostraba `total * 0.1` como "Ganancias hoy" — un 10% de
   // comisión que no existe en ningún lado del backend (no hay columna de
   // comisión/ganancia en `orders` ni `profiles`). Mostrar en cambio el
@@ -17,8 +18,8 @@ export const DeliveryStatsGrid = ({ availableCount, activeCount, completedToday 
   return (
     <div className="grid grid-cols-2 gap-3 px-5 mb-6">
       <div className="border border-gray-100 rounded-2xl text-center py-4">
-        <p className="text-2xl font-display font-bold text-primary">{availableCount}</p>
-        <p className="text-gray-500 text-xs mt-1">Disponibles</p>
+        <p className="text-2xl font-display font-bold text-primary">{assignedCount}</p>
+        <p className="text-gray-500 text-xs mt-1">Por aceptar</p>
       </div>
       <div className="border border-gray-100 rounded-2xl text-center py-4">
         <p className="text-2xl font-display font-bold text-warning-strong">{activeCount}</p>

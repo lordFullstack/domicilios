@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapPin, MapPinOff, Wifi, WifiOff } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { useOrders, useRestaurants, updateOrderLocation } from '@/hooks/useLocalData'
+import { useOrders, useRestaurants } from '@/hooks/useLocalData'
+import {
+  deliveryAcceptOrder,
+  deliveryRejectOrder,
+  deliveryCompleteOrder,
+  deliveryUpdateLocation,
+} from '@/services/orderActions.service'
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
@@ -11,7 +17,9 @@ import { DeliveryStatsGrid } from '../components/DeliveryStatsGrid'
 import { DeliveryOrderCard } from '../components/DeliveryOrderCard'
 import { DeliveryOrderDetailSheet } from '../components/DeliveryOrderDetailSheet'
 import { ActiveDeliveryBar } from '../components/ActiveDeliveryBar'
-import { ORDER_STATUS, PAYMENT_METHOD, PAYMENT_STATUS } from '@/config/constants'
+import { ShiftToggle } from '../components/ShiftToggle'
+import { useDriverShift } from '../hooks/useDriverShift'
+import { ORDER_STATUS } from '@/config/constants'
 import { Order } from '@/shared/types'
 import { formatCOP } from '@/shared/utils/money'
 
@@ -21,7 +29,8 @@ const LOCATION_UPDATE_INTERVAL_MS = 10000
 
 export const DeliveryDashboard = () => {
   const { user } = useAuth()
-  const { orders, updateOrder, acceptOrder, getOrdersByDelivery } = useOrders()
+  const { getOrdersByDelivery, reload } = useOrders()
+  const shift = useDriverShift(user?.id)
   const { restaurants } = useRestaurants()
   const restaurantsById = new Map(restaurants.map((r) => [r.id, r]))
   const connectionStatus = useOnlineStatus()
@@ -42,11 +51,9 @@ export const DeliveryDashboard = () => {
     setTimeout(() => setToastMessage(null), 2500)
   }
 
-  const availableOrders = orders.filter(
-    (o) => o.status === ORDER_STATUS.READY && !o.delivery_person_id
-  )
-
+  // "Mis pedidos": solo lo que YA me asignaron (el servidor asigna; no hay lista de pedidos libres).
   const myDeliveries = user ? getOrdersByDelivery(user.id) : []
+  const assignedOrders = myDeliveries.filter((o) => o.status === ORDER_STATUS.READY)
   const activeDeliveries = myDeliveries.filter((o) => o.status === ORDER_STATUS.IN_DELIVERY)
   const completedDeliveries = myDeliveries.filter((o) => o.status === ORDER_STATUS.DELIVERED)
   const activeOrder = activeDeliveries[0]
@@ -68,7 +75,7 @@ export const DeliveryDashboard = () => {
         const now = Date.now()
         if (now - lastSentAtRef.current < LOCATION_UPDATE_INTERVAL_MS) return
         lastSentAtRef.current = now
-        updateOrderLocation(activeOrder.id, position.coords.latitude, position.coords.longitude)
+        void deliveryUpdateLocation(activeOrder.id, position.coords.latitude, position.coords.longitude)
       },
       (err) => {
         setSharingLocation(false)
@@ -93,43 +100,49 @@ export const DeliveryDashboard = () => {
   })
 
   const handleAcceptOrder = async (order: Order) => {
-    if (!user || processingOrderId) return
+    if (processingOrderId) return
     setProcessingOrderId(order.id)
-    const result = await acceptOrder(order.id, user.id)
+    const result = await deliveryAcceptOrder(order.id)
     setProcessingOrderId(null)
+    await reload()
 
     if (result.ok) {
       setDetailOrder(null)
       showToast('✓ Pedido aceptado — dirígete al restaurante')
-    } else if (result.reason === 'taken') {
-      setDetailOrder(null)
-      showToast('Este pedido ya fue tomado por otro domiciliario')
     } else {
-      showToast('No pudimos aceptar el pedido. Intenta de nuevo.')
+      if (result.code !== 'delivery_busy') setDetailOrder(null)
+      showToast(result.reason ?? 'No pudimos aceptar el pedido. Intenta de nuevo.')
     }
+  }
+
+  const handleRejectOrder = async (order: Order) => {
+    if (processingOrderId) return
+    setProcessingOrderId(order.id)
+    const result = await deliveryRejectOrder(order.id)
+    setProcessingOrderId(null)
+    await reload()
+    setDetailOrder(null)
+    showToast(result.ok ? 'Pedido rechazado. Lo asignaremos a otro domiciliario.' : result.reason ?? 'No pudimos rechazar el pedido.')
   }
 
   const handleCompleteDelivery = async (order: Order) => {
     if (processingOrderId) return
     setProcessingOrderId(order.id)
-    const updates: Partial<Order> = { status: ORDER_STATUS.DELIVERED }
-    // Si es efectivo/datáfono, el domiciliario cobra al entregar → marcar pagado
-    if (order.payment_method === PAYMENT_METHOD.CASH_ON_DELIVERY) {
-      updates.payment_status = PAYMENT_STATUS.PAID
-    }
-    const ok = await updateOrder(order.id, updates)
+    // El servidor marca el pago como recibido si es contra entrega (efectivo/datáfono).
+    const result = await deliveryCompleteOrder(order.id)
     setProcessingOrderId(null)
+    await reload()
 
-    if (ok) {
+    if (result.ok) {
       setDetailOrder(null)
       showToast('✓ Entrega completada')
     } else {
-      showToast('No pudimos marcar la entrega. Intenta de nuevo.')
+      showToast(result.reason ?? 'No pudimos marcar la entrega. Intenta de nuevo.')
     }
   }
 
-  // El sheet de detalle sirve tanto para pedidos disponibles (acción:
-  // aceptar) como para la entrega activa (acción: marcar entregada).
+  // El sheet de detalle sirve tanto para un pedido asignado sin aceptar (acciones:
+  // aceptar / rechazar) como para la entrega activa (acción: marcar entregada).
   const detailIsActive = detailOrder?.status === ORDER_STATUS.IN_DELIVERY
   const detailActionLabel = detailIsActive ? 'Marcar como entregada' : 'Aceptar entrega'
   const detailActionDisabled =
@@ -144,7 +157,7 @@ export const DeliveryDashboard = () => {
         <div>
           <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
           <h1 className="font-display text-xl font-bold text-secondary">🚴 Panel de Domiciliario</h1>
-          <p className="text-sm text-gray-500">Hola {user?.name?.split(' ')[0]}, aquí tus entregas</p>
+          <p className="text-sm text-gray-500">Hola {user?.name?.split(' ')[0]}, aquí tus pedidos</p>
         </div>
         <NotificationBell />
       </div>
@@ -163,12 +176,21 @@ export const DeliveryDashboard = () => {
         )}
       </div>
 
+      <ShiftToggle
+        onShift={shift.onShift}
+        loading={shift.loading}
+        saving={shift.saving}
+        disabled={isOffline}
+        error={shift.error}
+        onToggle={shift.toggle}
+      />
+
       <div className="px-5">
         <NotificationPermissionCard />
       </div>
 
       <DeliveryStatsGrid
-        availableCount={availableOrders.length}
+        assignedCount={assignedOrders.length}
         activeCount={activeDeliveries.length}
         completedToday={todayCompleted}
       />
@@ -203,20 +225,23 @@ export const DeliveryDashboard = () => {
         </div>
       )}
 
-      {/* Órdenes disponibles */}
+      {/* Pedidos asignados por aceptar */}
       <div className="px-5 mb-6">
-        <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Órdenes Disponibles</h2>
+        <h2 className="font-display font-bold text-sm text-gray-700 mb-3">Pedidos por aceptar</h2>
 
-        {availableOrders.length === 0 ? (
-          <p className="text-gray-500 text-sm text-center py-8">No hay órdenes disponibles en este momento</p>
+        {assignedOrders.length === 0 ? (
+          <p className="text-gray-500 text-sm text-center py-8">
+            {shift.onShift ? 'Cuando te asignen un pedido aparecerá aquí' : 'Ponte en turno para recibir pedidos'}
+          </p>
         ) : (
           <div className="flex flex-col gap-3">
-            {availableOrders.map((order) => (
+            {assignedOrders.map((order) => (
               <DeliveryOrderCard
                 key={order.id}
                 order={order}
                 restaurant={restaurantsById.get(order.restaurant_id)}
                 onOpenDetail={setDetailOrder}
+                pendingAcceptance
               />
             ))}
           </div>
@@ -257,6 +282,10 @@ export const DeliveryDashboard = () => {
           if (!detailOrder) return
           detailIsActive ? handleCompleteDelivery(detailOrder) : handleAcceptOrder(detailOrder)
         }}
+        hideCustomerAddress={!detailIsActive}
+        secondaryActionLabel={detailIsActive ? undefined : 'Rechazar pedido'}
+        secondaryActionDisabled={isOffline || !!processingOrderId}
+        onSecondaryAction={() => detailOrder && handleRejectOrder(detailOrder)}
       />
 
       {/* CTA sticky de la entrega activa — accesible con el pulgar sin

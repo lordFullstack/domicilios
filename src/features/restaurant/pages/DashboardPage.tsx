@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MapPin, Camera, Loader2 } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { useOrders, useRestaurants, useProducts, getAvailableDeliveryPerson, updateRestaurant } from '@/hooks/useLocalData'
+import { useOrders, useRestaurants, useProducts, updateRestaurant } from '@/hooks/useLocalData'
+import { restaurantAdvanceOrder, restaurantCancelOrder, restaurantSendOrder } from '@/services/orderActions.service'
 import { supabase } from '@/shared/utils/supabase'
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
@@ -11,19 +12,10 @@ import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
 import { OrderItemsList } from '@/shared/components/OrderItemsList'
+import { RestaurantOrderActions } from '../components/RestaurantOrderActions'
 import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { Order, OrderStatus } from '@/shared/types'
-
-const STATUS_FLOW: Record<string, string | null> = {
-  [ORDER_STATUS.PENDING]: ORDER_STATUS.CONFIRMED,
-  [ORDER_STATUS.CONFIRMED]: ORDER_STATUS.PREPARING,
-  [ORDER_STATUS.PREPARING]: ORDER_STATUS.READY,
-  [ORDER_STATUS.READY]: ORDER_STATUS.IN_DELIVERY,
-  [ORDER_STATUS.IN_DELIVERY]: null,
-  [ORDER_STATUS.DELIVERED]: null,
-  [ORDER_STATUS.CANCELLED]: null,
-}
 
 const STATUS_LABELS: Record<string, string> = {
   [ORDER_STATUS.PENDING]: 'Pendiente',
@@ -35,24 +27,19 @@ const STATUS_LABELS: Record<string, string> = {
   [ORDER_STATUS.CANCELLED]: 'Cancelada',
 }
 
-const NEXT_ACTION_LABELS: Record<string, string> = {
-  [ORDER_STATUS.PENDING]: 'Confirmar',
-  [ORDER_STATUS.CONFIRMED]: 'Preparar',
-  [ORDER_STATUS.PREPARING]: 'Marcar Lista',
-  [ORDER_STATUS.READY]: 'Enviar',
-}
-
 export const RestaurantDashboard = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { restaurants, loading: loadingRestaurants, reload: reloadRestaurants } = useRestaurants()
-  const { updateOrder, getOrdersByRestaurant } = useOrders()
+  const { getOrdersByRestaurant, reload } = useOrders()
 
   const myRestaurant = restaurants.find((r) => r.owner_id === user?.id)
   const { products } = useProducts(myRestaurant?.id)
 
   const myOrders = myRestaurant ? getOrdersByRestaurant(myRestaurant.id) : []
-  const [noDeliveryMsg, setNoDeliveryMsg] = useState(false)
+  // Transiciones por RPC del servidor (LOOP_SECURITY_01): una acción a la vez.
+  const [processingId, setProcessingId] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
   const [togglingStatus, setTogglingStatus] = useState(false)
   const [uploadingCover, setUploadingCover] = useState(false)
 
@@ -66,27 +53,24 @@ export const RestaurantDashboard = () => {
   })
   const revenueToday = deliveredToday.reduce((sum, o) => sum + o.total, 0)
 
-  const handleAdvanceStatus = async (order: Order) => {
-    const nextStatus = STATUS_FLOW[order.status]
-    if (!nextStatus) return
-    const updates: Partial<Order> = { status: nextStatus as any }
-
-    if (nextStatus === ORDER_STATUS.IN_DELIVERY) {
-      const deliveryPersonId = await getAvailableDeliveryPerson()
-      if (!deliveryPersonId) {
-        setNoDeliveryMsg(true)
-        setTimeout(() => setNoDeliveryMsg(false), 4000)
-        return
-      }
-      updates.delivery_person_id = deliveryPersonId
+  const runOrderAction = async (order: Order, action: (id: string) => Promise<{ ok: boolean; reason?: string }>) => {
+    if (processingId) return
+    setProcessingId(order.id)
+    setActionError(null)
+    const result = await action(order.id)
+    await reload()
+    setProcessingId(null)
+    if (!result.ok) {
+      setActionError(result.reason ?? 'No pudimos actualizar el pedido. Intenta de nuevo.')
+      setTimeout(() => setActionError(null), 5000)
     }
-
-    updateOrder(order.id, updates)
   }
 
-  const handleCancelOrder = (order: Order) => {
-    updateOrder(order.id, { status: ORDER_STATUS.CANCELLED as any })
-  }
+  // "Enviar" (pedido listo) = el servidor asigna al siguiente domiciliario disponible.
+  const handleAdvanceStatus = (order: Order) =>
+    runOrderAction(order, order.status === ORDER_STATUS.READY ? restaurantSendOrder : restaurantAdvanceOrder)
+
+  const handleCancelOrder = (order: Order) => runOrderAction(order, restaurantCancelOrder)
 
   const handleToggleStatus = async () => {
     if (!myRestaurant || togglingStatus) return
@@ -227,9 +211,9 @@ export const RestaurantDashboard = () => {
         </div>
       )}
 
-      {noDeliveryMsg && (
+      {actionError && (
         <div className="mx-5 mb-4 bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3 md:max-w-4xl md:mx-auto" role="alert">
-          No hay domiciliarios disponibles en este momento. Intenta de nuevo en unos minutos.
+          {actionError}
         </div>
       )}
 
@@ -306,18 +290,13 @@ export const RestaurantDashboard = () => {
                   </span>
                 </div>
 
-                <div className="flex gap-2">
-                  {order.status === ORDER_STATUS.PENDING && (
-                    <Button variant="outline" size="sm" fullWidth onClick={() => handleCancelOrder(order)}>
-                      Cancelar
-                    </Button>
-                  )}
-                  {STATUS_FLOW[order.status] && (
-                    <Button variant="primary" size="sm" fullWidth onClick={() => handleAdvanceStatus(order)}>
-                      {NEXT_ACTION_LABELS[order.status]}
-                    </Button>
-                  )}
-                </div>
+                <RestaurantOrderActions
+                  order={order}
+                  busy={processingId === order.id}
+                  disabled={!!processingId}
+                  onAdvance={() => handleAdvanceStatus(order)}
+                  onCancel={() => handleCancelOrder(order)}
+                />
               </Card>
             ))}
           </div>

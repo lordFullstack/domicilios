@@ -15,7 +15,6 @@ import { triggerOrderPushNotification } from '@/services/pushNotifications.servi
 import { useAuth } from '@/shared/hooks/useAuth'
 import { playNotificationSound, showBrowserNotification } from '@/shared/utils/notificationSound'
 import { Restaurant, Product, Order, AppNotification, OrderRating } from '@/shared/types'
-import { ORDER_STATUS } from '@/config/constants'
 
 // ============================================
 // HOOK: useOrderItems
@@ -543,65 +542,6 @@ export const useProductById = (id: string) => {
 }
 
 // ============================================
-// FUNCIÓN: getAvailableDeliveryPerson
-// ============================================
-// Busca un domiciliario (role = 'delivery') que no tenga ninguna
-// orden actualmente en camino ('in_delivery'). Si todos están
-// ocupados, devuelve null en vez de forzar una asignación.
-
-export const getAvailableDeliveryPerson = async (): Promise<string | null> => {
-  const { data: deliveryPeople, error: peopleError } = await supabase
-    .from('profiles')
-    .select('id, name')
-    .eq('role', 'delivery')
-    .order('name')
-
-  if (peopleError) {
-    console.error('Error cargando domiciliarios:', peopleError)
-    return null
-  }
-  if (!deliveryPeople || deliveryPeople.length === 0) {
-    return null
-  }
-
-  const { data: activeOrders, error: ordersError } = await supabase
-    .from('orders')
-    .select('delivery_person_id')
-    .eq('status', 'in_delivery')
-
-  if (ordersError) {
-    console.error('Error revisando órdenes en camino:', ordersError)
-    return null
-  }
-
-  const busyIds = new Set((activeOrders || []).map((o) => o.delivery_person_id))
-  const free = deliveryPeople.find((p) => !busyIds.has(p.id))
-
-  return free ? free.id : null
-}
-
-// ============================================
-// FUNCIÓN: updateOrderLocation
-// ============================================
-// Actualización liviana de solo la ubicación, sin recargar toda la
-// lista de órdenes cada vez (el GPS manda esto muy seguido).
-
-export const updateOrderLocation = async (orderId: string, lat: number, lng: number) => {
-  const { error } = await supabase
-    .from('orders')
-    .update({
-      current_lat: lat,
-      current_lng: lng,
-      location_updated_at: new Date().toISOString(),
-    })
-    .eq('id', orderId)
-
-  if (error) {
-    console.error('Error actualizando ubicación:', error)
-  }
-}
-
-// ============================================
 // HOOK: useOrderLocation
 // ============================================
 // Sigue la ubicación en vivo de UNA orden puntual (la del domiciliario
@@ -790,72 +730,6 @@ export const useOrders = (userId?: string) => {
   }
 
 
-  // A diferencia de updateOrder (que sobrescribe sin condición), esta
-  // función solo asigna el pedido si SIGUE sin domiciliario asignado en
-  // el momento exacto del UPDATE. Sin esto, si dos domiciliarios tocan
-  // "Aceptar" casi al mismo tiempo, el segundo pisaría silenciosamente
-  // la asignación del primero (last-write-wins) — un pedido terminaría
-  // con delivery_person_id de quien tocó último, no de quien lo aceptó
-  // primero, y ambos verían la app como si "lo tuvieran".
-  const acceptOrder = async (
-    orderId: string,
-    deliveryPersonId: string
-  ): Promise<{ ok: boolean; reason?: 'taken' | 'error' }> => {
-    const { data, error } = await supabase
-      .from('orders')
-      .update({ status: ORDER_STATUS.IN_DELIVERY, delivery_person_id: deliveryPersonId })
-      .eq('id', orderId)
-      .is('delivery_person_id', null) // condición de carrera: solo si sigue libre
-      .select()
-      .maybeSingle()
-
-    if (error) {
-      console.error('Error accepting order:', error)
-      return { ok: false, reason: 'error' }
-    }
-    if (!data) {
-      // El UPDATE no afectó ninguna fila: otro domiciliario ya lo había tomado.
-      await reload()
-      return { ok: false, reason: 'taken' }
-    }
-
-    await reload()
-    return { ok: true }
-  }
-
-  const updateOrder = async (orderId: string, updates: Partial<Order>) => {
-    const previous = orders.find((o) => o.id === orderId)
-
-    const { error } = await supabase.from('orders').update(updates).eq('id', orderId)
-    if (error) {
-      console.error('Error updating order:', error)
-      setError('Error al actualizar orden')
-      return false
-    }
-
-    // Decide a quién avisar según qué cambió. Se compara contra el pedido
-    // que ya teníamos en memoria porque `updates` solo trae los campos que
-    // cambiaron, no el pedido completo.
-    if (previous) {
-      const newDeliveryPersonId = updates.delivery_person_id ?? previous.delivery_person_id
-      if (updates.delivery_person_id && updates.delivery_person_id !== previous.delivery_person_id) {
-        triggerOrderPushNotification(updates.delivery_person_id, 'assigned', orderId)
-      }
-      if (updates.status === ORDER_STATUS.READY && newDeliveryPersonId) {
-        triggerOrderPushNotification(newDeliveryPersonId, 'ready', orderId)
-      }
-      if (updates.status === ORDER_STATUS.IN_DELIVERY) {
-        triggerOrderPushNotification(previous.user_id, 'in_delivery', orderId)
-      }
-      if (updates.status === ORDER_STATUS.DELIVERED) {
-        triggerOrderPushNotification(previous.user_id, 'delivered', orderId)
-      }
-    }
-
-    await reload()
-    return true
-  }
-
   const getOrdersByRestaurant = (restaurantId: string) => {
     return orders.filter((o) => o.restaurant_id === restaurantId)
   }
@@ -871,8 +745,7 @@ export const useOrders = (userId?: string) => {
     fromCache,
     cachedAt,
     createOrder,
-    updateOrder,
-    acceptOrder,
+    reload,
     getOrdersByRestaurant,
     getOrdersByDelivery,
   }

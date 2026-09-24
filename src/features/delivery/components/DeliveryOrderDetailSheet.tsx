@@ -15,6 +15,11 @@ interface DeliveryOrderDetailSheetProps {
   actionLoading: boolean
   actionDisabled: boolean
   onAction: () => void
+  /** Pedido asignado sin aceptar: se oculta la dirección del cliente hasta que acepte. */
+  hideCustomerAddress?: boolean
+  secondaryActionLabel?: string
+  secondaryActionDisabled?: boolean
+  onSecondaryAction?: () => void
 }
 
 export const DeliveryOrderDetailSheet = ({
@@ -25,6 +30,10 @@ export const DeliveryOrderDetailSheet = ({
   actionLoading,
   actionDisabled,
   onAction,
+  hideCustomerAddress = false,
+  secondaryActionLabel,
+  secondaryActionDisabled,
+  onSecondaryAction,
 }: DeliveryOrderDetailSheetProps) => {
   const { restaurant } = useRestaurantById(order?.restaurant_id || '')
 
@@ -41,9 +50,15 @@ export const DeliveryOrderDetailSheet = ({
 
         <div>
           <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">ENTREGAR EN</p>
-          <p className="text-sm font-semibold text-secondary">{order.delivery_address}</p>
-          {order.special_instructions && (
-            <p className="text-xs text-gray-500 italic mt-1">"{order.special_instructions}"</p>
+          {hideCustomerAddress ? (
+            <p className="text-xs text-gray-500">La dirección aparece cuando aceptas el pedido.</p>
+          ) : (
+            <>
+              <p className="text-sm font-semibold text-secondary">{order.delivery_address}</p>
+              {order.special_instructions && (
+                <p className="text-xs text-gray-500 italic mt-1">"{order.special_instructions}"</p>
+              )}
+            </>
           )}
         </div>
 
@@ -73,6 +88,11 @@ export const DeliveryOrderDetailSheet = ({
         <Button fullWidth size="lg" loading={actionLoading} disabled={actionDisabled} onClick={onAction}>
           {actionLabel}
         </Button>
+        {secondaryActionLabel && onSecondaryAction && (
+          <Button fullWidth variant="outline" disabled={secondaryActionDisabled} onClick={onSecondaryAction}>
+            {secondaryActionLabel}
+          </Button>
+        )}
       </div>
     </BottomSheet>
   )
