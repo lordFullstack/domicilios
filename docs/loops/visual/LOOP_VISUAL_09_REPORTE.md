@@ -56,9 +56,15 @@ Validados en navegador (`/qa/home` temporal, retirada): header (116px / 176px), 
 
 ### DEUDA TÉCNICA GENERADA
 - **LOOP_CLIENT_06:** selector de dirección (el chevron es decorativo).
-- **Axe → LOOP_QA_TOOLING** (sustituto: Lighthouse, lo corre Jorge).
-- `PromoBanner`: fondo con `style` inline (deuda de LOOP_VISUAL_10).
+- **LOOP_QA_TOOLING:** Axe (sustituto: Lighthouse, lo corre Jorge).
+- **LOOP_VISUAL_10:** `PromoBanner` con fondo `style` inline.
 - `PromoBanner` sigue con `h-28`; no se agrandó (fuera de lo pedido en las sub-tandas).
+
+### CIERRE
+- **Hash del commit:** `e3465e6` (`e3465e6cf269c95e39adba45e442f6bf6475c655`)
+- **Hash del merge:** `e3465e6` (fast-forward a `main`, sin commit de merge)
+- **QA a 360px:** "Restaurantes cerca de ti" + "Ver todo →" caben en una línea (título 209px, botón 77×44, 33px libres); sin cambios.
+- **Estado de la rama `loop/visual-09-home`:** pendiente de borrar tras verificar producción (READY + revisión de Jorge). No borrada.
 
 ### PREPARACIÓN PARA LOOP_VISUAL_07
 El saludo, los títulos de sección y el bloque del pedido activo tienen ya su jerarquía y espaciado estables para animar entradas.
