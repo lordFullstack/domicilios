@@ -40,7 +40,7 @@ export const PromoBanner = () => {
 
   return (
     <div
-      className="mx-5 mb-6"
+      className="mx-5 mb-8"
       role="region"
       aria-roledescription="carrusel"
       aria-label="Promociones"

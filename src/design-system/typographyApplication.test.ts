@@ -52,10 +52,10 @@ describe('tipografía aplicada (LOOP_VISUAL_05)', () => {
     }
   })
 
-  it('jerarquía de títulos del cliente: xl (Home, Categoría, 404) y lg (secundarios)', () => {
+  it('jerarquía de títulos del cliente: xl (Categoría, 404), display (Home) y lg (secundarios)', () => {
     const h1 = (path: string) => read(path).match(/<h1 className="([^"]*)"/)?.[1] ?? ''
+    // El saludo del Home pasó a text-display en LOOP_VISUAL_09 (ver homeStructure/HomeHeader tests).
     const xl = [
-      '/src/features/client/components/HomeHeader.tsx',
       '/src/features/client/pages/CategoryResultsPage.tsx',
       '/src/shared/pages/NotFound.tsx',
     ]

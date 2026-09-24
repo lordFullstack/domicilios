@@ -33,7 +33,7 @@ export const ActiveOrderCard = ({ order }: ActiveOrderCardProps) => {
   const openOrder = () => navigate(ROUTES.CLIENT_ORDER.replace(':id', order.id))
 
   return (
-    <div className="px-5 mb-6">
+    <div className="px-5 mb-8">
       {/* <button> nativo: responde a Enter/Espacio sin emularlo. Solo contiene texto. */}
       <button
         type="button"

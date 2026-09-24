@@ -12,7 +12,7 @@ export const SearchBar = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 mb-8">
       <button
         type="button"
         onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}

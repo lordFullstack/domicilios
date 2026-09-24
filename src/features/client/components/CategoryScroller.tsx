@@ -11,13 +11,13 @@ export const CategoryScroller = () => {
   const navigate = useNavigate()
 
   return (
-    <div>
-      <h2 className="font-display font-bold text-sm text-gray-700 mb-2 px-5">Categorías</h2>
+    <div className="mb-8">
+      <h2 className="font-display text-lg font-bold text-secondary mb-4 px-5">Categorías</h2>
       {/* Máscara de desvanecido a la derecha: con 7 categorías la fila no
           entra completa en pantalla, y sin esta señal la última (Mariscos)
           pasaba inadvertida hasta hacer scroll a ciegas. */}
       <div
-        className="flex gap-4 px-5 pb-4 overflow-x-auto scrollbar-hide [mask-image:linear-gradient(to_right,black_90%,transparent_100%)]"
+        className="flex gap-4 px-5 pb-1 overflow-x-auto scrollbar-hide [mask-image:linear-gradient(to_right,black_90%,transparent_100%)]"
       >
         {RESTAURANT_CATEGORIES.map((c) => (
           <button

@@ -14,7 +14,7 @@ export const HomeHeroBanner = () => {
   const navigate = useNavigate()
 
   return (
-    <div className="mx-5 mb-6">
+    <div className="mx-5 mb-8">
       <button
         type="button"
         onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}

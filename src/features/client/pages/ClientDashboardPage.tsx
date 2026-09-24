@@ -31,12 +31,14 @@ export const ClientDashboardPage = () => {
 
   return (
     <AppShell>
-      <HomeHeader />
-      <SearchBar />
-      <HomeHeroBanner />
-      <CategoryScroller />
-
+      {/* Home adaptativo: con un pedido en curso, ese pedido es el protagonista
+          (va arriba) y se omiten el saludo visible y el hero para no competir
+          con él; el h1 sigue existiendo, solo para lectores de pantalla. */}
+      <HomeHeader showGreeting={!activeOrder} />
       {activeOrder && <ActiveOrderCard order={activeOrder} />}
+      <SearchBar />
+      {!activeOrder && <HomeHeroBanner />}
+      <CategoryScroller />
 
       <PromoBanner />
       <FeaturedSection type="featured_product" title="Platos que te pueden gustar" variant="promoGrid" />

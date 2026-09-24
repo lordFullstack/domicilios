@@ -37,9 +37,9 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
 
   if (variant === 'promoGrid') {
     return (
-      <div className="mb-6">
-        <div className="flex items-center justify-between px-5 mb-3">
-          <h2 className="font-display font-bold text-sm text-gray-700">{title}</h2>
+      <div className="mb-8">
+        <div className="flex items-baseline justify-between px-5 mb-4">
+          <h2 className="font-display text-lg font-bold text-secondary">{title}</h2>
           <button
             type="button"
             onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}
@@ -70,7 +70,7 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
                   <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} aria-hidden="true" />
                 )}
               </span>
-              <span className="absolute top-2 left-2 flex items-center gap-1 bg-coral text-white text-xs font-bold px-2 py-1 rounded-full">
+              <span className="absolute top-2 left-2 flex items-center gap-1 bg-coral text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
                 <Flame className="w-3 h-3" fill="currentColor" aria-hidden="true" />
                 Oferta
               </span>
@@ -88,8 +88,8 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
   }
 
   return (
-    <div className="mb-6">
-      <h2 className="font-display font-bold text-sm text-gray-700 mb-3 px-5">{title}</h2>
+    <div className="mb-8">
+      <h2 className="font-display text-lg font-bold text-secondary mb-4 px-5">{title}</h2>
       <div className="flex gap-3 px-5 overflow-x-auto scrollbar-hide">
         {promotions.map((promo) => (
           <button
