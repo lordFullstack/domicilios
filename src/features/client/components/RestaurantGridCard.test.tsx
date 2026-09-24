@@ -43,9 +43,9 @@ describe('<RestaurantGridCard />', () => {
     expect(screen.getByLabelText('Quitar Asados de favoritos')).toHaveAttribute('aria-pressed', 'true')
   })
 
-  it('la tarjeta se abre con Espacio', () => {
+  it('la tarjeta se abre al activar el botón principal (nativo: Enter/Espacio)', () => {
     renderCard(base)
-    fireEvent.keyDown(screen.getByRole('button', { name: 'Asados' }), { key: ' ' })
+    fireEvent.click(screen.getByRole('button', { name: 'Asados' }))
     expect(navigate).toHaveBeenCalledWith('/app/restaurant/r1')
   })
 

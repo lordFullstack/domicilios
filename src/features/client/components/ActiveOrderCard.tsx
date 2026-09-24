@@ -34,18 +34,11 @@ export const ActiveOrderCard = ({ order }: ActiveOrderCardProps) => {
 
   return (
     <div className="px-5 mb-6">
-      <div
-        role="button"
-        tabIndex={0}
+      {/* <button> nativo: responde a Enter/Espacio sin emularlo. Solo contiene texto. */}
+      <button
+        type="button"
         onClick={openOrder}
-        onKeyDown={(e) => {
-          // role="button" debe responder a Enter y Espacio.
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault()
-            openOrder()
-          }
-        }}
-        className="focus-ring rounded-2xl p-4 bg-secondary shadow-floating cursor-pointer active:scale-[0.98] transition-transform"
+        className="focus-ring block w-full rounded-3xl bg-secondary p-4 text-left shadow-floating transition-transform active:scale-[0.98]"
       >
         <div className="flex items-center gap-2 mb-3">
           <OrderStatusIcon status={order.status} className="w-4 h-4 text-white" aria-hidden="true" />
@@ -54,7 +47,7 @@ export const ActiveOrderCard = ({ order }: ActiveOrderCardProps) => {
           </p>
         </div>
 
-        <p className="text-white/60 text-xs mb-3">Pedido #{order.id.substring(0, 8).toUpperCase()}</p>
+        <p className="text-white/60 text-xs mb-3 tabular-nums">Pedido #{order.id.substring(0, 8).toUpperCase()}</p>
 
         <div className="flex items-center gap-1.5 mb-4" aria-hidden="true">
           {STEPS.map((step, i) => (
@@ -71,7 +64,7 @@ export const ActiveOrderCard = ({ order }: ActiveOrderCardProps) => {
             Ver seguimiento <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
           </span>
         </div>
-      </div>
+      </button>
     </div>
   )
 }

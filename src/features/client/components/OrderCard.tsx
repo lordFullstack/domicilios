@@ -72,11 +72,11 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
   })
 
   return (
-    <Card hoverable onClick={onClick}>
-      <div className="flex gap-4">
+    <Card hoverable onClick={onClick} className="card-surface card-surface--static rounded-3xl">
+      <div className="flex gap-3">
         {/* Antes imprimía image_url como TEXTO (con foto real salía la URL). */}
-        <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
-          <ProductImage imageUrl={restaurant?.image_url} alt="" fallbackIconSize={24} width={48} />
+        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
+          <ProductImage imageUrl={restaurant?.image_url} alt="" fallbackIconSize={20} width={40} height={40} />
         </div>
 
         <div className="flex-1 min-w-0">
@@ -85,7 +85,7 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
               <h3 className="font-semibold text-sm text-secondary truncate">
                 {restaurant?.name || 'Restaurante'}
               </h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 tabular-nums">
                 #{order.id.substring(0, 8).toUpperCase()} · {formattedDate} · {formattedTime}
               </p>
             </div>
@@ -105,7 +105,7 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
             <span className="text-xs text-gray-500">
               {order.delivery_person_id ? 'Domiciliario asignado' : 'Sin domiciliario'}
             </span>
-            <span className="font-display font-semibold text-ink">{formatCOP(order.total)}</span>
+            <span className="font-display font-semibold tabular-nums text-ink">{formatCOP(order.total)}</span>
           </div>
         </div>
       </div>

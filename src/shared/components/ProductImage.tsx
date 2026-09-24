@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Icon } from '@/shared/icons'
+import { RocketMark } from './RocketMark'
 import { supabaseImageUrl } from '@/shared/utils/supabaseImage'
 
 interface ProductImageProps {
@@ -9,6 +10,8 @@ interface ProductImageProps {
   emojiClassName?: string
   /** Tamaño del ícono de respaldo (sin foto ni emoji). */
   fallbackIconSize?: number
+  /** 'rocket' → el cohete de marca (RocketMark) cuando no hay foto o falla; 'icon' (default) → ícono gris. */
+  fallback?: 'icon' | 'rocket'
   /**
    * Ancho y alto reales del contenedor (px). Se usan para pedirle a
    * Supabase una versión redimensionada en vez del archivo original — sin
@@ -27,7 +30,7 @@ interface ProductImageProps {
 // Los productos pueden tener una foto real (URL de Supabase Storage) o,
 // como respaldo rápido, un emoji guardado directo en image_url.
 // Este componente decide cuál mostrar sin que cada pantalla lo repita.
-export const ProductImage = ({ imageUrl, alt, className, emojiClassName, fallbackIconSize = 28, width, height }: ProductImageProps) => {
+export const ProductImage = ({ imageUrl, alt, className, emojiClassName, fallbackIconSize = 28, fallback = 'icon', width, height }: ProductImageProps) => {
   // Si la URL falla (archivo borrado del Storage, sin red), cae al emoji
   // de respaldo en vez de mostrar el ícono de imagen rota del navegador.
   const [failedUrl, setFailedUrl] = useState<string | null>(null)
@@ -74,7 +77,11 @@ export const ProductImage = ({ imageUrl, alt, className, emojiClassName, fallbac
   // Sin foto, o la foto no cargó: ícono propio en vez del emoji 🍽️.
   return (
     <span className={emojiClassName} {...a11y}>
-      <Icon name="restaurants" size={fallbackIconSize} className="text-gray-400" />
+      {fallback === 'rocket' ? (
+        <RocketMark variant="icon" size={Math.round(fallbackIconSize * 1.5)} className="opacity-70" />
+      ) : (
+        <Icon name="restaurants" size={fallbackIconSize} className="text-gray-400" />
+      )}
     </span>
   )
 }

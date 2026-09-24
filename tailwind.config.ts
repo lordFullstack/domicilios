@@ -115,10 +115,12 @@ export default {
       boxShadow: {
         xs:  '0 1px 2px rgba(15,23,42,0.04)',
         sm:  '0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06)',
-        card: '0 1px 2px rgba(15,23,42,0.04), 0 4px 12px rgba(15,23,42,0.06)',
+        // Elevación de cards (LOOP_VISUAL_10): nivel 1 / 2 / 3, color cálido.
+        card: '0 1px 2px rgba(28,25,23,0.04), 0 4px 12px rgba(28,25,23,0.06)',
         'card-hover':
-          '0 2px 4px rgba(15,23,42,0.04), 0 12px 32px rgba(15,23,42,0.10)',
-        floating: '0 8px 24px rgba(15,23,42,0.12)',
+          '0 2px 4px rgba(28,25,23,0.04), 0 12px 32px rgba(28,25,23,0.10)',
+        floating: '0 8px 24px rgba(28,25,23,0.12)',
+        hairline: 'inset 0 0 0 0.5px rgba(28,25,23,0.08)',
         'bottom-sheet': '0 -8px 32px rgba(15,23,42,0.14)',
         'premium':
           'inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 2px rgba(28,25,23,0.04), 0 8px 24px rgba(28,25,23,0.08)',

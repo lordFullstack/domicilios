@@ -25,19 +25,21 @@ const FeaturedCard = ({ product, quantity, restaurantIsOpen, onOpenDetail, onAdd
   const price = formatCOP(product.price)
 
   return (
-    <li className="relative w-[152px] flex-shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+    <li className="card-surface card-surface--static relative w-40 flex-shrink-0 overflow-hidden rounded-2xl bg-white">
       <button
         type="button"
         onClick={() => onOpenDetail(product)}
         aria-label={`Ver detalles de ${product.name}`}
         className="focus-ring block w-full text-left active:scale-[0.99] transition-transform"
       >
-        <span className="flex h-24 w-full items-center justify-center overflow-hidden bg-gray-50 text-3xl">
-          <ProductImage imageUrl={product.image_url} alt="" width={152} height={96} />
+        <span className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden bg-gray-50 text-3xl">
+          <ProductImage imageUrl={product.image_url} alt="" width={160} height={120} fallback="rocket" />
         </span>
-        <span className="block p-2.5 pr-12">
-          <span className="block truncate font-display text-xs font-bold text-secondary">{product.name}</span>
-          <span className="mt-0.5 block text-xs font-semibold text-ink">{price}</span>
+        {/* Fila inferior: nombre + precio a la izquierda; el "+" (hermano
+            absoluto, centrado en esta fila de 60px) a la derecha. */}
+        <span className="flex min-h-[60px] flex-col justify-center gap-0.5 p-3 pr-14">
+          <span className="block truncate font-display text-sm font-bold text-secondary">{product.name}</span>
+          <span className="block text-sm font-semibold tabular-nums text-ink">{price}</span>
         </span>
       </button>
 

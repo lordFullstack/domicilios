@@ -55,9 +55,9 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
               key={promo.id}
               onClick={() => handleClick(promo.restaurant_id)}
               disabled={!promo.restaurant_id}
-              className="relative text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
+              className="card-surface focus-ring relative text-left rounded-3xl overflow-hidden bg-white"
             >
-              <div className="aspect-[4/3] bg-primary/10 overflow-hidden flex items-center justify-center">
+              <span className="aspect-[4/3] bg-primary/10 overflow-hidden flex items-center justify-center">
                 {promo.image_url ? (
                   <img
                     src={supabaseImageUrl(promo.image_url, { width: 300, height: 225 })}
@@ -69,17 +69,17 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
                 ) : (
                   <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} aria-hidden="true" />
                 )}
-              </div>
+              </span>
               <span className="absolute top-2 left-2 flex items-center gap-1 bg-coral text-white text-[10px] font-bold px-2 py-1 rounded-full">
                 <Flame className="w-3 h-3" fill="currentColor" aria-hidden="true" />
                 Oferta
               </span>
-              <div className="p-3">
-                <p className="font-semibold text-xs text-secondary line-clamp-2">{promo.title}</p>
+              <span className="block p-3">
+                <span className="block font-semibold text-xs text-secondary line-clamp-2">{promo.title}</span>
                 {promo.subtitle && (
-                  <p className="text-[11px] text-gray-500 truncate mt-0.5">{promo.subtitle}</p>
+                  <span className="mt-0.5 block truncate text-[11px] text-gray-500">{promo.subtitle}</span>
                 )}
-              </div>
+              </span>
             </button>
           ))}
         </div>
@@ -97,9 +97,9 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
             key={promo.id}
             onClick={() => handleClick(promo.restaurant_id)}
             disabled={!promo.restaurant_id}
-            className="flex-shrink-0 w-64 text-left rounded-2xl overflow-hidden border border-gray-100 shadow-card active:scale-95 transition-transform"
+            className="card-surface focus-ring flex-shrink-0 w-64 text-left rounded-3xl overflow-hidden bg-white"
           >
-            <div className="aspect-[4/3] bg-primary/10 overflow-hidden flex items-center justify-center">
+            <span className="aspect-[4/3] bg-primary/10 overflow-hidden flex items-center justify-center">
               {promo.image_url ? (
                 <img
                   src={supabaseImageUrl(promo.image_url, { width: 400, height: 300 })}
@@ -113,13 +113,13 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
               ) : (
                 <Store className="w-7 h-7 text-primary/40" strokeWidth={1.5} aria-hidden="true" />
               )}
-            </div>
-            <div className="p-3">
-              <p className="font-semibold text-sm text-secondary truncate">{promo.title}</p>
+            </span>
+            <span className="block p-3">
+              <span className="block truncate font-semibold text-sm text-secondary">{promo.title}</span>
               {promo.subtitle && (
-                <p className="text-xs text-gray-500 truncate mt-0.5">{promo.subtitle}</p>
+                <span className="mt-0.5 block truncate text-xs text-gray-500">{promo.subtitle}</span>
               )}
-            </div>
+            </span>
           </button>
         ))}
       </div>

@@ -55,7 +55,7 @@ export const PromoBanner = () => {
         type="button"
         onClick={handleClick}
         disabled={!current.restaurant_id}
-        className="w-full text-left rounded-2xl overflow-hidden relative bg-primary/10 active:scale-[0.98] transition-transform"
+        className="card-surface focus-ring w-full text-left rounded-3xl overflow-hidden relative bg-primary/10 disabled:cursor-default"
       >
         {current.image_url ? (
           <div className="h-28 bg-cover bg-center" style={{ backgroundImage: `url(${current.image_url})` }}>

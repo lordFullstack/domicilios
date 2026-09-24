@@ -35,6 +35,9 @@ export const MenuProductCard = ({
   const reason = !product.available ? 'Agotado' : 'Cerrado'
   const price = formatCOP(product.price)
   const titleId = `product-${product.id}`
+  // Metadata de 1 línea: primera línea de la descripción; si no hay, la categoría.
+  // (No se inventan peso ni tiempo: el modelo no los tiene.)
+  const meta = product.description?.split('\n')[0].trim() || product.category
 
   const add = () => {
     if (onAdd(product)) trigger()
@@ -44,8 +47,8 @@ export const MenuProductCard = ({
     <li>
       <article
         aria-labelledby={titleId}
-        className={`w-full overflow-hidden rounded-xl border border-gray-100 bg-white ${
-          !product.available ? 'opacity-55' : 'shadow-sm'
+        className={`card-surface card-surface--static w-full overflow-hidden rounded-2xl bg-white ${
+          !product.available ? 'opacity-55' : ''
         }`}
       >
         <div className="flex items-center gap-3 p-3">
@@ -56,7 +59,7 @@ export const MenuProductCard = ({
             className="focus-ring flex min-w-0 flex-1 items-center gap-3 text-left active:scale-[0.99] transition-transform"
           >
             <span className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50 flex items-center justify-center text-4xl">
-              <ProductImage imageUrl={product.image_url} alt="" width={96} />
+              <ProductImage imageUrl={product.image_url} alt="" width={96} fallback="rocket" />
             </span>
             <span className="min-w-0 flex-1">
               {/* <span> y no <h3>/<p>: van dentro de un <button>, que solo admite
@@ -64,8 +67,8 @@ export const MenuProductCard = ({
               <span id={titleId} className="block font-display text-base font-bold text-secondary">
                 {product.name}
               </span>
-              <span className="mt-1 line-clamp-2 text-xs leading-5 text-gray-500">{product.description}</span>
-              <span className="mt-2 block text-base font-semibold text-ink">{price}</span>
+              {meta && <span className="mt-1 line-clamp-1 text-xs leading-5 text-gray-500">{meta}</span>}
+              <span className="mt-2 block text-base font-semibold tabular-nums text-ink">{price}</span>
             </span>
           </button>
 
