@@ -1,11 +1,13 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { ChevronLeft, ClipboardList } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders } from '@/hooks/useLocalData'
 import { Button } from '@/shared/components/Button'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { Skeleton } from '@/shared/components/Skeleton'
+import { LoadingState } from '@/shared/components/LoadingState'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { EMPTY_COPY } from '@/shared/constants/stateCopy'
 import { OrderCard } from '../components/OrderCard'
 import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
@@ -45,7 +47,7 @@ export const OrdersPage = () => {
         <NotificationPermissionCard />
 
         {loading ? (
-          <div className="flex flex-col gap-3">
+          <LoadingState label="Cargando pedidos" className="flex flex-col gap-3">
             {[0, 1, 2].map((i) => (
               <div key={i} className="flex gap-4 rounded-2xl border border-gray-100 p-4">
                 <Skeleton className="w-12 h-12 flex-shrink-0" />
@@ -56,7 +58,7 @@ export const OrdersPage = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </LoadingState>
         ) : orders.length > 0 ? (
           <div className="flex flex-col gap-3">
             {orders.map((order) => (
@@ -69,10 +71,10 @@ export const OrdersPage = () => {
           </div>
         ) : (
           <EmptyState
-            icon={ClipboardList}
-            title="No tienes órdenes"
-            description="Realiza tu primera orden ahora."
-            action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>}
+            illustration={EMPTY_COPY.orders.illustration}
+            title={EMPTY_COPY.orders.title}
+            description={EMPTY_COPY.orders.description}
+            action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>{EMPTY_COPY.orders.cta}</Button>}
           />
         )}
       </div>

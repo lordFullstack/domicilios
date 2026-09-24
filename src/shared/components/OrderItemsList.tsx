@@ -1,4 +1,6 @@
 import { useOrderItems } from '@/hooks/useLocalData'
+import { LoadingState } from './LoadingState'
+import { Skeleton } from './Skeleton'
 
 interface OrderItemsListProps {
   orderId: string
@@ -11,7 +13,12 @@ export const OrderItemsList = ({ orderId, className }: OrderItemsListProps) => {
   const { items, loading } = useOrderItems(orderId)
 
   if (loading) {
-    return <p className={`text-xs text-gray-300 ${className || ''}`}>Cargando pedido...</p>
+    return (
+      <LoadingState label="Cargando productos del pedido" className={`space-y-1.5 ${className || ''}`}>
+        <Skeleton className="h-3 w-2/3" />
+        <Skeleton className="h-3 w-1/2" />
+      </LoadingState>
+    )
   }
 
   if (items.length === 0) {

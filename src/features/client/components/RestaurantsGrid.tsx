@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom'
-import { Search, AlertTriangle, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Restaurant } from '@/shared/types'
 import { RestaurantGrid } from './RestaurantGrid'
 import { RestaurantCardsSkeleton } from '@/shared/components/RestaurantCardsSkeleton'
 import { EmptyState } from '@/shared/components/EmptyState'
-import { Button } from '@/shared/components/Button'
+import { ErrorState } from '@/shared/components/ErrorState'
 import { ROUTES } from '@/config/constants'
+import { EMPTY_COPY, ERROR_COPY } from '@/shared/constants/stateCopy'
 
 interface RestaurantsGridProps {
   restaurants: Restaurant[]
@@ -37,21 +38,21 @@ export const RestaurantsGrid = ({ restaurants, loading, error, onRetry }: Restau
       {loading ? (
         <RestaurantCardsSkeleton />
       ) : error ? (
-        <EmptyState
-          role="alert"
-          icon={AlertTriangle}
-          title="Algo salió mal"
-          description="No pudimos cargar los restaurantes."
-          action={<Button variant="tertiary" onClick={onRetry}>Intentar nuevamente</Button>}
+        <ErrorState
+          illustration={ERROR_COPY.restaurantsNetwork.illustration}
+          title={ERROR_COPY.restaurantsNetwork.title}
+          description={ERROR_COPY.restaurantsNetwork.description}
+          retryLabel={ERROR_COPY.restaurantsNetwork.cta}
+          onRetry={onRetry}
         />
       ) : restaurants.length > 0 ? (
         // El "Ver todo →" vive junto al título (un solo CTA hacia Restaurantes).
         <RestaurantGrid restaurants={restaurants} />
       ) : (
         <EmptyState
-          icon={Search}
-          title="No encontramos restaurantes"
-          description="Prueba cambiando tu ubicación o revisa más tarde."
+          illustration={EMPTY_COPY.noRestaurants.illustration}
+          title={EMPTY_COPY.noRestaurants.title}
+          description={EMPTY_COPY.noRestaurants.description}
         />
       )}
     </div>

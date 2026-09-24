@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom'
 import { ReactNode } from 'react'
-import { Loader2 } from 'lucide-react'
+import { LoadingState } from '@/shared/components/LoadingState'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 
@@ -23,14 +23,7 @@ export const ProtectedRoute = ({
   const { isAuthenticated, loading, user } = useAuth()
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-white">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 mx-auto mb-3 text-primary animate-spin" />
-          <p className="text-sm text-gray-500">Cargando...</p>
-        </div>
-      </div>
-    )
+    return <LoadingState fullScreen />
   }
 
   if (!isAuthenticated) {

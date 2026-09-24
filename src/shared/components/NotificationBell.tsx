@@ -7,6 +7,8 @@ import { useAuth } from '@/shared/hooks/useAuth'
 import { requestNotificationPermission } from '@/shared/utils/notificationSound'
 import { getNotificationTarget } from '@/shared/utils/notificationLinks'
 import { ROUTES } from '@/config/constants'
+import { EmptyState } from './EmptyState'
+import { EMPTY_COPY } from '@/shared/constants/stateCopy'
 
 const timeAgo = (dateStr: string) => {
   const minutes = Math.max(0, Math.round((Date.now() - new Date(dateStr).getTime()) / 60000))
@@ -107,9 +109,12 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
 
           <div className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
-              <p className="text-center text-gray-500 text-xs py-8">
-                No tienes notificaciones todavía
-              </p>
+              <EmptyState
+                size="sm"
+                illustration={EMPTY_COPY.notificationsAll.illustration}
+                title={EMPTY_COPY.notificationsAll.title}
+                description={EMPTY_COPY.notificationsAll.description}
+              />
             ) : (
               notifications.slice(0, 8).map((n) => (
                 <button

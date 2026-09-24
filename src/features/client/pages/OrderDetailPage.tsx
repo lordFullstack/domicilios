@@ -4,6 +4,10 @@ import { ChevronLeft, XCircle, Star, RotateCcw, Wifi, WifiOff } from 'lucide-rea
 import { Button } from '@/shared/components/Button'
 import { BottomSheet } from '@/shared/components/BottomSheet'
 import { Toast } from '@/shared/components/Toast'
+import { ErrorState } from '@/shared/components/ErrorState'
+import { LoadingState } from '@/shared/components/LoadingState'
+import { Skeleton } from '@/shared/components/Skeleton'
+import { ERROR_COPY } from '@/shared/constants/stateCopy'
 import {
   useOrders,
   useOrderItems,
@@ -66,18 +70,26 @@ export const OrderDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex items-center justify-center">
-        <p className="text-gray-500 text-sm">Cargando orden...</p>
-      </div>
+      <LoadingState fullScreen label="Cargando pedido" className="max-w-md mx-auto safe-left safe-right">
+        <div className="w-full px-5 space-y-3">
+          <Skeleton className="h-6 w-1/3" />
+          <Skeleton className="h-40 w-full rounded-2xl" />
+          <Skeleton className="h-24 w-full rounded-2xl" />
+        </div>
+      </LoadingState>
     )
   }
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-white max-w-md mx-auto safe-left safe-right flex flex-col items-center justify-center px-8 text-center">
-        <p className="text-gray-500 text-sm mb-4">Orden no encontrada</p>
-        <Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_ORDERS)}>Volver a mis órdenes</Button>
-      </div>
+      <ErrorState
+        fullScreen
+        className="max-w-md mx-auto safe-left safe-right"
+        illustration={ERROR_COPY.orderNotFound.illustration}
+        title={ERROR_COPY.orderNotFound.title}
+        description={ERROR_COPY.orderNotFound.description}
+        action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_ORDERS)}>{ERROR_COPY.orderNotFound.cta}</Button>}
+      />
     )
   }
 

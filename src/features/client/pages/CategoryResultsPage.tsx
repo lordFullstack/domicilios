@@ -1,12 +1,14 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { ChevronLeft } from 'lucide-react'
-import { Icon, Drop, brandIcon, CATEGORY_ICON, CATEGORY_DROP_CLASS } from '@/shared/icons'
+import { Icon, Drop, CATEGORY_ICON, CATEGORY_DROP_CLASS } from '@/shared/icons'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { useProductsByCategory } from '@/hooks/useLocalData'
 import { AppShell } from '@/shared/components/AppShell'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { Skeleton } from '@/shared/components/Skeleton'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { Button } from '@/shared/components/Button'
+import { EMPTY_COPY } from '@/shared/constants/stateCopy'
 import { ROUTES, RESTAURANT_CATEGORIES } from '@/config/constants'
 
 // Resultado de tocar un botón de categoría (🍕 Pizza, 🍔 Burgers, etc.) en el
@@ -84,9 +86,10 @@ export const CategoryResultsPage = () => {
           </div>
         ) : (
           <EmptyState
-            icon={brandIcon('restaurants')}
-            title="No encontramos productos"
-            description={`Todavía no hay productos de ${categoryInfo?.label.toLowerCase() || 'esta categoría'} disponibles.`}
+            illustration={EMPTY_COPY.emptyCategory.illustration}
+            title={EMPTY_COPY.emptyCategory.title}
+            description={EMPTY_COPY.emptyCategory.description}
+            action={<Button variant="tertiary" onClick={() => navigate(ROUTES.CLIENT_HOME)}>{EMPTY_COPY.emptyCategory.cta}</Button>}
           />
         )}
       </div>

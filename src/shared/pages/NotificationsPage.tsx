@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Check, Bell } from 'lucide-react'
+import { ChevronLeft, Check } from 'lucide-react'
 import { useNotifications } from '@/hooks/useLocalData'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { getNotificationIcon, getNotificationTarget } from '@/shared/utils/notificationLinks'
 import { Skeleton } from '@/shared/components/Skeleton'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { EMPTY_COPY } from '@/shared/constants/stateCopy'
 
 const timeAgo = (dateStr: string) => {
   const minutes = Math.max(0, Math.round((Date.now() - new Date(dateStr).getTime()) / 60000))
@@ -89,13 +90,9 @@ export const NotificationsPage = () => {
         </div>
       ) : visible.length === 0 ? (
         <EmptyState
-          icon={Bell}
-          title={tab === 'unread' ? 'Todo al día' : 'Sin notificaciones'}
-          description={
-            tab === 'unread'
-              ? 'No tienes notificaciones sin leer.'
-              : 'Todavía no tienes notificaciones.'
-          }
+          illustration={(tab === 'unread' ? EMPTY_COPY.notificationsUnread : EMPTY_COPY.notificationsAll).illustration}
+          title={(tab === 'unread' ? EMPTY_COPY.notificationsUnread : EMPTY_COPY.notificationsAll).title}
+          description={(tab === 'unread' ? EMPTY_COPY.notificationsUnread : EMPTY_COPY.notificationsAll).description}
         />
       ) : (
         <div className="px-5 flex flex-col gap-2">

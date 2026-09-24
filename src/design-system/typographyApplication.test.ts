@@ -57,7 +57,6 @@ describe('tipografía aplicada (LOOP_VISUAL_05)', () => {
     // El saludo del Home pasó a text-display en LOOP_VISUAL_09 (ver homeStructure/HomeHeader tests).
     const xl = [
       '/src/features/client/pages/CategoryResultsPage.tsx',
-      '/src/shared/pages/NotFound.tsx',
     ]
     const lg = [
       '/src/features/client/pages/CartPage.tsx',
@@ -70,6 +69,8 @@ describe('tipografía aplicada (LOOP_VISUAL_05)', () => {
     ]
     xl.forEach((f) => expect(h1(f), f).toMatch(/\btext-xl\b/))
     lg.forEach((f) => expect(h1(f), f).toMatch(/\btext-lg\b/))
+    // El 404 usa ErrorState fullScreen, cuyo h1 es text-xl (ver ErrorState.test).
+    expect(read('/src/shared/pages/NotFound.tsx')).toContain('<ErrorState')
   })
 
   it('OrderCard usa h2 (sin h3 huérfano bajo el h1 de Mis Órdenes)', () => {

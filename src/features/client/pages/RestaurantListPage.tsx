@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Store } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { useRestaurants } from '@/hooks/useLocalData'
 import { AppShell } from '@/shared/components/AppShell'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { RestaurantCardsSkeleton } from '@/shared/components/RestaurantCardsSkeleton'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { EMPTY_COPY } from '@/shared/constants/stateCopy'
 import { Button } from '@/shared/components/Button'
 import { ROUTES } from '@/config/constants'
 import { ExploreSearchInput } from '../components/ExploreSearchInput'
@@ -50,19 +51,19 @@ export const RestaurantListPage = () => {
     if (!hasData) {
       return (
         <EmptyState
-          icon={Store}
-          title="Todavía no hay restaurantes disponibles"
-          description="Estamos sumando restaurantes en Riohacha. Vuelve pronto."
+          illustration={EMPTY_COPY.noRestaurants.illustration}
+          title={EMPTY_COPY.noRestaurants.title}
+          description={EMPTY_COPY.noRestaurants.description}
         />
       )
     }
     if (results.length === 0) {
       return (
         <EmptyState
-          illustration="noResults"
-          title="No encontramos restaurantes con esos filtros"
-          description={term ? `Nada coincide con "${term}". Prueba otra palabra o quita filtros.` : 'Prueba quitando algún filtro.'}
-          action={<Button variant="tertiary" onClick={clearAll}>Limpiar filtros</Button>}
+          illustration={EMPTY_COPY.noResults.illustration}
+          title={EMPTY_COPY.noResults.title}
+          description={EMPTY_COPY.noResults.description}
+          action={<Button variant="tertiary" onClick={clearAll}>{EMPTY_COPY.noResults.cta}</Button>}
         />
       )
     }

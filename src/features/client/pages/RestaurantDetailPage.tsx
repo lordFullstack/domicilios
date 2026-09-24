@@ -1,8 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useMemo } from 'react'
-import { AlertTriangle, Ban, SearchX } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { ErrorState } from '@/shared/components/ErrorState'
+import { EMPTY_COPY, ERROR_COPY } from '@/shared/constants/stateCopy'
 import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
 import { Toast } from '@/shared/components/Toast'
 import { useRestaurantById, useProducts, useFavorites } from '@/hooks/useLocalData'
@@ -97,12 +98,11 @@ export const RestaurantDetailPage = () => {
   if (!restaurant && restaurantQuery.error) {
     return (
       <FullScreen>
-        <EmptyState
-          role="alert"
-          icon={AlertTriangle}
-          title="No pudimos cargar este restaurante"
-          description="Revisa tu conexión e intenta de nuevo."
-          action={<Button variant="gradient" onClick={restaurantQuery.reload}>Reintentar</Button>}
+        <ErrorState
+          illustration={ERROR_COPY.restaurantLoad.illustration}
+          title={ERROR_COPY.restaurantLoad.title}
+          description={ERROR_COPY.restaurantLoad.description}
+          action={<Button variant="gradient" onClick={restaurantQuery.reload}>{ERROR_COPY.restaurantLoad.cta}</Button>}
         />
       </FullScreen>
     )
@@ -111,13 +111,13 @@ export const RestaurantDetailPage = () => {
   if (!restaurant) {
     return (
       <FullScreen>
-        <EmptyState
-          icon={SearchX}
-          title="No encontramos este restaurante"
-          description="Puede que el enlace esté mal o que ya no exista."
+        <ErrorState
+          illustration={ERROR_COPY.restaurantNotFound.illustration}
+          title={ERROR_COPY.restaurantNotFound.title}
+          description={ERROR_COPY.restaurantNotFound.description}
           action={
             <div className="flex flex-col gap-2">
-              <Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>Explorar restaurantes</Button>
+              <Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>{ERROR_COPY.restaurantNotFound.cta}</Button>
               <Button variant="ghost" onClick={() => navigate(ROUTES.CLIENT_HOME)}>
                 Volver al inicio
               </Button>
@@ -133,11 +133,11 @@ export const RestaurantDetailPage = () => {
   if (!restaurant.approved) {
     return (
       <FullScreen>
-        <EmptyState
-          icon={Ban}
-          title="Restaurante no disponible"
-          description="Este restaurante está temporalmente suspendido y no puede recibir pedidos."
-          action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_HOME)}>Volver al inicio</Button>}
+        <ErrorState
+          illustration={ERROR_COPY.restaurantUnavailable.illustration}
+          title={ERROR_COPY.restaurantUnavailable.title}
+          description={ERROR_COPY.restaurantUnavailable.description}
+          action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_HOME)}>{ERROR_COPY.restaurantUnavailable.cta}</Button>}
         />
       </FullScreen>
     )
@@ -154,21 +154,22 @@ export const RestaurantDetailPage = () => {
     if (productsQuery.loading) return <MenuListSkeleton />
     if (productsQuery.error && products.length === 0) {
       return (
-        <EmptyState
-          role="alert"
-          icon={AlertTriangle}
-          title="No pudimos cargar el menú"
-          description="Revisa tu conexión e intenta de nuevo."
-          action={<Button variant="tertiary" onClick={productsQuery.reload}>Reintentar</Button>}
+        <ErrorState
+          illustration={ERROR_COPY.menuLoad.illustration}
+          title={ERROR_COPY.menuLoad.title}
+          description={ERROR_COPY.menuLoad.description}
+          retryLabel={ERROR_COPY.menuLoad.cta}
+          onRetry={productsQuery.reload}
         />
       )
     }
     if (products.length === 0) {
       return (
         <EmptyState
-          icon={AlertTriangle}
-          title="Sin productos disponibles"
-          description="Este restaurante todavía no tiene productos disponibles."
+          illustration={EMPTY_COPY.emptyMenu.illustration}
+          title={EMPTY_COPY.emptyMenu.title}
+          description={EMPTY_COPY.emptyMenu.description}
+          action={<Button variant="tertiary" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>{EMPTY_COPY.emptyMenu.cta}</Button>}
         />
       )
     }

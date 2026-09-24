@@ -1,24 +1,11 @@
-import { AlertTriangle, Lock, WifiOff, LucideIcon } from 'lucide-react'
 import { LoadErrorKind } from '@/hooks/useLocalData'
-import { EmptyState } from '@/shared/components/EmptyState'
-import { Button } from '@/shared/components/Button'
+import { ErrorState } from '@/shared/components/ErrorState'
+import { ERROR_COPY } from '@/shared/constants/stateCopy'
 
-const COPY: Record<LoadErrorKind, { icon: LucideIcon; title: string; description: string }> = {
-  network: {
-    icon: WifiOff,
-    title: 'Sin conexión',
-    description: 'Revisa tu internet e intenta de nuevo.',
-  },
-  permission: {
-    icon: Lock,
-    title: 'No pudimos verificar tu sesión',
-    description: 'Cierra sesión y vuelve a entrar. Si sigue pasando, escríbenos.',
-  },
-  unknown: {
-    icon: AlertTriangle,
-    title: 'No pudimos cargar los restaurantes',
-    description: 'Intenta de nuevo en un momento.',
-  },
+const COPY: Record<LoadErrorKind, typeof ERROR_COPY.restaurantsNetwork | typeof ERROR_COPY.restaurantsPermission | typeof ERROR_COPY.restaurantsUnknown> = {
+  network: ERROR_COPY.restaurantsNetwork,
+  permission: ERROR_COPY.restaurantsPermission,
+  unknown: ERROR_COPY.restaurantsUnknown,
 }
 
 interface RestaurantLoadErrorProps {
@@ -29,21 +16,18 @@ interface RestaurantLoadErrorProps {
 
 /**
  * Error de carga con copy según la causa — nunca el mensaje crudo de
- * Supabase. role="alert" (vía EmptyState) para que se anuncie de inmediato.
+ * Supabase. role="alert" (vía ErrorState) para que se anuncie de inmediato.
  */
 export const RestaurantLoadError = ({ kind, onRetry, retrying }: RestaurantLoadErrorProps) => {
-  const { icon, title, description } = COPY[kind ?? 'unknown']
+  const copy = COPY[kind ?? 'unknown']
   return (
-    <EmptyState
-      role="alert"
-      icon={icon}
-      title={title}
-      description={description}
-      action={
-        <Button variant="tertiary" onClick={onRetry} loading={retrying}>
-          Reintentar
-        </Button>
-      }
+    <ErrorState
+      illustration={copy.illustration}
+      title={copy.title}
+      description={copy.description}
+      retryLabel={copy.cta}
+      onRetry={onRetry}
+      retrying={retrying}
     />
   )
 }

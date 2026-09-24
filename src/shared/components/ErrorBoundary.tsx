@@ -1,6 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react'
-import { Button } from './Button'
-import { Illustration } from '@/shared/illustrations'
+import { ErrorState } from './ErrorState'
+import { ERROR_COPY } from '@/shared/constants/stateCopy'
 
 interface Props {
   children: ReactNode
@@ -38,16 +38,14 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-white flex items-center justify-center px-8 text-center">
-          <div>
-            <Illustration name="sad" size="md" className="mb-2" />
-            <h1 className="font-display font-bold text-lg text-secondary mb-2">Algo salió mal</h1>
-            <p className="text-sm text-gray-500 mb-6">
-              Estamos intentando recuperar la aplicación.
-            </p>
-            <Button variant="gradient" onClick={this.handleRetry}>Reintentar</Button>
-          </div>
-        </div>
+        <ErrorState
+          fullScreen
+          illustration={ERROR_COPY.boundary.illustration}
+          title={ERROR_COPY.boundary.title}
+          description={ERROR_COPY.boundary.description}
+          retryLabel={ERROR_COPY.boundary.cta}
+          onRetry={this.handleRetry}
+        />
       )
     }
 

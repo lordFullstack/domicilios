@@ -102,7 +102,8 @@ describe('<RestaurantListPage />', () => {
 
   it('sin resultados → empty state con "Limpiar filtros" que vuelve a todos', () => {
     renderAt('/app/restaurants?q=sushi')
-    expect(screen.getByRole('status')).toHaveTextContent('No encontramos restaurantes con esos filtros')
+    expect(screen.getByRole('status')).toHaveTextContent('Sin resultados')
+    expect(screen.getByRole('status')).toHaveTextContent('Prueba con otros filtros o cambia la búsqueda')
     fireEvent.click(screen.getByRole('button', { name: 'Limpiar filtros' }))
     expect(names()).toHaveLength(3)
     expect(currentSearch).toBe('')
@@ -127,7 +128,8 @@ describe('<RestaurantListPage />', () => {
     state.error = 'x'
     state.errorKind = 'network'
     renderAt()
-    expect(screen.getByRole('alert')).toHaveTextContent('Sin conexión')
+    expect(screen.getByRole('alert')).toHaveTextContent('No pudimos cargar los restaurantes')
+    expect(screen.getByRole('alert')).toHaveTextContent('Revisa tu conexión e intenta de nuevo')
     fireEvent.click(screen.getByRole('button', { name: 'Reintentar' }))
     expect(state.reload).toHaveBeenCalled()
   })
@@ -143,7 +145,8 @@ describe('<RestaurantListPage />', () => {
   it('catálogo vacío → empty state sin CTA de filtros', () => {
     state.restaurants = []
     renderAt()
-    expect(screen.getByRole('status')).toHaveTextContent('Todavía no hay restaurantes disponibles')
+    expect(screen.getByRole('status')).toHaveTextContent('Aún no hay restaurantes en tu zona')
+    expect(screen.getByRole('status')).toHaveTextContent('Estamos trabajando para traer más opciones')
     expect(screen.queryByRole('button', { name: 'Limpiar filtros' })).not.toBeInTheDocument()
   })
 })

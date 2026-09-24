@@ -72,13 +72,10 @@ describe('Illustration', () => {
 })
 
 describe('Integración de ilustraciones', () => {
-  it('EmptyState con illustration la muestra; sin ella conserva el ícono', () => {
-    const { container, rerender } = render(<EmptyState illustration="emptyCart" title="Vacío" />)
+  it('EmptyState muestra la ilustración (obligatoria) y anuncia como status', () => {
+    const { container } = render(<EmptyState illustration="emptyCart" title="Vacío" />)
     expect(container.querySelector('[data-illustration="emptyCart"]')).not.toBeNull()
     expect(screen.getByRole('status')).toBeInTheDocument()
-    rerender(<EmptyState icon={(p) => <svg data-testid="ico" {...p} />} title="Vacío" />)
-    expect(screen.getByTestId('ico')).toBeInTheDocument()
-    expect(container.querySelector('[data-illustration]')).toBeNull()
   })
 
   it('ErrorBoundary muestra RocketSad', () => {

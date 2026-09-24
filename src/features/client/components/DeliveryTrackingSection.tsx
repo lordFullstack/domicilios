@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react'
 import { Phone, MessageCircle, Bike } from 'lucide-react'
 import { Avatar } from '@/shared/components/Avatar'
+import { LoadingState } from '@/shared/components/LoadingState'
+import { Skeleton } from '@/shared/components/Skeleton'
 
 // Leaflet pesa ~155kB — antes se importaba directo, así que se descargaba
 // en CADA apertura de un detalle de pedido (entregado, cancelado, etc.),
@@ -68,9 +70,9 @@ export const DeliveryTrackingSection = ({ deliveryPerson, liveLocation }: Delive
     {liveLocation ? (
       <Suspense
         fallback={
-          <div className="bg-gray-50 rounded-2xl h-48 flex items-center justify-center">
-            <p className="text-gray-500 text-xs">Cargando mapa...</p>
-          </div>
+          <LoadingState label="Cargando mapa">
+            <Skeleton className="h-48 w-full rounded-2xl" />
+          </LoadingState>
         }
       >
         <DeliveryLiveMap lat={liveLocation.lat} lng={liveLocation.lng} updatedAt={liveLocation.updatedAt} />

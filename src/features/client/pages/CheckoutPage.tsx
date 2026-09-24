@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Banknote, CreditCard, WifiOff, ShoppingBag } from 'lucide-react'
+import { ChevronLeft, Banknote, CreditCard, WifiOff } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
 import { Badge } from '@/shared/components/Badge'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { EMPTY_COPY } from '@/shared/constants/stateCopy'
 import { useOrders, useRestaurantById, useProductById, useProducts } from '@/hooks/useLocalData'
 import { useCartContext } from '@/shared/hooks/useCartContext'
 import { useAuth } from '@/shared/hooks/useAuth'
@@ -79,10 +80,10 @@ export const CheckoutPage = () => {
           <h1 className="font-display text-lg font-bold text-secondary">Confirmar pedido</h1>
         </div>
         <EmptyState
-          icon={ShoppingBag}
-          title="Tu carrito está vacío"
-          description="No hay productos para ordenar."
-          action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_HOME)}>Ir a restaurantes</Button>}
+          illustration={EMPTY_COPY.cart.illustration}
+          title={EMPTY_COPY.cart.title}
+          description={EMPTY_COPY.cart.description}
+          action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>{EMPTY_COPY.cart.cta}</Button>}
         />
       </div>
     )

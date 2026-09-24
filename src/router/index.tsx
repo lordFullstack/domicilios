@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 import { ProtectedRoute } from './ProtectedRoute'
+import { LoadingState } from '@/shared/components/LoadingState'
 import { NotFound } from '@/shared/pages/NotFound'
 
 // Auth Pages (eager: son el punto de entrada, no vale la pena diferirlas)
@@ -93,11 +94,7 @@ const RestaurantAccountPage = lazy(() =>
   import('@/features/restaurant/pages/AccountPage').then((m) => ({ default: m.RestaurantAccountPage }))
 )
 
-const PageLoader = () => (
-  <div className="min-h-screen bg-white flex items-center justify-center">
-    <div className="w-8 h-8 border-2 border-gray-200 border-t-primary rounded-full animate-spin" />
-  </div>
-)
+const PageLoader = () => <LoadingState fullScreen />
 
 export const Router = () => {
   return (

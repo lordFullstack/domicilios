@@ -8,6 +8,7 @@ import { ProductImage } from '@/shared/components/ProductImage'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { BottomSheet } from '@/shared/components/BottomSheet'
 import { EmptyState } from '@/shared/components/EmptyState'
+import { EMPTY_COPY } from '@/shared/constants/stateCopy'
 import { formatCOP } from '@/shared/utils/money'
 import { ROUTES } from '@/config/constants'
 import { Product } from '@/shared/types'
@@ -56,10 +57,10 @@ export const CartPage = () => {
         </div>
 
         <EmptyState
-          illustration="emptyCart"
-          title="Tu carrito está vacío"
-          description="Explora restaurantes y encuentra algo delicioso."
-          action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>Explorar restaurantes</Button>}
+          illustration={EMPTY_COPY.cart.illustration}
+          title={EMPTY_COPY.cart.title}
+          description={EMPTY_COPY.cart.description}
+          action={<Button variant="gradient" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>{EMPTY_COPY.cart.cta}</Button>}
         />
 
         <BottomNav />
