@@ -20,7 +20,7 @@ export const Toast = ({ message, variant = 'success' }: ToastProps) => {
   return createPortal(
     <div
       role="status"
-      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 animate-fade-in max-w-[90vw]"
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-60 animate-fade-in max-w-[90vw]"
     >
       <div className="flex items-center gap-2 bg-secondary text-white text-sm font-semibold px-4 py-3 rounded-2xl shadow-floating">
         {variant === 'error' ? (

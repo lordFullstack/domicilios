@@ -90,8 +90,6 @@ export default {
         'brand-gradient': 'linear-gradient(135deg, #1C2459 0%, #F4652C 62%, #FFC24B 100%)',
         'brand-gradient-soft':
           'linear-gradient(135deg, rgba(28,36,89,0.08) 0%, rgba(244,101,44,0.06) 60%, rgba(255,194,75,0.05) 100%)',
-        'mesh-hero':
-          'radial-gradient(at 20% 0%, rgba(46,58,140,0.14) 0%, transparent 50%), radial-gradient(at 80% 100%, rgba(244,101,44,0.12) 0%, transparent 50%)',
       },
 
       fontFamily: {
@@ -119,19 +117,31 @@ export default {
         display: ['1.75rem', { lineHeight: '2rem',      letterSpacing: '-0.03em' }],
       },
 
+      // Sistema de elevación (LOOP_VISUAL_06), todo en gris cálido
+      // rgba(28,25,23,…). Ver docs/design-system/ELEVATION.md.
+      // nivel 0: sin sombra
+      // nivel 1: card
+      // nivel 2: card-hover
+      // nivel 3: floating
+      // hairline: para definición
+      // (sm = sombra mínima de barras; bottom-sheet = BottomSheet real;
+      //  bottom-nav = BottomNav, ascendente y más ligera)
       boxShadow: {
-        xs:  '0 1px 2px rgba(15,23,42,0.04)',
-        sm:  '0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06)',
-        // Elevación de cards (LOOP_VISUAL_10): nivel 1 / 2 / 3, color cálido.
+        sm: '0 1px 2px rgba(28,25,23,0.04), 0 1px 3px rgba(28,25,23,0.06)',
         card: '0 1px 2px rgba(28,25,23,0.04), 0 4px 12px rgba(28,25,23,0.06)',
         'card-hover':
           '0 2px 4px rgba(28,25,23,0.04), 0 12px 32px rgba(28,25,23,0.10)',
         floating: '0 8px 24px rgba(28,25,23,0.12)',
         hairline: 'inset 0 0 0 0.5px rgba(28,25,23,0.08)',
-        'bottom-sheet': '0 -8px 32px rgba(15,23,42,0.14)',
-        'premium':
-          'inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 2px rgba(28,25,23,0.04), 0 8px 24px rgba(28,25,23,0.08)',
-        'glow-primary': '0 8px 32px rgba(46,58,140,0.28)',
+        'bottom-sheet': '0 -8px 32px rgba(28,25,23,0.14)',
+        'bottom-nav': '0 -4px 16px rgba(28,25,23,0.08)',
+      },
+
+      // Escala de capas (ver ELEVATION.md). Tailwind trae 0–50; se agrega 60
+      // para los avisos superiores (banner, toast, actualización), que deben
+      // quedar sobre los modales (z-50).
+      zIndex: {
+        60: '60',
       },
 
       borderRadius: {

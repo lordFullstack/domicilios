@@ -100,7 +100,7 @@ export const RegisterPage = () => {
               fullWidth
               size="lg"
               loading={loading}
-              className="mt-2 shadow-lg shadow-primary/25 whitespace-nowrap"
+              className="mt-2 shadow-floating whitespace-nowrap"
             >
               <span className="whitespace-nowrap">Crear cuenta</span>
               {!loading && <ArrowRight className="w-4 h-4 shrink-0" />}

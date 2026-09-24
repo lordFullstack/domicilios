@@ -24,7 +24,7 @@ export const OrderSuccessView = ({
       Pedido #{orderId.substring(0, 8).toUpperCase()}
     </p>
 
-    <div className="w-full border border-gray-100 rounded-2xl p-4 mb-8">
+    <div className="w-full card-surface--flat bg-white rounded-2xl p-4 mb-8">
       <p className="text-xs text-gray-500 mb-1">Restaurante</p>
       <p className="font-semibold text-secondary mb-3">{restaurantName}</p>
       <p className="text-xs text-gray-500 mb-1">Total</p>

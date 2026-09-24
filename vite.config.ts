@@ -78,7 +78,9 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
-    css: false,
+    // Los CSS se ignoran en los tests, salvo styles.css importado con ?raw:
+    // elevation.test.ts lo lee como texto para blindar el sistema de elevación.
+    css: { include: [/[\/]src[\/]styles\.css\?raw/] },
     // tsconfig.json no declara los tipos globales de Vitest a propósito:
     // 'npm run build' corre tsc sobre TODO src/, y no queremos que el
     // build de producción dependa de tipos de testing. Por eso los tests

@@ -205,7 +205,7 @@ export const CheckoutPage = () => {
               />
             </button>
 
-            <div className="flex items-center gap-3 border border-gray-100 rounded-2xl p-3 opacity-50 cursor-not-allowed">
+            <div className="flex items-center gap-3 hairline rounded-2xl p-3 opacity-50 cursor-not-allowed">
               <div className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
                 <CreditCard className="w-4 h-4 text-gray-500" />
               </div>
@@ -221,7 +221,7 @@ export const CheckoutPage = () => {
         {/* RESUMEN */}
         <div>
           <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">RESUMEN</h2>
-          <div className="border border-gray-100 rounded-2xl p-4">
+          <div className="hairline rounded-2xl p-4">
             <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
               <div className="w-6 h-6 rounded-lg overflow-hidden flex items-center justify-center text-base flex-shrink-0">
                 <ProductImage imageUrl={restaurant?.image_url} alt={restaurant?.name || ''} width={48} />

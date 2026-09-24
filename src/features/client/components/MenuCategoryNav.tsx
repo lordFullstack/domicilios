@@ -46,7 +46,7 @@ export const MenuCategoryNav = ({ categories, activeId, onSelect }: MenuCategory
   return (
     <nav
       aria-label="Categorías del menú"
-      className="sticky top-[calc(3.5rem+env(safe-area-inset-top))] z-20 -mx-5 mb-4 bg-white/95 px-5 py-2 backdrop-blur"
+      className="sticky top-[calc(3.5rem+env(safe-area-inset-top))] z-20 -mx-5 mb-4 glass--bar px-5 py-2"
     >
       <div ref={rowRef} className="no-scrollbar flex gap-2 overflow-x-auto">
         {categories.map((cat) => {

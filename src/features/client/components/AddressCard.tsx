@@ -32,7 +32,7 @@ export const AddressCard = ({ draft, onEdit }: AddressCardProps) => {
     <button
       type="button"
       onClick={onEdit}
-      className="focus-ring w-full text-left border border-gray-100 rounded-2xl p-4 flex items-start gap-3 active:scale-[0.98] transition-transform"
+      className="focus-ring w-full text-left card-surface bg-white rounded-2xl p-4 flex items-start gap-3"
     >
       <BrandIcon name="pin" size="sm" className="text-primary flex-shrink-0" />
       <div className="flex-1 min-w-0">

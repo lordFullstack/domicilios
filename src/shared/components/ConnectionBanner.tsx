@@ -23,7 +23,7 @@ export const ConnectionBanner = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 z-50 ${config.bg} text-white text-xs font-medium text-center py-2 px-4`}
+      className={`fixed top-0 left-0 right-0 z-60 ${config.bg} text-white text-xs font-medium text-center py-2 px-4`}
       style={{ paddingTop: 'calc(env(safe-area-inset-top) + 0.5rem)' }}
     >
       <span className="inline-flex items-center gap-2">

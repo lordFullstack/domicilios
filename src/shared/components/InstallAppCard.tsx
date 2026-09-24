@@ -8,7 +8,7 @@ export const InstallAppCard = () => {
   if (!canInstall) return null
 
   return (
-    <div className="flex items-center gap-3 border border-gray-100 rounded-2xl p-4 mb-2">
+    <div className="flex items-center gap-3 card-surface--flat bg-white rounded-2xl p-4 mb-2">
       <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
         <Download className="w-4 h-4 text-primary" />
       </div>

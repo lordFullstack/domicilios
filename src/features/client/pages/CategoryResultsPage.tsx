@@ -60,7 +60,7 @@ export const CategoryResultsPage = () => {
               <button
                 key={product.id}
                 onClick={() => navigate(ROUTES.CLIENT_RESTAURANT.replace(':id', product.restaurant.id))}
-                className="focus-ring flex items-center gap-3 text-left rounded-2xl border border-gray-100 shadow-card p-3 active:scale-[0.98] transition-transform"
+                className="focus-ring flex items-center gap-3 text-left card-surface rounded-2xl bg-white p-3"
               >
                 <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                   {/* ProductImage: foto real, emoji guardado por el restaurante o

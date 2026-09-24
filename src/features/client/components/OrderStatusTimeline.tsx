@@ -29,7 +29,7 @@ export const OrderStatusTimeline = ({ status, updatedAt }: OrderStatusTimelinePr
     : null
 
   return (
-    <div className="border border-gray-100 rounded-2xl p-4 mb-4">
+    <div className="card-surface--flat bg-white rounded-2xl p-4 mb-4">
       <div className="flex flex-col">
         {TRACKER_STEPS.map((step, index) => {
           const isDone = index < currentStepIndex

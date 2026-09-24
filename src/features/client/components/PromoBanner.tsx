@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Sparkles } from 'lucide-react'
 import { usePromotions } from '@/shared/hooks/usePromotions'
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion'
+import { ImageOverlay } from '@/shared/components/ImageOverlay'
 import { ROUTES } from '@/config/constants'
 
 const AUTO_ROTATE_MS = 5000
@@ -58,8 +59,10 @@ export const PromoBanner = () => {
         className="card-surface focus-ring w-full text-left rounded-3xl overflow-hidden relative bg-primary/10 disabled:cursor-default"
       >
         {current.image_url ? (
-          <div className="h-28 bg-cover bg-center" style={{ backgroundImage: `url(${current.image_url})` }}>
-            <div className="h-full bg-gradient-to-t from-black/60 via-black/10 to-transparent flex flex-col justify-end p-4">
+          <div className="relative h-28 bg-cover bg-center" style={{ backgroundImage: `url(${current.image_url})` }}>
+            {/* Overlay hermano (ImageOverlay) y el texto encima. */}
+            <ImageOverlay variant="bottom-soft" />
+            <div className="relative flex h-full flex-col justify-end p-4">
               <p className="font-display font-bold text-sm text-white">{current.title}</p>
               {current.subtitle && <p className="text-xs text-white/80">{current.subtitle}</p>}
             </div>

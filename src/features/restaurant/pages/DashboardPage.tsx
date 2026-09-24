@@ -6,6 +6,7 @@ import { useOrders, useRestaurants, useProducts, getAvailableDeliveryPerson, upd
 import { supabase } from '@/shared/utils/supabase'
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
+import { ImageOverlay } from '@/shared/components/ImageOverlay'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { NotificationBell } from '@/shared/components/NotificationBell'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
@@ -160,7 +161,7 @@ export const RestaurantDashboard = () => {
           </>
         )}
         {myRestaurant.cover_url && (
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+          <ImageOverlay variant="bottom-soft" />
         )}
 
         <div className="relative flex items-start gap-3">

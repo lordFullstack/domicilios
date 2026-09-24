@@ -9,6 +9,13 @@ describe('<ImageOverlay />', () => {
     expect(container.firstChild).toHaveClass('from-black/90')
   })
 
+  it('bottom-soft (0.60) es más ligero que bottom-gradient (0.90); ambos transparentes al 60%', () => {
+    const soft = render(<ImageOverlay variant="bottom-soft" />)
+    const strong = render(<ImageOverlay variant="bottom-gradient" />)
+    expect(soft.container.firstChild).toHaveClass('from-black/60', 'to-transparent', 'to-60%')
+    expect(strong.container.firstChild).toHaveClass('from-black/90', 'to-transparent', 'to-60%')
+  })
+
   it('full-soft y full-strong son overlays planos de distinta densidad', () => {
     const soft = render(<ImageOverlay variant="full-soft" />)
     const strong = render(<ImageOverlay variant="full-strong" />)

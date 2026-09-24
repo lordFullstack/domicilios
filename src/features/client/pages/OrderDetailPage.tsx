@@ -239,7 +239,7 @@ export const OrderDetailPage = () => {
             </Button>
 
             {rating ? (
-              <div className="border border-gray-100 rounded-2xl p-4 flex items-center gap-2">
+              <div className="hairline rounded-2xl p-4 flex items-center gap-2">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 flex-shrink-0" />
                 <p className="text-sm text-gray-500">
                   Calificaste este pedido con {rating.restaurant_rating}/5 al restaurante

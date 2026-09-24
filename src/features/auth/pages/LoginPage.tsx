@@ -112,7 +112,7 @@ export const LoginPage = () => {
               fullWidth
               size="lg"
               loading={loading}
-              className="mt-2 shadow-lg shadow-primary/25 whitespace-nowrap"
+              className="mt-2 shadow-floating whitespace-nowrap"
             >
               <span className="whitespace-nowrap">Iniciar sesión</span>
               {!loading && <ArrowRight className="w-4 h-4 shrink-0" />}

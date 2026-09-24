@@ -194,7 +194,7 @@ const CartItemRow = ({
   // bbq" quedaban truncados a "cos…" justo en la pantalla donde el
   // usuario confirma qué está a punto de pagar.
   return (
-    <div className="flex items-start gap-3 border border-gray-100 rounded-2xl p-3">
+    <div className="flex items-start gap-3 hairline rounded-2xl p-3">
       <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl flex-shrink-0 overflow-hidden">
         <ProductImage imageUrl={product.image_url} alt={product.name} width={48} />
       </div>

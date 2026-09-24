@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { ROUTES } from '@/config/constants'
 import { RocketMark } from '@/shared/components/RocketMark'
+import { GrainOverlay } from '@/shared/components/GrainOverlay'
 
 // Banner fijo de descubrimiento — no depende de Supabase (a diferencia de
 // PromoBanner/FeaturedSection, que sí muestran promociones reales del
@@ -20,6 +21,8 @@ export const HomeHeroBanner = () => {
         onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}
         className="relative w-full text-left rounded-3xl overflow-hidden bg-brand-gradient p-5 pr-28 active:scale-[0.98] transition-transform shadow-floating"
       >
+        {/* Grano sutil sobre el degradado atardecer (fondo de marca, sin foto). */}
+        <GrainOverlay />
         <p className="font-display font-extrabold text-lg text-white leading-snug max-w-[70%]">
           Los mejores sabores en un solo lugar
         </p>

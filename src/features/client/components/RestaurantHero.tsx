@@ -4,6 +4,7 @@ import { Restaurant } from '@/shared/types'
 import { Badge } from '@/shared/components/Badge'
 import { ProductImage } from '@/shared/components/ProductImage'
 import { ImageOverlay } from '@/shared/components/ImageOverlay'
+import { GrainOverlay } from '@/shared/components/GrainOverlay'
 import { useDeliveryFee, deliveryFeeLabel } from '@/shared/hooks/useDeliveryFee'
 import { supabaseImageUrl } from '@/shared/utils/supabaseImage'
 
@@ -35,6 +36,8 @@ export const RestaurantHero = ({
   onToggleFavorite,
 }: RestaurantHeroProps) => {
   const feeLabel = deliveryFeeLabel(useDeliveryFee().fee)
+  // Grano solo sobre el fondo de marca (sin portada ni foto real): nunca sobre una foto.
+  const hasPhoto = !!restaurant.cover_url || /^https?:\/\//.test(restaurant.image_url ?? '')
   return (
     <div className="relative h-52 overflow-hidden bg-primary/10">
       {restaurant.cover_url ? (
@@ -54,6 +57,7 @@ export const RestaurantHero = ({
           fallbackIconSize={64}
         />
       )}
+      {!hasPhoto && <GrainOverlay />}
       {/* Scrim más denso en la mitad inferior: las portadas las sube cada
         restaurante y pueden traer texto propio que se mezclaba con el nombre. */}
       <ImageOverlay variant="bottom-gradient" />
@@ -90,7 +94,7 @@ export const RestaurantHero = ({
         <div className="flex items-end gap-2.5">
           <div
             aria-hidden="true"
-            className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-white/70 bg-white flex items-center justify-center text-2xl shadow-md"
+            className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-white/70 bg-white flex items-center justify-center text-2xl shadow-card"
           >
             {restaurant.cover_url ? (
               <img

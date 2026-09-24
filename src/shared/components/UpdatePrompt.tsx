@@ -31,7 +31,7 @@ export const UpdatePrompt = () => {
   // CTAs de pago, que viven en la franja inferior de todas las pantallas.
   return (
     <div
-      className="fixed left-4 right-4 z-50 max-w-md mx-auto bg-secondary text-white rounded-2xl py-2.5 pl-4 pr-2 shadow-floating flex items-center justify-between gap-2 animate-fade-slide-up"
+      className="fixed left-4 right-4 z-60 max-w-md mx-auto bg-secondary text-white rounded-2xl py-2.5 pl-4 pr-2 shadow-floating flex items-center justify-between gap-2 animate-fade-slide-up"
       style={{ top: 'max(0.75rem, env(safe-area-inset-top))' }}
       role="status"
     >

@@ -67,7 +67,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
       {/* Barra inferior — siempre en celular; en restaurante, solo hasta md.
           Glassmorphism sutil + safe-bottom + touch targets de 48px. */}
       <div
-        className={`fixed bottom-0 left-0 right-0 glass shadow-bottom-sheet px-2 pt-1 safe-bottom z-40 ${
+        className={`fixed bottom-0 left-0 right-0 glass shadow-bottom-nav px-2 pt-1 safe-bottom z-40 ${
           isSidebarCapable ? 'md:hidden' : ''
         }`}
       >

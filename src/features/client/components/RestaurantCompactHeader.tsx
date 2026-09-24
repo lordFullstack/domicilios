@@ -26,7 +26,7 @@ export const RestaurantCompactHeader = ({ restaurant, visible, onBack }: Restaur
     <div
       ref={ref}
       aria-hidden={!visible}
-      className={`fixed inset-x-0 top-0 z-30 mx-auto max-w-md bg-white/95 backdrop-blur shadow-sm pt-[env(safe-area-inset-top)] transition-opacity duration-150 motion-reduce:transition-none ${
+      className={`fixed inset-x-0 top-0 z-30 mx-auto max-w-md glass--bar shadow-sm pt-[env(safe-area-inset-top)] transition-opacity duration-150 motion-reduce:transition-none ${
         visible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >

@@ -67,7 +67,7 @@ export const ClientAccountPage = () => {
       {/* Mi perfil */}
       <div className="px-5 mb-6">
         <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">MI PERFIL</h2>
-        <div className="border border-gray-100 rounded-2xl p-4">
+        <div className="card-surface--flat bg-white rounded-2xl p-4">
           <Input label="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
 
           {error && <p className="text-danger text-sm mt-2">{error}</p>}
@@ -94,7 +94,7 @@ export const ClientAccountPage = () => {
 
         <button
           onClick={() => navigate(ROUTES.NOTIFICATIONS)}
-          className="focus-ring w-full flex items-center justify-between border border-gray-100 rounded-2xl p-4 mt-2"
+          className="focus-ring w-full flex items-center justify-between card-surface--flat bg-white rounded-2xl p-4 mt-2"
         >
           <span className="flex items-center gap-2 text-sm font-semibold text-secondary">
             <BrandIcon name="bell" size="sm" className="text-gray-500" />
@@ -110,7 +110,7 @@ export const ClientAccountPage = () => {
 
         <button
           onClick={() => navigate(ROUTES.CLIENT_ORDERS)}
-          className="focus-ring w-full flex items-center justify-between border border-gray-100 rounded-2xl p-4 mt-2"
+          className="focus-ring w-full flex items-center justify-between card-surface--flat bg-white rounded-2xl p-4 mt-2"
         >
           <span className="flex items-center gap-2 text-sm font-semibold text-secondary">
             <BrandIcon name="orders" size="sm" className="text-gray-500" />
@@ -124,7 +124,7 @@ export const ClientAccountPage = () => {
       <div className="px-5">
         <button
           onClick={() => setLogoutSheetOpen(true)}
-          className="focus-ring w-full flex items-center gap-2 border border-gray-100 rounded-2xl p-4 text-danger font-semibold text-sm"
+          className="focus-ring w-full flex items-center gap-2 card-surface--flat bg-white rounded-2xl p-4 text-danger font-semibold text-sm"
         >
           <LogOut className="w-4 h-4" />
           Cerrar sesión

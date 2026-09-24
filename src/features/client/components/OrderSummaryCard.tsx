@@ -18,7 +18,7 @@ export const OrderSummaryCard = ({
   deliveryFee = 0,
   onViewDetails,
 }: OrderSummaryCardProps) => (
-  <div className="border border-gray-100 rounded-2xl p-4 mb-4">
+  <div className="card-surface--flat bg-white rounded-2xl p-4 mb-4">
     <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
       <span className="text-2xl">{restaurantEmoji}</span>
       <div>

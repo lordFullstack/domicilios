@@ -7,7 +7,7 @@ import { iconToSvgString } from '@/shared/icons/svgString'
 // Marcador: moto de la iconografía propia sobre gota azul (antes emoji 🛵).
 // Leaflet no renderiza React, por eso el SVG va como string.
 const bikeIcon = L.divIcon({
-  html: `<div style="background:#1C2459;width:32px;height:32px;border-radius:50% 12% 50% 50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.3);border:2px solid white;">${iconToSvgString({ name: 'moto', size: 18, color: '#FFFFFF', variant: 'onDark' })}</div>`,
+  html: `<div class="shadow-card" style="background:#1C2459;width:32px;height:32px;border-radius:50% 12% 50% 50%;display:flex;align-items:center;justify-content:center;border:2px solid white;">${iconToSvgString({ name: 'moto', size: 18, color: '#FFFFFF', variant: 'onDark' })}</div>`,
   className: '',
   iconSize: [32, 32],
   iconAnchor: [16, 16],

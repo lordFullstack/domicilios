@@ -34,7 +34,7 @@ export const DeliveryTrackingSection = ({ deliveryPerson, liveLocation }: Delive
     <p className="font-display font-bold text-sm text-secondary mb-2">Tu domiciliario en camino</p>
 
     {deliveryPerson && (
-      <div className="flex items-center gap-3 border border-gray-100 rounded-2xl p-3 mb-3">
+      <div className="flex items-center gap-3 hairline rounded-2xl p-3 mb-3">
         <Avatar src={deliveryPerson.avatar_url} name={deliveryPerson.name} size="md" />
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm text-secondary truncate">{deliveryPerson.name}</p>
