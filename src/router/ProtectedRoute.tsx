@@ -3,6 +3,7 @@ import { ReactNode } from 'react'
 import { LoadingState } from '@/shared/components/LoadingState'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { ROUTES, USER_ROLES } from '@/config/constants'
+import { AccountInactiveScreen } from '@/features/auth/components/AccountInactiveScreen'
 
 const ROUTE_BY_ROLE: Record<string, string> = {
   [USER_ROLES.CLIENT]: ROUTES.CLIENT_HOME,
@@ -28,6 +29,12 @@ export const ProtectedRoute = ({
 
   if (!isAuthenticated) {
     return <Navigate to={ROUTES.LOGIN} replace />
+  }
+
+  // Cuenta sin activar o desactivada por el admin (restaurantes y domiciliarios nuevos
+  // nacen inactivos). El admin nunca queda bloqueado por esta regla.
+  if (user && user.active === false && user.role !== USER_ROLES.ADMIN) {
+    return <AccountInactiveScreen />
   }
 
   if (allowedRoles && !allowedRoles.includes(user?.role || '')) {

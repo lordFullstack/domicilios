@@ -221,6 +221,12 @@ export const RestaurantDashboard = () => {
         </button>
       </div>
 
+      {!myRestaurant.approved && (
+        <div className="mx-5 mb-4 bg-warning/10 text-warning-strong text-sm font-semibold rounded-2xl p-3 md:max-w-4xl md:mx-auto" role="status">
+          Tu restaurante está en revisión. Aparecerá para los clientes cuando un administrador lo apruebe.
+        </div>
+      )}
+
       {noDeliveryMsg && (
         <div className="mx-5 mb-4 bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3 md:max-w-4xl md:mx-auto" role="alert">
           No hay domiciliarios disponibles en este momento. Intenta de nuevo en unos minutos.

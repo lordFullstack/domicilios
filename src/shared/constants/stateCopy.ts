@@ -80,6 +80,13 @@ export const EMPTY_COPY = {
 } as const satisfies Record<string, StateCopy>
 
 export const ERROR_COPY = {
+  /** Cuenta de restaurante/domiciliario sin activar (o desactivada por el admin). */
+  accountInactive: {
+    illustration: 'confused',
+    title: 'Tu cuenta está en revisión',
+    description: 'Un administrador debe activarla antes de que puedas entrar. Si crees que es un error, escríbenos',
+    cta: 'Cerrar sesión',
+  },
   /** ErrorBoundary (pantalla completa). */
   boundary: {
     illustration: 'sad',
