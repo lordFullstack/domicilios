@@ -57,4 +57,4 @@ Todas OK (QA manual confirmado por el usuario):
 - Verificar con un test que el trigger bloquea al cliente cambiar las columnas nuevas.
 - Actualizar `docs/security/SEGURIDAD_PEDIDOS.md`.
 - Fuera de este LOOP: propina (05B), dirección por defecto (06).
-- Pendiente de proceso: commit de la rama (docs + supabase + frontend), a pedido explícito.
+- Commits de la rama: `673f8a7` (código, migraciones y tests) y `db77f18` (reporte). Merge a `main` pendiente de la verificación visual en preview.
