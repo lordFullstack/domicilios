@@ -29,7 +29,7 @@ export const CartFloatingBar = () => {
       >
         <span className="flex items-center gap-2 text-sm font-semibold">
           <BrandIcon name="bag" size="sm" variant="onDark" />
-          {count} {count === 1 ? 'producto' : 'productos'} · {formatCOP(getTotal())}
+          <span className="tabular-nums">{count} {count === 1 ? 'producto' : 'productos'} · {formatCOP(getTotal())}</span>
         </span>
         <span className="flex items-center gap-0.5 text-sm font-semibold">
           Ver <ChevronRight className="w-4 h-4" aria-hidden="true" />

@@ -16,7 +16,7 @@ export const OrderDetailSheet = ({ open, onClose, order }: OrderDetailSheetProps
 
       <div className="border-t border-gray-100 pt-3 flex justify-between font-display font-bold text-secondary">
         <span>Total</span>
-        <span className="text-primary">{formatCOP(order.total)}</span>
+        <span className="tabular-nums text-primary">{formatCOP(order.total)}</span>
       </div>
 
       <div className="border-t border-gray-100 pt-3">

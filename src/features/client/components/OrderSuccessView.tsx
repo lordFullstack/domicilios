@@ -19,8 +19,8 @@ export const OrderSuccessView = ({
 }: OrderSuccessViewProps) => (
   <div className="min-h-screen bg-white max-w-md mx-auto flex flex-col items-center justify-center px-8 text-center safe-top safe-bottom">
     <Illustration name="success" size="lg" className="mb-2" />
-    <h1 className="font-display text-xl font-bold text-secondary mb-1">¡Pedido confirmado!</h1>
-    <p className="text-sm text-gray-500 mb-6">
+    <h1 className="font-display text-display font-extrabold text-secondary mb-1 line-clamp-2">¡Pedido confirmado!</h1>
+    <p className="text-sm text-gray-500 mb-6 tabular-nums">
       Pedido #{orderId.substring(0, 8).toUpperCase()}
     </p>
 
@@ -28,7 +28,7 @@ export const OrderSuccessView = ({
       <p className="text-xs text-gray-500 mb-1">Restaurante</p>
       <p className="font-semibold text-secondary mb-3">{restaurantName}</p>
       <p className="text-xs text-gray-500 mb-1">Total</p>
-      <p className="font-display font-bold text-lg text-primary">{formatCOP(total)}</p>
+      <p className="font-display font-bold text-lg tabular-nums text-primary">{formatCOP(total)}</p>
     </div>
 
     <Button variant="gradient" fullWidth size="lg" onClick={onViewOrder} className="mb-3">

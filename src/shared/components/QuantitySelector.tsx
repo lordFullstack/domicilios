@@ -22,7 +22,7 @@ export const QuantitySelector = ({ value, onChange, min = 1, max }: QuantitySele
       >
         <Minus className="w-4 h-4 text-secondary" aria-hidden="true" />
       </button>
-      <span className="text-base font-bold text-secondary w-6 text-center" aria-live="polite">
+      <span className="text-base font-bold tabular-nums text-secondary w-6 text-center" aria-live="polite">
         {value}
       </span>
       <button

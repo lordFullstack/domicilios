@@ -73,7 +73,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Sora', 'Inter', system-ui, sans-serif;
-    letter-spacing: -0.01em;
+    /* El tracking lo define cada text-* de tailwind.config (fontSize). */
     font-weight: 700;
   }
 

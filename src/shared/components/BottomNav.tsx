@@ -117,7 +117,7 @@ export const BottomNav = ({ role = 'client' }: BottomNavProps) => {
                 {showCount && (
                   <span
                     aria-hidden="true"
-                    className="absolute top-0 right-1 bg-primary text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center"
+                    className="absolute top-0 right-1 bg-primary text-white text-xs font-bold tabular-nums rounded-full min-w-5 h-5 px-1 flex items-center justify-center"
                   >
                     {cartCount > 99 ? '99+' : cartCount}
                   </span>

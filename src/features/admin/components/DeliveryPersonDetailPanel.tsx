@@ -112,15 +112,15 @@ export const DeliveryPersonDetailPanel = ({
             <div className="grid grid-cols-3 gap-2">
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-secondary">{stats.totalDeliveries}</p>
-                <p className="text-[11px] text-gray-500">Entregas</p>
+                <p className="text-xs text-gray-500">Entregas</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-warning-strong">{stats.activeOrders.length}</p>
-                <p className="text-[11px] text-gray-500">En camino</p>
+                <p className="text-xs text-gray-500">En camino</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-primary text-sm">{formatCOP(stats.deliveredValue)}</p>
-                <p className="text-[11px] text-gray-500">Valor entregado</p>
+                <p className="text-xs text-gray-500">Valor entregado</p>
               </div>
             </div>
           </div>
@@ -169,7 +169,7 @@ export const DeliveryPersonDetailPanel = ({
                     </div>
                     <div className="text-right flex-shrink-0">
                       <p className="text-xs font-semibold text-secondary">{formatCOP(order.total)}</p>
-                      <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${STATUS_BADGE[order.status] || 'bg-gray-100 text-gray-500'}`}>
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full ${STATUS_BADGE[order.status] || 'bg-gray-100 text-gray-500'}`}>
                         {order.status}
                       </span>
                     </div>

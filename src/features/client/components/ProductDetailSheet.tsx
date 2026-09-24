@@ -62,7 +62,7 @@ export const ProductDetailSheet = ({
         </div>
 
         <h2 className="font-display font-bold text-lg text-secondary mb-1">{product.name}</h2>
-        <p className="font-bold text-primary mb-3">{formatCOP(product.price)}</p>
+        <p className="font-bold tabular-nums text-primary mb-3">{formatCOP(product.price)}</p>
 
         {product.description && (
           <p className="text-sm text-gray-500 mb-5">{product.description}</p>
@@ -90,6 +90,7 @@ export const ProductDetailSheet = ({
           variant="solid"
           fullWidth
           size="lg"
+          className="tabular-nums"
           disabled={!canAdd}
           onClick={() => canAdd && onAdd(product, quantity)}
         >

@@ -100,7 +100,7 @@ export const ClientAccountPage = () => {
             <BrandIcon name="bell" size="sm" className="text-gray-500" />
             Notificaciones
             {unreadCount > 0 && (
-              <span className="bg-danger text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="bg-danger text-white text-xs font-bold tabular-nums rounded-full min-w-6 h-6 px-1 flex items-center justify-center">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}

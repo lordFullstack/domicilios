@@ -82,7 +82,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
         {unreadCount > 0 && (
           <span
             aria-hidden="true"
-            className="absolute top-1 right-1 min-w-[19px] h-[19px] px-1 bg-danger rounded-full flex items-center justify-center text-[11px] font-bold text-white border-2 border-white"
+            className="absolute top-1 right-1 min-w-5 h-5 px-1 bg-danger rounded-full flex items-center justify-center text-xs font-bold tabular-nums text-white border-2 border-white"
           >
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
@@ -125,7 +125,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-secondary">{n.title}</p>
                       <p className="text-xs text-gray-500 mt-0.5">{n.body}</p>
-                      <p className="text-[11px] text-gray-500 mt-1">{timeAgo(n.created_at)}</p>
+                      <p className="text-xs text-gray-500 tabular-nums mt-1">{timeAgo(n.created_at)}</p>
                     </div>
                   </div>
                 </button>

@@ -32,12 +32,12 @@ export const OrderSummaryCard = ({
     {deliveryFee > 0 && (
       <div className="flex items-center justify-between mb-1 text-sm text-gray-500">
         <span>Envío</span>
-        <span>{formatCOP(deliveryFee)}</span>
+        <span className="tabular-nums">{formatCOP(deliveryFee)}</span>
       </div>
     )}
     <div className="flex items-center justify-between mb-3">
       <span className="font-display font-bold text-secondary">Total</span>
-      <span className="font-display font-semibold text-lg text-ink">{formatCOP(total)}</span>
+      <span className="font-display font-semibold text-lg tabular-nums text-ink">{formatCOP(total)}</span>
     </div>
 
     <button onClick={onViewDetails} className="focus-ring text-sm font-semibold text-primary">

@@ -17,7 +17,7 @@ export const RevenueBarChart = ({ data }: RevenueBarChartProps) => {
         <div className="flex items-end justify-between gap-2 h-40 min-w-[280px]">
           {data.map((d) => (
             <div key={d.label} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-              <span className="text-[10px] font-semibold text-secondary whitespace-nowrap">
+              <span className="text-xs font-semibold text-secondary whitespace-nowrap">
                 {d.revenue > 0 ? formatCOP(d.revenue) : ''}
               </span>
               <div

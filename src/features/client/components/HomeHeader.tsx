@@ -26,7 +26,7 @@ export const HomeHeader = () => {
           </Drop>
           <div className="leading-tight">
             <p className="font-display font-bold text-base text-secondary">Domicilios</p>
-            <p className="text-[11px] text-gray-500">Tu comida, más cerca</p>
+            <p className="text-xs text-gray-500">Tu comida, más cerca</p>
           </div>
         </div>
         <NotificationBell />

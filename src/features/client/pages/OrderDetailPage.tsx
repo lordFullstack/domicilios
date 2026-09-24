@@ -157,10 +157,10 @@ export const OrderDetailPage = () => {
           <ChevronLeft className="w-4 h-4 text-secondary" />
         </button>
         <div>
-          <h1 className="font-display text-lg font-bold text-secondary">
+          <h1 className="font-display text-lg font-bold tabular-nums tracking-[0.01em] text-secondary">
             #{order.id.substring(0, 8).toUpperCase()}
           </h1>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 tabular-nums">
             {formattedDate} · {formattedTime}
           </p>
         </div>
@@ -169,7 +169,7 @@ export const OrderDetailPage = () => {
       {/* Indicador de conexión — honesto: nunca simula tiempo real */}
       <div className="px-5 pb-1">
         {isOffline ? (
-          <p className="flex items-center gap-1.5 text-xs text-gray-500">
+          <p className="flex items-center gap-1.5 text-xs tabular-nums text-gray-500">
             <WifiOff className="w-3 h-3" />
             Sin conexión · mostrando el último estado conocido ({lastUpdateTime})
           </p>

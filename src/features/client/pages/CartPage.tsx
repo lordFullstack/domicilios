@@ -151,12 +151,12 @@ export const CartPage = () => {
       <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 px-5 pt-4 pb-6 safe-bottom">
         <div className="flex justify-between text-sm text-gray-500 mb-1">
           <span>Subtotal</span>
-          <span>{formatCOP(subtotal)}</span>
+          <span className="tabular-nums">{formatCOP(subtotal)}</span>
         </div>
         <DeliveryFeeRow fee={deliveryFee} className="mb-3" />
-        <div className="flex justify-between font-display font-bold mb-4 text-secondary">
+        <div className="flex items-baseline justify-between font-display font-bold mb-4 text-secondary">
           <span>Total</span>
-          <span className="text-brand-700">{formatCOP(total)}</span>
+          <span className="text-display font-extrabold tabular-nums text-brand-700">{formatCOP(total)}</span>
         </div>
         <Button
           variant="gradient"
@@ -200,7 +200,7 @@ const CartItemRow = ({
       <div className="flex-1 min-w-0 flex flex-col gap-1.5">
         <p className="font-semibold text-sm text-secondary line-clamp-2">{product.name}</p>
         <div className="flex items-center justify-between gap-2">
-          <p className="text-xs text-ink font-semibold">{formatCOP(product.price)}</p>
+          <p className="text-xs text-ink font-semibold tabular-nums">{formatCOP(product.price)}</p>
           <div className="flex items-center gap-2 flex-shrink-0">
             <div className="flex items-center gap-1.5 bg-gray-50 rounded-full px-1.5 py-1">
               <button
@@ -210,7 +210,7 @@ const CartItemRow = ({
               >
                 <Minus className="w-3 h-3 text-secondary" />
               </button>
-              <span className="text-sm font-semibold w-4 text-center text-secondary">{item.quantity}</span>
+              <span className="text-sm font-semibold w-4 text-center tabular-nums text-secondary">{item.quantity}</span>
               <button
                 onClick={() => onChangeQty(item.productId, 1, item.quantity)}
                 aria-label="Aumentar cantidad"

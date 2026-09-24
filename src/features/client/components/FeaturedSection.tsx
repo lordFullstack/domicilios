@@ -70,14 +70,14 @@ export const FeaturedSection = ({ type, title, variant = 'carousel' }: FeaturedS
                   <UtensilsCrossed className="w-7 h-7 text-primary/40" strokeWidth={1.5} aria-hidden="true" />
                 )}
               </span>
-              <span className="absolute top-2 left-2 flex items-center gap-1 bg-coral text-white text-[10px] font-bold px-2 py-1 rounded-full">
+              <span className="absolute top-2 left-2 flex items-center gap-1 bg-coral text-white text-xs font-bold px-2 py-1 rounded-full">
                 <Flame className="w-3 h-3" fill="currentColor" aria-hidden="true" />
                 Oferta
               </span>
               <span className="block p-3">
                 <span className="block font-semibold text-xs text-secondary line-clamp-2">{promo.title}</span>
                 {promo.subtitle && (
-                  <span className="mt-0.5 block truncate text-[11px] text-gray-500">{promo.subtitle}</span>
+                  <span className="mt-0.5 block truncate text-xs text-gray-500">{promo.subtitle}</span>
                 )}
               </span>
             </button>

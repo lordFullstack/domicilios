@@ -97,19 +97,26 @@ export default {
       fontFamily: {
         display: ['"Sora"', '"Inter"', 'system-ui', 'sans-serif'],
         sans:    ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
-        mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        // Sin `mono`: JetBrains Mono no se carga ni se usa. El #orderId va en
+        // Inter con tabular-nums (LOOP_VISUAL_05).
       },
 
+      // Escala tipográfica (LOOP_VISUAL_05): tamaño / leading / tracking
+      // explícitos en TODOS los pasos. Única fuente de verdad (ver
+      // docs/design-system/TYPOGRAPHY.md).
       fontSize: {
-        '2xs': ['0.6875rem', { lineHeight: '1rem' }],
-        xs:    ['0.75rem',   { lineHeight: '1.125rem' }],
-        sm:    ['0.875rem',  { lineHeight: '1.375rem' }],
-        base:  ['0.9375rem', { lineHeight: '1.5rem' }],
-        lg:    ['1.0625rem', { lineHeight: '1.625rem' }],
-        xl:    ['1.25rem',   { lineHeight: '1.75rem', letterSpacing: '-0.01em' }],
-        '2xl': ['1.5rem',    { lineHeight: '2rem',    letterSpacing: '-0.02em' }],
-        '3xl': ['1.875rem',  { lineHeight: '2.25rem', letterSpacing: '-0.02em' }],
-        '4xl': ['2.25rem',   { lineHeight: '2.5rem',  letterSpacing: '-0.03em' }],
+        '2xs': ['0.6875rem', { lineHeight: '1rem',      letterSpacing: '0.02em' }],
+        xs:    ['0.75rem',   { lineHeight: '1.125rem',  letterSpacing: '0.01em' }],
+        sm:    ['0.875rem',  { lineHeight: '1.375rem',  letterSpacing: '0em' }],
+        base:  ['0.9375rem', { lineHeight: '1.5rem',    letterSpacing: '0em' }],
+        lg:    ['1.0625rem', { lineHeight: '1.625rem',  letterSpacing: '-0.005em' }],
+        xl:    ['1.25rem',   { lineHeight: '1.75rem',   letterSpacing: '-0.015em' }],
+        '2xl': ['1.5rem',    { lineHeight: '2rem',      letterSpacing: '-0.015em' }],
+        '3xl': ['1.875rem',  { lineHeight: '2.25rem',   letterSpacing: '-0.02em' }],
+        '4xl': ['2.25rem',   { lineHeight: '2.5rem',    letterSpacing: '-0.03em' }],
+        // Momentos display (nombre del restaurante, totales, "Pedido confirmado").
+        // Usar con font-display font-extrabold y máx. 2 líneas.
+        display: ['1.75rem', { lineHeight: '2rem',      letterSpacing: '-0.03em' }],
       },
 
       boxShadow: {

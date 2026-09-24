@@ -118,7 +118,7 @@ export const NotificationsPage = () => {
                     {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-danger mt-1.5 flex-shrink-0" />}
                   </div>
                   <p className="text-xs text-gray-500 mt-0.5">{n.body}</p>
-                  <p className="text-[11px] text-gray-300 mt-1">{timeAgo(n.created_at)}</p>
+                  <p className="text-xs text-gray-500 tabular-nums mt-1">{timeAgo(n.created_at)}</p>
                 </div>
               </button>
             )

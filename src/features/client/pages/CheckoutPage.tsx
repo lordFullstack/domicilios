@@ -241,7 +241,7 @@ export const CheckoutPage = () => {
             <div className="pt-3 border-t border-gray-100 space-y-1">
               <div className="flex justify-between text-sm text-gray-500">
                 <span>Subtotal</span>
-                <span>{formatCOP(subtotal)}</span>
+                <span className="tabular-nums">{formatCOP(subtotal)}</span>
               </div>
               <DeliveryFeeRow fee={deliveryFee} />
             </div>
@@ -261,15 +261,16 @@ export const CheckoutPage = () => {
             Sin conexión — tu carrito está guardado
           </div>
         )}
-        <div className="flex justify-between font-display font-bold mb-3 text-secondary">
+        <div className="flex items-baseline justify-between font-display font-bold mb-3 text-secondary">
           <span>Total</span>
-          <span className="text-brand-700">{formatCOP(total)}</span>
+          <span className="text-display font-extrabold tabular-nums text-brand-700">{formatCOP(total)}</span>
         </div>
         <Button
           variant="gradient"
           onClick={handleSubmit}
           fullWidth
           size="lg"
+          className="tabular-nums"
           loading={isSubmitting}
           disabled={isSubmitting || !checkoutInfoReady || isOffline || !hasAddress}
         >
@@ -308,11 +309,9 @@ const CheckoutItemRow = ({
   return (
     <div className="flex justify-between text-sm text-gray-500">
       <span>
-        {product.name} x{item.quantity}
+        {product.name} <span className="tabular-nums">x{item.quantity}</span>
       </span>
-      <span className="font-semibold text-secondary">
-        {formatCOP(product.price * item.quantity)}
-      </span>
+      <span className="font-semibold tabular-nums text-secondary">{formatCOP(product.price * item.quantity)}</span>
     </div>
   )
 }

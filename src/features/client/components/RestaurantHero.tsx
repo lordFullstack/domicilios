@@ -105,13 +105,13 @@ export const RestaurantHero = ({
             )}
           </div>
           <div className="min-w-0 flex-1 pb-0.5">
-            <h1 className="font-display text-lg font-bold text-white truncate drop-shadow">
+            <h1 className="font-display text-display font-extrabold text-white line-clamp-2 drop-shadow">
               {restaurant.name}
             </h1>
             <p className="mt-0.5 flex items-center gap-1 text-xs text-white drop-shadow">
               <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" aria-hidden="true" />
               <span className="sr-only">{ratingLabel(restaurant)}</span>
-              <span aria-hidden="true">
+              <span aria-hidden="true" className="tabular-nums">
                 {restaurant.rating_count > 0
                   ? `${restaurant.rating_avg.toFixed(1)} (${restaurant.rating_count})`
                   : 'Nuevo'}

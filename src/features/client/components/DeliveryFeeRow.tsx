@@ -18,7 +18,7 @@ export const DeliveryFeeRow = ({ fee, className = '' }: DeliveryFeeRowProps) => 
     ) : fee === 0 ? (
       <span className="text-success-strong font-semibold">Gratis</span>
     ) : (
-      <span>{formatCOP(fee)}</span>
+      <span className="tabular-nums">{formatCOP(fee)}</span>
     )}
   </div>
 )

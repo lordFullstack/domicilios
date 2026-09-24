@@ -92,15 +92,15 @@ export const ClientDetailPanel = ({
             <div className="grid grid-cols-3 gap-2">
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-secondary">{stats.totalOrders}</p>
-                <p className="text-[11px] text-gray-500">Pedidos</p>
+                <p className="text-xs text-gray-500">Pedidos</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-secondary">{stats.delivered}</p>
-                <p className="text-[11px] text-gray-500">Entregados</p>
+                <p className="text-xs text-gray-500">Entregados</p>
               </div>
               <div className="border border-gray-100 rounded-xl p-2 text-center">
                 <p className="font-display font-bold text-primary text-sm">{formatCOP(stats.totalSpent)}</p>
-                <p className="text-[11px] text-gray-500">Total gastado</p>
+                <p className="text-xs text-gray-500">Total gastado</p>
               </div>
             </div>
             {stats.lastOrder && (
@@ -144,7 +144,7 @@ export const ClientDetailPanel = ({
                     </div>
                     <div className="text-right flex-shrink-0">
                       <p className="text-xs font-semibold text-secondary">{formatCOP(order.total)}</p>
-                      <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${STATUS_BADGE[order.status] || 'bg-gray-100 text-gray-500'}`}>
+                      <span className={`text-xs px-1.5 py-0.5 rounded-full ${STATUS_BADGE[order.status] || 'bg-gray-100 text-gray-500'}`}>
                         {order.status}
                       </span>
                     </div>

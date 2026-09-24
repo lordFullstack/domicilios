@@ -82,9 +82,9 @@ export const OrderCard = ({ order, onClick }: OrderCardProps) => {
         <div className="flex-1 min-w-0">
           <div className="flex justify-between items-start gap-2 mb-2">
             <div className="min-w-0 flex-1">
-              <h3 className="font-semibold text-sm text-secondary truncate">
+              <h2 className="font-semibold text-sm text-secondary truncate">
                 {restaurant?.name || 'Restaurante'}
-              </h3>
+              </h2>
               <p className="text-xs text-gray-500 tabular-nums">
                 #{order.id.substring(0, 8).toUpperCase()} · {formattedDate} · {formattedTime}
               </p>

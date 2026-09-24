@@ -95,7 +95,7 @@ export const RestaurantGridCard = ({ restaurant }: RestaurantGridCardProps) => {
             {/* Tarifa real que fija el Admin (app_settings.delivery_fee). */}
             {isOpen && feeLabel && (
               <span
-                className={`flex-shrink-0 text-[10px] font-semibold ${deliveryFee === 0 ? 'text-success-strong' : 'text-gray-600'}`}
+                className={`flex-shrink-0 text-xs font-semibold ${deliveryFee === 0 ? 'text-success-strong' : 'text-gray-600'}`}
               >
                 {feeLabel}
               </span>

@@ -82,7 +82,7 @@ export const MenuProductCard = ({
               >
                 <Plus className="h-5 w-5" aria-hidden="true" />
               </button>
-              <span className="text-[11px] font-medium text-gray-500" aria-hidden="true">
+              <span className="text-xs font-medium text-gray-500" aria-hidden="true">
                 {reason}
               </span>
             </div>
@@ -96,7 +96,7 @@ export const MenuProductCard = ({
               >
                 <Minus className="h-4 w-4" aria-hidden="true" />
               </button>
-              <span className="min-w-6 text-center text-sm font-bold text-secondary" aria-live="polite">
+              <span className="min-w-6 text-center text-sm font-bold tabular-nums text-secondary" aria-live="polite">
                 <span className="sr-only">{product.name}: </span>
                 {quantity}
                 <span className="sr-only"> en el carrito</span>

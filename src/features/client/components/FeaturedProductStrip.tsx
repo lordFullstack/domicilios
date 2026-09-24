@@ -55,7 +55,7 @@ const FeaturedCard = ({ product, quantity, restaurantIsOpen, onOpenDetail, onAdd
             {quantity > 0 && (
               <span
                 aria-hidden="true"
-                className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[10px] font-bold text-white"
+                className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-secondary px-1 text-xs font-bold tabular-nums text-white"
               >
                 {quantity}
               </span>
