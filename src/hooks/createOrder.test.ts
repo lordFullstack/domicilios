@@ -50,9 +50,24 @@ describe('createOrder (RPC)', () => {
       p_special_instructions: 'Casa azul',
       p_payment_method: 'cash_on_delivery',
       p_items: [{ product_id: 'p1', quantity: 2 }],
+      p_client_order_id: null,
     })
     expect(JSON.stringify(rpc.mock.calls[0])).not.toMatch(/unit_price|total/)
     expect(res?.order?.total).toBe(75000)
+  })
+
+  it('envía p_client_order_id cuando se le pasa la llave', async () => {
+    rpc.mockResolvedValue({ data: { id: 'o1', total: 1000 }, error: null })
+    const { result } = renderHook(() => useOrders())
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    await act(async () => {
+      await result.current.createOrder({
+        restaurant_id: 'r1', delivery_address: 'Calle 15 #10-20', payment_method: 'cash_on_delivery',
+        items: [{ product_id: 'p1', quantity: 1 }],
+        client_order_id: '11111111-1111-4111-8111-111111111111',
+      })
+    })
+    expect(rpc.mock.calls[0][1].p_client_order_id).toBe('11111111-1111-4111-8111-111111111111')
   })
 
   it('traduce el error del servidor a un mensaje para el cliente', async () => {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, Banknote, CreditCard, WifiOff } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
@@ -19,6 +19,7 @@ import { AddressCard } from '../components/AddressCard'
 import { OrderSuccessView } from '../components/OrderSuccessView'
 import { DeliveryFeeRow } from '../components/DeliveryFeeRow'
 import { useDeliveryFee } from '@/shared/hooks/useDeliveryFee'
+import * as clientOrderId from '../utils/clientOrderId'
 
 const EMPTY_ADDRESS: AddressDraft = { street: '', complement: '', reference: '' }
 
@@ -33,6 +34,8 @@ export const CheckoutPage = () => {
   const connectionStatus = useOnlineStatus()
   const isOffline = connectionStatus === 'offline'
 
+  // Freno síncrono contra doble envío (setState es asíncrono).
+  const inFlightRef = useRef(false)
   const [submitState, setSubmitState] = useState<SubmitState>('idle')
   const [error, setError] = useState<string | null>(null)
   const [createdOrder, setCreatedOrder] = useState<{ id: string; restaurantName: string; total: number } | null>(null)
@@ -92,7 +95,8 @@ export const CheckoutPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     // Freno extra contra doble-tap además del disabled del botón.
-    if (submitState === 'submitting') return
+    if (inFlightRef.current || submitState === 'submitting') return
+    inFlightRef.current = true
 
     setSubmitState('submitting')
     setError(null)
@@ -119,6 +123,8 @@ export const CheckoutPage = () => {
         special_instructions: address.reference,
         payment_method: paymentMethod,
         items: cart.map((item) => ({ product_id: item.productId, quantity: item.quantity })),
+        // Misma llave mientras el carrito no cambie: un reintento devuelve el mismo pedido.
+        client_order_id: clientOrderId.getOrCreate(clientOrderId.cartSignature(cart)).id,
       })
       if (!newOrder) throw new Error(orderError || 'No pudimos confirmar tu pedido. Tu carrito sigue guardado.')
 
@@ -128,11 +134,14 @@ export const CheckoutPage = () => {
 
       // Total del SERVIDOR (incluye la tarifa vigente al confirmar).
       setCreatedOrder({ id: newOrder.id, restaurantName: restaurant.name, total: Number(newOrder.total) })
+      clientOrderId.clear()
       clear()
       setSubmitState('success')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No pudimos confirmar tu pedido. Tu carrito sigue guardado.')
       setSubmitState('error')
+    } finally {
+      inFlightRef.current = false
     }
   }
 

@@ -753,6 +753,7 @@ export const useOrders = (userId?: string) => {
     special_instructions?: string
     payment_method: string
     items: { product_id: string; quantity: number }[]
+    client_order_id?: string
   }): Promise<{ order: Order | null; error?: string }> => {
     const { data: newOrder, error: orderError } = await supabase.rpc('create_order', {
       p_restaurant_id: input.restaurant_id,
@@ -760,6 +761,7 @@ export const useOrders = (userId?: string) => {
       p_special_instructions: input.special_instructions ?? '',
       p_payment_method: input.payment_method,
       p_items: input.items,
+      p_client_order_id: input.client_order_id ?? null,
     })
 
     if (orderError || !newOrder) {
