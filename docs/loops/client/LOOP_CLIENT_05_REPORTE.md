@@ -1,7 +1,7 @@
 # LOOP_CLIENT_05 — Reporte (Sub-tanda 1: Seguridad)
 
-Estado: **sub-tanda 1 completa en código y base; QA manual del frontend pendiente.** Sub-tanda 2 pendiente.
-Rama: `loop/client-05-checkout` (sin commits todavía).
+Estado: **sub-tanda 1 CERRADA** (M1 + M2 + M3 + frontend; QA manual OK). Sub-tanda 2 movida a **LOOP_CLIENT_05C** (pendiente).
+Rama: `loop/client-05-checkout`. Commit de la sub-tanda 1: `673f8a7`. Pendiente de merge a `main` tras verificar el preview.
 
 ## 1. Migraciones aplicadas a producción (una por una, con OK)
 
@@ -40,18 +40,16 @@ No se tocó: RPC, migraciones, `OrderSuccessView`, manejo de errores, lógica de
 
 ## 4. Pruebas manuales del cliente
 
-Hechas:
-- Pedido real tras M1 (flujo de punta a punta, total del servidor): OK.
+Todas OK (QA manual confirmado por el usuario):
+- Pedido real tras M1, flujo de punta a punta con total del servidor (#F28868AE, $8.000).
+- Pedido guarda el UUID en `orders.client_order_id`.
+- Recarga durante el checkout conserva el mismo UUID.
+- Doble click en "Confirmar" crea un solo pedido.
+- Reintento tras error usa el mismo UUID.
+- Carrito cambiado genera un UUID nuevo.
+- Tras éxito, la clave se borra de sessionStorage.
 
-Pendientes (QA manual del frontend con M3 en producción):
-1. Hacer un pedido y verificar que `orders.client_order_id` guarda el UUID.
-2. Recargar la página durante el checkout y confirmar que se conserva el mismo UUID en sessionStorage.
-3. Doble click en "Confirmar": debe crearse un solo pedido.
-4. Provocar un error (p. ej. sin conexión) y reintentar: mismo UUID, un solo pedido.
-5. Cambiar el carrito tras un intento: UUID nuevo.
-6. Tras éxito: la clave desaparece de sessionStorage.
-
-## 5. Deuda: sub-tanda 2 (UX)
+## 5. Deuda: LOOP_CLIENT_05C (antes sub-tanda 2, UX) — pendiente
 
 - Pantalla de error del checkout con ErrorState (+ copy en `stateCopy`).
 - `cash_amount` (cambio): M4 columna, M6 RPC, UI.
