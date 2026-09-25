@@ -14,6 +14,8 @@ import { NotificationBell } from '@/shared/components/NotificationBell'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
 import { Toast } from '@/shared/components/Toast'
 import { DeliveryStatsGrid } from '../components/DeliveryStatsGrid'
+import { CashClosingCard } from '@/shared/components/CashClosingCard'
+import { bogotaDay } from '@/shared/utils/cashSettlement'
 import { DeliveryOrderCard } from '../components/DeliveryOrderCard'
 import { DeliveryOrderDetailSheet } from '../components/DeliveryOrderDetailSheet'
 import { ActiveDeliveryBar } from '../components/ActiveDeliveryBar'
@@ -194,6 +196,16 @@ export const DeliveryDashboard = () => {
         activeCount={activeDeliveries.length}
         completedToday={todayCompleted}
       />
+
+      {user && (
+        <div className="px-5 mb-6">
+          <CashClosingCard
+            orders={myDeliveries}
+            day={bogotaDay(new Date())}
+            baseStorageKey={`delivery_cash_base_${user.id}_${bogotaDay(new Date())}`}
+          />
+        </div>
+      )}
 
       {/* Entrega activa */}
       {activeDeliveries.length > 0 && (

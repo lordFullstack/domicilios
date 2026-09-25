@@ -30,7 +30,8 @@ export const DeliveryProfilePage = () => {
 
   const myDeliveries = user ? getOrdersByDelivery(user.id) : []
   const completedDeliveries = myDeliveries.filter((o) => o.status === ORDER_STATUS.DELIVERED)
-  const totalEarnings = completedDeliveries.reduce((sum, o) => sum + o.total * 0.1, 0)
+  // Su ganancia real es la tarifa de domicilio de cada entrega (antes se mostraba total × 10%, inventado).
+  const totalEarnings = completedDeliveries.reduce((sum, o) => sum + Number(o.delivery_fee ?? 0), 0)
 
   const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

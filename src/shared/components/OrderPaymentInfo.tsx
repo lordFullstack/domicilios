@@ -4,7 +4,7 @@ import { formatCOP } from '@/shared/utils/money'
 import type { Order } from '@/shared/types'
 
 interface OrderPaymentInfoProps {
-  order: Pick<Order, 'payment_method' | 'total' | 'cash_amount' | 'notes_to_restaurant'>
+  order: Pick<Order, 'payment_method' | 'total' | 'cash_amount' | 'notes_to_restaurant'> & { delivery_fee?: number }
   /** El domiciliario necesita el efectivo bien visible: lleva el cambio y cobra al entregar. */
   audience: 'restaurant' | 'delivery' | 'admin' | 'client'
 }
@@ -21,6 +21,10 @@ export const OrderPaymentInfo = ({ order, audience }: OrderPaymentInfoProps) => 
   const emphasize = audience === 'delivery'
 
   if (!isCash && !notes) return null
+
+  const fee = Number(order.delivery_fee ?? 0)
+  const advance = formatCOP(Number(order.total) - fee)
+  const earns = formatCOP(fee)
 
   return (
     <div className="flex flex-col gap-2">
@@ -41,6 +45,11 @@ export const OrderPaymentInfo = ({ order, audience }: OrderPaymentInfoProps) => 
               {emphasize ? formatCOP(Number(order.total)) : 'Efectivo o datáfono'}
               {cash !== null && ` · Paga con ${formatCOP(cash)}`}
             </p>
+            {emphasize && (
+              <p className="text-sm text-gray-600 tabular-nums">
+                Al recoger pagas al restaurante {advance}; ganas {earns}.
+              </p>
+            )}
             <p className="text-sm text-gray-600 tabular-nums">
               {cash === null
                 ? emphasize

@@ -1,9 +1,11 @@
-import { useMemo, lazy, Suspense } from 'react'
+import { useMemo, useState, lazy, Suspense } from 'react'
 import { X, Phone, Star, MapPin } from 'lucide-react'
 import { User, Order } from '@/shared/types'
 import { ORDER_STATUS } from '@/config/constants'
 import { formatCOP } from '@/shared/utils/money'
 import { Button } from '@/shared/components/Button'
+import { CashClosingCard } from '@/shared/components/CashClosingCard'
+import { bogotaDay } from '@/shared/utils/cashSettlement'
 
 const DeliveryLiveMap = lazy(() =>
   import('@/shared/components/DeliveryLiveMap').then((m) => ({ default: m.DeliveryLiveMap }))
@@ -32,6 +34,7 @@ export const DeliveryPersonDetailPanel = ({
   onEdit,
   onToggleActive,
 }: DeliveryPersonDetailPanelProps) => {
+  const [closingDay, setClosingDay] = useState(() => bogotaDay(new Date()))
   const stats = useMemo(() => {
     const delivered = orders.filter((o) => o.status === ORDER_STATUS.DELIVERED)
     const active = orders.filter((o) => o.status === ORDER_STATUS.IN_DELIVERY)
@@ -123,6 +126,21 @@ export const DeliveryPersonDetailPanel = ({
                 <p className="text-xs text-gray-500">Valor entregado</p>
               </div>
             </div>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold text-gray-500 tracking-wide">CUADRE DEL DÍA</p>
+              <input
+                type="date"
+                value={closingDay}
+                max={bogotaDay(new Date())}
+                onChange={(e) => e.target.value && setClosingDay(e.target.value)}
+                aria-label="Día a cuadrar"
+                className="focus-ring min-h-[44px] rounded-xl border border-gray-200 px-2 text-sm"
+              />
+            </div>
+            <CashClosingCard orders={orders} day={closingDay} />
           </div>
 
           {stats.activeOrders.length > 0 && (
