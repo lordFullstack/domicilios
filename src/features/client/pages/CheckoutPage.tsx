@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, Banknote, CreditCard, WifiOff } from 'lucide-react'
+import { ChevronLeft, WifiOff } from 'lucide-react'
 import { Button } from '@/shared/components/Button'
-import { Badge } from '@/shared/components/Badge'
-import { ProductImage } from '@/shared/components/ProductImage'
 import { EmptyState } from '@/shared/components/EmptyState'
 import { EMPTY_COPY } from '@/shared/constants/stateCopy'
 import { useOrders, useRestaurantById, useProductById, useProducts } from '@/hooks/useLocalData'
@@ -11,13 +9,16 @@ import { useCartContext } from '@/shared/hooks/useCartContext'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus'
 import { ROUTES, PAYMENT_METHOD } from '@/config/constants'
-import { PaymentMethod, Product } from '@/shared/types'
+import { PaymentMethod } from '@/shared/types'
 import { formatCOP } from '@/shared/utils/money'
 import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 import { AddressSheet, AddressDraft } from '../components/AddressSheet'
 import { AddressCard } from '../components/AddressCard'
 import { OrderSuccessView } from '../components/OrderSuccessView'
-import { DeliveryFeeRow } from '../components/DeliveryFeeRow'
+import { CheckoutError } from '../components/CheckoutError'
+import { PaymentMethodSelector } from '../components/PaymentMethodSelector'
+import { CheckoutSummary } from '../components/CheckoutSummary'
+import { classifyCheckoutError, type CheckoutFailure } from '../utils/checkoutError'
 import { useDeliveryFee } from '@/shared/hooks/useDeliveryFee'
 import * as clientOrderId from '../utils/clientOrderId'
 
@@ -37,7 +38,9 @@ export const CheckoutPage = () => {
   // Freno síncrono contra doble envío (setState es asíncrono).
   const inFlightRef = useRef(false)
   const [submitState, setSubmitState] = useState<SubmitState>('idle')
+  // Errores previos al envío (sin dirección, sin conexión): en línea. Fallos del servidor: `failure`.
   const [error, setError] = useState<string | null>(null)
+  const [failure, setFailure] = useState<CheckoutFailure | null>(null)
   const [createdOrder, setCreatedOrder] = useState<{ id: string; restaurantName: string; total: number } | null>(null)
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PAYMENT_METHOD.CASH_ON_DELIVERY)
@@ -92,32 +95,30 @@ export const CheckoutPage = () => {
     )
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault()
     // Freno extra contra doble-tap además del disabled del botón.
     if (inFlightRef.current || submitState === 'submitting') return
-    inFlightRef.current = true
 
+    // Antes de enviar: se quedan en línea (el botón ya lo comunica).
+    if (isOffline) return setError('Necesitamos conexión a internet para confirmar tu pedido. Tu carrito está guardado.')
+    if (!hasAddress) return setError('Agrega una dirección de entrega para continuar.')
+    if (!checkoutInfoReady || !restaurant || !user) {
+      return setError('Aún estamos cargando la información del restaurante. Intenta de nuevo en un momento.')
+    }
+
+    inFlightRef.current = true
     setSubmitState('submitting')
     setError(null)
+    setFailure(null)
 
     try {
-      if (isOffline) {
-        throw new Error('Necesitamos conexión a internet para confirmar tu pedido. Tu carrito está guardado.')
-      }
-      if (!hasAddress) {
-        throw new Error('Agrega una dirección de entrega para continuar.')
-      }
-      if (!checkoutInfoReady || !restaurant || !user) {
-        throw new Error('Aún estamos cargando la información del restaurante. Intenta de nuevo en un momento.')
-      }
-
       const deliveryAddress = address.complement
         ? `${address.street}, ${address.complement}`
         : address.street
 
       // Sin precios ni total: los calcula el servidor (RPC create_order).
-      const { order: newOrder, error: orderError } = await createOrder({
+      const { order: newOrder, code } = await createOrder({
         restaurant_id: restaurant.id,
         delivery_address: deliveryAddress,
         special_instructions: address.reference,
@@ -126,7 +127,11 @@ export const CheckoutPage = () => {
         // Misma llave mientras el carrito no cambie: un reintento devuelve el mismo pedido.
         client_order_id: clientOrderId.getOrCreate(clientOrderId.cartSignature(cart)).id,
       })
-      if (!newOrder) throw new Error(orderError || 'No pudimos confirmar tu pedido. Tu carrito sigue guardado.')
+      if (!newOrder) {
+        setFailure(classifyCheckoutError(code))
+        setSubmitState('error')
+        return
+      }
 
       // Solo se guarda localmente para autocompletar la próxima vez — no es
       // una tabla de direcciones en el backend.
@@ -138,7 +143,8 @@ export const CheckoutPage = () => {
       clear()
       setSubmitState('success')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No pudimos confirmar tu pedido. Tu carrito sigue guardado.')
+      console.error('Error confirmando el pedido:', err)
+      setFailure('network')
       setSubmitState('error')
     } finally {
       inFlightRef.current = false
@@ -153,6 +159,17 @@ export const CheckoutPage = () => {
         total={createdOrder.total}
         onViewOrder={() => navigate(ROUTES.CLIENT_ORDER.replace(':id', createdOrder.id))}
         onKeepShopping={() => navigate(ROUTES.CLIENT_HOME)}
+      />
+    )
+  }
+
+  if (failure) {
+    return (
+      <CheckoutError
+        kind={failure}
+        onRetry={() => void handleSubmit()}
+        onReview={() => setFailure(null)}
+        onNavigate={(path) => navigate(path)}
       />
     )
   }
@@ -185,78 +202,15 @@ export const CheckoutPage = () => {
           <AddressCard draft={address} onEdit={() => setAddressSheetOpen(true)} />
         </div>
 
-        {/* MÉTODO */}
-        <div>
-          <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">MÉTODO DE PAGO</h2>
-          <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              onClick={() => setPaymentMethod(PAYMENT_METHOD.CASH_ON_DELIVERY)}
-              className={`focus-ring flex items-center gap-3 border rounded-2xl p-3 text-left transition-colors min-h-[48px] ${
-                paymentMethod === PAYMENT_METHOD.CASH_ON_DELIVERY
-                  ? 'border-primary bg-primary/10'
-                  : 'border-gray-200'
-              }`}
-            >
-              <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-                <Banknote className="w-4 h-4 text-primary" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-secondary">Efectivo o datáfono</p>
-                <p className="text-xs text-gray-500">Pagas al recibir tu pedido</p>
-              </div>
-              <div
-                className={`w-4 h-4 rounded-full border-2 flex-shrink-0 ${
-                  paymentMethod === PAYMENT_METHOD.CASH_ON_DELIVERY
-                    ? 'border-primary bg-primary'
-                    : 'border-gray-300'
-                }`}
-              />
-            </button>
+        <PaymentMethodSelector value={paymentMethod} onChange={setPaymentMethod} />
 
-            <div className="flex items-center gap-3 hairline rounded-2xl p-3 opacity-50 cursor-not-allowed">
-              <div className="w-9 h-9 rounded-full bg-gray-50 flex items-center justify-center flex-shrink-0">
-                <CreditCard className="w-4 h-4 text-gray-500" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-gray-500">Pagar en línea</p>
-                <p className="text-xs text-gray-500">Tarjeta, PSE, Nequi</p>
-              </div>
-              <Badge variant="default">Próximamente</Badge>
-            </div>
-          </div>
-        </div>
-
-        {/* RESUMEN */}
-        <div>
-          <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">RESUMEN</h2>
-          <div className="hairline rounded-2xl p-4">
-            <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
-              <div className="w-6 h-6 rounded-lg overflow-hidden flex items-center justify-center text-base flex-shrink-0">
-                <ProductImage imageUrl={restaurant?.image_url} alt={restaurant?.name || ''} width={48} />
-              </div>
-              <p className="font-display font-bold text-sm text-secondary">{restaurant?.name}</p>
-            </div>
-
-            <div className="flex flex-col gap-1.5 mb-3">
-              {cart.map((item) => (
-                <CheckoutItemRow
-                  key={item.productId}
-                  item={item}
-                  product={productById.get(item.productId) || null}
-                />
-              ))}
-            </div>
-
-            <div className="pt-3 border-t border-gray-100 space-y-1">
-              <div className="flex justify-between text-sm text-gray-500">
-                <span>Subtotal</span>
-                <span className="tabular-nums">{formatCOP(subtotal)}</span>
-              </div>
-              <DeliveryFeeRow fee={deliveryFee} />
-            </div>
-          </div>
-        </div>
+        <CheckoutSummary
+          restaurant={restaurant}
+          cart={cart}
+          productById={productById}
+          subtotal={subtotal}
+          deliveryFee={deliveryFee}
+        />
 
         <p className="text-xs text-gray-500 text-center px-4">
           Tu pedido será procesado inmediatamente. El restaurante y el domiciliario recibirán la notificación.
@@ -302,26 +256,6 @@ export const CheckoutPage = () => {
         onClose={() => setAddressSheetOpen(false)}
         onSave={setAddress}
       />
-    </div>
-  )
-}
-
-// Componente auxiliar: fila de producto en el resumen del checkout.
-const CheckoutItemRow = ({
-  item,
-  product,
-}: {
-  item: { productId: string; quantity: number; unitPrice: number }
-  product: Product | null
-}) => {
-  if (!product) return null
-
-  return (
-    <div className="flex justify-between text-sm text-gray-500">
-      <span>
-        {product.name} <span className="tabular-nums">x{item.quantity}</span>
-      </span>
-      <span className="font-semibold tabular-nums text-secondary">{formatCOP(product.price * item.quantity)}</span>
     </div>
   )
 }

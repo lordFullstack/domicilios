@@ -152,6 +152,37 @@ export const ERROR_COPY = {
     description: 'Puede que el enlace esté roto o el pedido ya no exista',
     cta: 'Volver a mis pedidos',
   },
+  /** CheckoutPage: fallo del servidor al confirmar el pedido, por causa (LOOP_CLIENT_05C). */
+  checkoutSession: {
+    illustration: 'sad',
+    title: 'Tu sesión expiró',
+    description: 'Inicia sesión otra vez para confirmar el pedido. Tu carrito sigue guardado',
+    cta: 'Iniciar sesión',
+  },
+  checkoutNetwork: {
+    illustration: 'sad',
+    title: 'No pudimos confirmar tu pedido',
+    description: 'Revisa tu conexión e intenta de nuevo. Tu carrito sigue guardado',
+    cta: 'Reintentar',
+  },
+  checkoutValidation: {
+    illustration: 'sad',
+    title: 'Revisa los datos de tu pedido',
+    description: 'Algo de la dirección o del pago no es válido. Tu carrito sigue guardado',
+    cta: 'Revisar mi pedido',
+  },
+  checkoutClosed: {
+    illustration: 'sad',
+    title: 'El restaurante no puede recibir tu pedido ahora',
+    description: 'Puede que haya cerrado hace un momento. Tu carrito sigue guardado',
+    cta: 'Volver a restaurantes',
+  },
+  checkoutCart: {
+    illustration: 'sad',
+    title: 'Algo cambió en tu carrito',
+    description: 'Un producto ya no está disponible o una cantidad no es válida. Tu carrito sigue guardado',
+    cta: 'Revisar mi carrito',
+  },
   /** OrderDetailPage: el restaurante no confirmó a tiempo (cancelación automática). */
   orderTimeout: {
     illustration: 'sad',

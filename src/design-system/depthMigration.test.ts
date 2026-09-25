@@ -36,7 +36,9 @@ const A_FLAT = [
 const B = [
   '/src/features/client/components/DeliveryTrackingSection.tsx',
   '/src/features/client/pages/CartPage.tsx',
-  '/src/features/client/pages/CheckoutPage.tsx',
+  // El checkout se dividió (LOOP_CLIENT_05C): el hairline vive en los componentes extraídos.
+  '/src/features/client/components/CheckoutSummary.tsx',
+  '/src/features/client/components/PaymentMethodSelector.tsx',
   '/src/features/client/pages/OrderDetailPage.tsx',
 ]
 

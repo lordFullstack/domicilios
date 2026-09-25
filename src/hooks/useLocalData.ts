@@ -605,8 +605,11 @@ const CREATE_ORDER_ERRORS: Record<string, string> = {
   invalid_products: 'Uno o más productos ya no están disponibles. Revisa tu carrito.',
 }
 
+export const createOrderErrorCode = (raw?: string) =>
+  Object.keys(CREATE_ORDER_ERRORS).find((c) => raw?.includes(c))
+
 export const createOrderErrorMessage = (raw?: string) => {
-  const code = Object.keys(CREATE_ORDER_ERRORS).find((c) => raw?.includes(c))
+  const code = createOrderErrorCode(raw)
   return code ? CREATE_ORDER_ERRORS[code] : 'No pudimos confirmar tu pedido. Tu carrito sigue guardado.'
 }
 
@@ -719,7 +722,7 @@ export const useOrders = (userId?: string) => {
     payment_method: string
     items: { product_id: string; quantity: number }[]
     client_order_id?: string
-  }): Promise<{ order: Order | null; error?: string }> => {
+  }): Promise<{ order: Order | null; error?: string; code?: string }> => {
     const { data: newOrder, error: orderError } = await supabase.rpc('create_order', {
       p_restaurant_id: input.restaurant_id,
       p_delivery_address: input.delivery_address,
@@ -733,7 +736,7 @@ export const useOrders = (userId?: string) => {
       console.error('Error creating order:', orderError)
       const message = createOrderErrorMessage(orderError?.message)
       setError(message)
-      return { order: null, error: message }
+      return { order: null, error: message, code: createOrderErrorCode(orderError?.message) }
     }
 
     // El aviso al restaurante ("pedido nuevo") lo genera y lo empuja la base de datos
