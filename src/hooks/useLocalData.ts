@@ -617,8 +617,9 @@ export const useOrders = (userId?: string) => {
   const [fromCache, setFromCache] = useState(false)
   const [cachedAt, setCachedAt] = useState<number | null>(null)
 
-  const reload = useCallback(async () => {
-    setLoading(true)
+  // `silent`: recarga sin mostrar el estado de carga (sondeo y tiempo real: sin parpadeos).
+  const load = useCallback(async (silent: boolean) => {
+    if (!silent) setLoading(true)
     let query = supabase.from('orders').select('*').order('created_at', { ascending: false })
     if (userId) {
       query = query.eq('user_id', userId)
@@ -647,9 +648,31 @@ export const useOrders = (userId?: string) => {
     setLoading(false)
   }, [userId])
 
+  const reload = useCallback(() => load(false), [load])
+  const silentReload = useCallback(() => load(true), [load])
+
   useEffect(() => {
     reload()
   }, [reload])
+
+  // Respaldo del tiempo real (LOOP_FLOW_01, QA): en el celular el WebSocket se duerme con la app
+  // en segundo plano y los cambios (pedido nuevo, vencimientos) no llegan hasta refrescar a mano.
+  // Se recarga al volver a la app / recuperar la red y cada 20 s mientras la pantalla está visible.
+  useEffect(() => {
+    const refresh = () => {
+      if (document.visibilityState === 'visible') silentReload()
+    }
+    const timer = setInterval(refresh, 20000)
+    document.addEventListener('visibilitychange', refresh)
+    window.addEventListener('online', refresh)
+    window.addEventListener('focus', refresh)
+    return () => {
+      clearInterval(timer)
+      document.removeEventListener('visibilitychange', refresh)
+      window.removeEventListener('online', refresh)
+      window.removeEventListener('focus', refresh)
+    }
+  }, [silentReload])
 
   // Tiempo real: cualquier cambio en 'orders' (nueva orden, cambio de
   // estado, etc.) recarga la lista automáticamente, sin que el usuario
@@ -671,15 +694,18 @@ export const useOrders = (userId?: string) => {
           ? { event: '*', schema: 'public', table: 'orders', filter: `user_id=eq.${userId}` }
           : { event: '*', schema: 'public', table: 'orders' },
         () => {
-          reload()
+          silentReload()
         }
       )
-      .subscribe()
+      // Al (re)conectar el canal se recarga: cubre lo ocurrido mientras estuvo caído.
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') silentReload()
+      })
 
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [reload, userId])
+  }, [silentReload, userId])
 
   // Crea el pedido con la RPC `create_order`: el servidor valida el
   // restaurante y los productos, toma los precios de `products`, suma la

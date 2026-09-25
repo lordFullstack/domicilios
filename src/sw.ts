@@ -123,7 +123,10 @@ self.addEventListener('push', (event) => {
       badge: '/brand/rocket-app-icon-192.png',
       data: { url: payload.url, orderId: payload.orderId },
       tag: `order-${payload.orderId}`, // reemplaza notificaciones previas del mismo pedido en vez de acumularlas
-    })
+      // Sin `renotify` un aviso que reemplaza a otro con el mismo tag llega en silencio (Android).
+      renotify: true,
+      vibrate: [200, 100, 200],
+    } as NotificationOptions) // renotify no está en los tipos de la librería DOM
   )
 })
 

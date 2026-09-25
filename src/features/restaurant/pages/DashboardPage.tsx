@@ -52,7 +52,7 @@ export const RestaurantDashboard = () => {
   // Pedidos listos que nadie aceptó: el restaurante los ve y puede buscar otra vez.
   const unassignedReady = myOrders.filter((o) => o.status === ORDER_STATUS.READY && !o.delivery_person_id)
   // Sonido repetido mientras haya pedidos por confirmar, y pantalla encendida (LOOP_FLOW_01).
-  useOrderAlarm(pendingOrders.length > 0)
+  const { audioBlocked, enableSound } = useOrderAlarm(pendingOrders.length > 0)
   useWakeLock(!!myRestaurant)
   const deliveredToday = myOrders.filter((o) => {
     const today = new Date().toDateString()
@@ -221,6 +221,14 @@ export const RestaurantDashboard = () => {
       {actionError && (
         <div className="mx-5 mb-4 bg-red-50 text-danger text-sm font-semibold rounded-2xl p-3 md:max-w-4xl md:mx-auto" role="alert">
           {actionError}
+        </div>
+      )}
+
+      {audioBlocked && (
+        <div className="mx-5 mb-4 md:max-w-4xl md:mx-auto">
+          <Button fullWidth variant="primary" onClick={enableSound}>
+            🔔 Activar sonido de pedidos nuevos
+          </Button>
         </div>
       )}
 
