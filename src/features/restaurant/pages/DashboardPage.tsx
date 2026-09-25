@@ -224,6 +224,12 @@ export const RestaurantDashboard = () => {
         </div>
       )}
 
+      <div className="mx-5 mb-2 md:max-w-4xl md:mx-auto">
+        <button type="button" onClick={enableSound} className="focus-ring min-h-[44px] text-sm font-semibold text-primary underline">
+          🔔 Probar sonido
+        </button>
+      </div>
+
       {audioBlocked && (
         <div className="mx-5 mb-4 md:max-w-4xl md:mx-auto">
           <Button fullWidth variant="primary" onClick={enableSound}>
