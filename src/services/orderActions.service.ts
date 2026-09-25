@@ -27,6 +27,7 @@ export const ORDER_ACTION_ERRORS: Record<string, string> = {
   delivery_busy: 'Ya tienes una entrega en camino. Termínala para aceptar otra.',
   order_not_assigned: 'Este pedido ya no está asignado a ti.',
   invalid_location: 'La ubicación no es válida.',
+  order_expired: 'Se acabó el tiempo para responder este pedido.',
 }
 
 const FALLBACK_MESSAGE = 'No pudimos completar la acción. Intenta de nuevo.'

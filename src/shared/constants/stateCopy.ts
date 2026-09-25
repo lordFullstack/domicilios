@@ -19,6 +19,8 @@ export interface StateCopy {
   title: string
   description?: string
   cta?: string
+  /** Segunda salida (opcional), p. ej. "Ver restaurantes". */
+  ctaSecondary?: string
 }
 
 const CTA_EXPLORE = 'Explorar restaurantes'
@@ -149,6 +151,14 @@ export const ERROR_COPY = {
     title: 'No encontramos este pedido',
     description: 'Puede que el enlace esté roto o el pedido ya no exista',
     cta: 'Volver a mis pedidos',
+  },
+  /** OrderDetailPage: el restaurante no confirmó a tiempo (cancelación automática). */
+  orderTimeout: {
+    illustration: 'sad',
+    title: 'El restaurante no respondió a tiempo',
+    description: 'No se te cobró nada. Puedes pedir de nuevo o elegir otro restaurante',
+    cta: 'Pedir de nuevo',
+    ctaSecondary: 'Ver restaurantes',
   },
   /** NotFound (404). El CTA depende de la sesión: "Volver al inicio" / "Iniciar sesión". */
   notFound: {

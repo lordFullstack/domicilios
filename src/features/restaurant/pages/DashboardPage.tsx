@@ -13,6 +13,8 @@ import { NotificationBell } from '@/shared/components/NotificationBell'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
 import { OrderItemsList } from '@/shared/components/OrderItemsList'
 import { RestaurantOrderActions } from '../components/RestaurantOrderActions'
+import { DeadlineCountdown } from '@/shared/components/DeadlineCountdown'
+import { useOrderAlarm, useWakeLock } from '../hooks/useOrderAlarm'
 import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { Order, OrderStatus } from '@/shared/types'
@@ -47,6 +49,11 @@ export const RestaurantDashboard = () => {
   const activeOrders = myOrders.filter(
     (o) => !([ORDER_STATUS.DELIVERED, ORDER_STATUS.CANCELLED] as OrderStatus[]).includes(o.status)
   )
+  // Pedidos listos que nadie aceptó: el restaurante los ve y puede buscar otra vez.
+  const unassignedReady = myOrders.filter((o) => o.status === ORDER_STATUS.READY && !o.delivery_person_id)
+  // Sonido repetido mientras haya pedidos por confirmar, y pantalla encendida (LOOP_FLOW_01).
+  useOrderAlarm(pendingOrders.length > 0)
+  useWakeLock(!!myRestaurant)
   const deliveredToday = myOrders.filter((o) => {
     const today = new Date().toDateString()
     return o.status === ORDER_STATUS.DELIVERED && new Date(o.updated_at).toDateString() === today
@@ -217,6 +224,14 @@ export const RestaurantDashboard = () => {
         </div>
       )}
 
+      {unassignedReady.length > 0 && (
+        <div className="mx-5 mb-4 bg-warning/10 text-warning-strong text-sm font-semibold rounded-2xl p-3 md:max-w-4xl md:mx-auto" role="alert">
+          {unassignedReady.length === 1
+            ? 'Un pedido listo no tiene domiciliario. Toca "Enviar" en la orden para buscar otra vez.'
+            : `${unassignedReady.length} pedidos listos no tienen domiciliario. Toca "Enviar" en cada orden para buscar otra vez.`}
+        </div>
+      )}
+
       {/* Estadísticas */}
       <div className="grid grid-cols-2 gap-3 px-5 mb-4 md:grid-cols-4 md:max-w-4xl md:mx-auto md:px-0">
         <Card className="text-center py-4">
@@ -272,6 +287,9 @@ export const RestaurantDashboard = () => {
                     {STATUS_LABELS[order.status]}
                   </span>
                 </div>
+                {order.status === ORDER_STATUS.PENDING && order.confirm_deadline && (
+                  <DeadlineCountdown deadline={order.confirm_deadline} prefix="Responde en" className="mb-1" />
+                )}
                 <p className="text-xs text-gray-500 mb-1">{order.delivery_address}</p>
                 {order.special_instructions && (
                   <p className="text-xs text-gray-500 italic mb-1">"{order.special_instructions}"</p>

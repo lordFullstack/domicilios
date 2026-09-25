@@ -12,6 +12,7 @@ import { USER_ROLES, ORDER_STATUS } from '@/config/constants'
 import { User } from '@/shared/types'
 import { AdminListSkeleton } from '../components/AdminListSkeleton'
 import { DeliveryFeeCard } from '../components/DeliveryFeeCard'
+import { ResponseTimesCard } from '../components/ResponseTimesCard'
 
 type QuickFilter = 'all' | 'active_now' | 'disabled'
 
@@ -81,6 +82,7 @@ export const AdminDeliveryPeoplePage = () => {
         </p>
 
         <DeliveryFeeCard />
+        <ResponseTimesCard />
 
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <input

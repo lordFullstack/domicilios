@@ -85,6 +85,12 @@ export interface Order {
   delivery_fee: number
   /** Ronda de asignación de domiciliario (sube con "Buscar otra vez"). */
   assignment_round?: number
+  /** Hora límite (servidor) para que el restaurante confirme; null en pedidos antiguos. */
+  confirm_deadline?: string | null
+  /** Hora límite (servidor) para que el domiciliario asignado acepte. */
+  accept_deadline?: string | null
+  /** null = cancelación manual o pedido antiguo. */
+  cancel_reason?: 'customer' | 'restaurant' | 'restaurant_timeout' | 'admin' | null
   current_lat?: number | null
   current_lng?: number | null
   location_updated_at?: string | null

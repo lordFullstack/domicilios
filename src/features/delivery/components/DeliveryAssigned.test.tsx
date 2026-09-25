@@ -5,6 +5,9 @@ import type { Order } from '@/shared/types'
 vi.mock('@/hooks/useLocalData', () => ({
   useRestaurantById: () => ({ restaurant: { name: 'Asados Riohacha', address: 'Calle 10 # 5-20' } }),
 }))
+vi.mock('@/hooks/useCountdown', () => ({
+  useCountdown: () => ({ secondsLeft: 90, expired: false, label: '1:30' }),
+}))
 vi.mock('@/shared/components/OrderItemsList', () => ({ OrderItemsList: () => null }))
 
 import { DeliveryOrderCard } from './DeliveryOrderCard'

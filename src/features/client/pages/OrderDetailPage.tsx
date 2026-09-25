@@ -29,6 +29,7 @@ import { OrderDetailSheet } from '../components/OrderDetailSheet'
 import { CancelOrderSheet } from '../components/CancelOrderSheet'
 import { RatingModal } from '../components/RatingModal'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
+import { DeadlineCountdown } from '@/shared/components/DeadlineCountdown'
 
 
 export const OrderDetailPage = () => {
@@ -196,10 +197,37 @@ export const OrderDetailPage = () => {
       </div>
 
       <div className="px-5">
+        {order.status === ORDER_STATUS.PENDING && order.confirm_deadline && (
+          <div className="bg-warning/10 rounded-2xl p-3 mb-3 flex items-center justify-between gap-2" role="status">
+            <p className="text-sm font-semibold text-secondary">Esperando confirmación del restaurante</p>
+            <DeadlineCountdown deadline={order.confirm_deadline} />
+          </div>
+        )}
+        {order.status === ORDER_STATUS.READY && !order.delivery_person_id && (
+          <p className="bg-warning/10 rounded-2xl p-3 mb-3 text-sm font-semibold text-secondary" role="status">
+            Buscando domiciliario…
+          </p>
+        )}
         {!isCancelled && <OrderStatusHero status={order.status} />}
 
         {/* Tracker de estado */}
-        {isCancelled ? (
+        {isCancelled && order.cancel_reason === 'restaurant_timeout' ? (
+          <ErrorState
+            illustration={ERROR_COPY.orderTimeout.illustration}
+            title={ERROR_COPY.orderTimeout.title}
+            description={ERROR_COPY.orderTimeout.description}
+            action={
+              <div className="flex flex-col items-center gap-2">
+                <Button variant="gradient" onClick={handleReorder} disabled={orderItems.length === 0}>
+                  {ERROR_COPY.orderTimeout.cta}
+                </Button>
+                <Button variant="tertiary" onClick={() => navigate(ROUTES.CLIENT_RESTAURANTS)}>
+                  {ERROR_COPY.orderTimeout.ctaSecondary}
+                </Button>
+              </div>
+            }
+          />
+        ) : isCancelled ? (
           <div className="bg-red-50 rounded-2xl p-6 text-center mb-4" role="alert">
             <XCircle className="w-10 h-10 text-danger mx-auto mb-2" />
             <p className="font-display font-bold text-danger">Esta orden fue cancelada</p>

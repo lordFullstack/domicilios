@@ -2,6 +2,7 @@ import { Banknote } from 'lucide-react'
 import { Order, Restaurant } from '@/shared/types'
 import { formatCOP } from '@/shared/utils/money'
 import { PAYMENT_METHOD } from '@/config/constants'
+import { DeadlineCountdown } from '@/shared/components/DeadlineCountdown'
 
 interface DeliveryOrderCardProps {
   order: Order
@@ -23,6 +24,9 @@ export const DeliveryOrderCard = ({ order, restaurant, onOpenDetail, pendingAcce
         <p className="text-xs text-gray-500 truncate">
           {pendingAcceptance ? 'Pedido asignado — ábrelo para aceptar o rechazar' : `Entregar: ${order.delivery_address}`}
         </p>
+        {pendingAcceptance && order.accept_deadline && (
+          <DeadlineCountdown deadline={order.accept_deadline} prefix="Responde en" />
+        )}
       </div>
       <div className="text-right flex-shrink-0">
         <p className="font-display font-bold text-sm text-primary">{formatCOP(order.total)}</p>
