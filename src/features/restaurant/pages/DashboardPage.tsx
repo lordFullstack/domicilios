@@ -14,6 +14,7 @@ import { NotificationPermissionCard } from '@/shared/components/NotificationPerm
 import { OrderItemsList } from '@/shared/components/OrderItemsList'
 import { RestaurantOrderActions } from '../components/RestaurantOrderActions'
 import { DeadlineCountdown } from '@/shared/components/DeadlineCountdown'
+import { OrderPaymentInfo } from '@/shared/components/OrderPaymentInfo'
 import { useOrderAlarm, useWakeLock } from '../hooks/useOrderAlarm'
 import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
@@ -308,6 +309,10 @@ export const RestaurantDashboard = () => {
                 {order.special_instructions && (
                   <p className="text-xs text-gray-500 italic mb-1">"{order.special_instructions}"</p>
                 )}
+
+                <div className="my-2">
+                  <OrderPaymentInfo order={order} audience="restaurant" />
+                </div>
 
                 <div className="bg-gray-50 rounded-xl p-2.5 my-2">
                   <OrderItemsList orderId={order.id} />

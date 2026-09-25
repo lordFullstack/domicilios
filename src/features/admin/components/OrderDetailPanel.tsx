@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { OrderPaymentInfo } from '@/shared/components/OrderPaymentInfo'
 import { X, AlertTriangle } from 'lucide-react'
 import { Order, User } from '@/shared/types'
 import { ORDER_STATUS, PAYMENT_METHOD } from '@/config/constants'
@@ -126,6 +127,8 @@ export const OrderDetailPanel = ({
               <p className="text-xs text-gray-500 italic mt-1">"{order.special_instructions}"</p>
             )}
           </div>
+
+          <OrderPaymentInfo order={order} audience="admin" />
 
           <div>
             <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">PRODUCTOS</p>

@@ -1,4 +1,5 @@
 import { BottomSheet } from '@/shared/components/BottomSheet'
+import { OrderPaymentInfo } from '@/shared/components/OrderPaymentInfo'
 import { OrderItemsList } from '@/shared/components/OrderItemsList'
 import { formatCOP } from '@/shared/utils/money'
 import { Order } from '@/shared/types'
@@ -25,6 +26,10 @@ export const OrderDetailSheet = ({ open, onClose, order }: OrderDetailSheetProps
         {order.special_instructions && (
           <p className="text-xs text-gray-500 italic mt-1">"{order.special_instructions}"</p>
         )}
+      </div>
+
+      <div className="border-t border-gray-100 pt-3">
+        <OrderPaymentInfo order={order} audience="client" />
       </div>
     </div>
   </BottomSheet>

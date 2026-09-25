@@ -1,4 +1,5 @@
 import { Banknote } from 'lucide-react'
+import { OrderPaymentInfo } from '@/shared/components/OrderPaymentInfo'
 import { Order } from '@/shared/types'
 import { useRestaurantById } from '@/hooks/useLocalData'
 import { BottomSheet } from '@/shared/components/BottomSheet'
@@ -61,6 +62,8 @@ export const DeliveryOrderDetailSheet = ({
             </>
           )}
         </div>
+
+        <OrderPaymentInfo order={order} audience="delivery" />
 
         <div className="bg-gray-50 rounded-xl p-3">
           <p className="text-xs font-bold text-gray-500 tracking-wide mb-2">PRODUCTOS</p>
