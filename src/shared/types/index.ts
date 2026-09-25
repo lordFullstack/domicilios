@@ -85,6 +85,10 @@ export interface Order {
   delivery_fee: number
   /** Ronda de asignación de domiciliario (sube con "Buscar otra vez"). */
   assignment_round?: number
+  /** Con cuánto paga el cliente en efectivo (null = sin especificar). */
+  cash_amount?: number | null
+  /** Nota del cliente para el restaurante (máx. 150). Distinta de special_instructions. */
+  notes_to_restaurant?: string | null
   /** Hora límite (servidor) para que el restaurante confirme; null en pedidos antiguos. */
   confirm_deadline?: string | null
   /** Hora límite (servidor) para que el domiciliario asignado acepte. */

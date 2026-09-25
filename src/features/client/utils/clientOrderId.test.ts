@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { getOrCreate, clear, generateUuid, cartSignature } from './clientOrderId'
+import { getOrCreate, clear, generateUuid, cartSignature, orderSignature } from './clientOrderId'
 
 const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 
@@ -52,5 +52,42 @@ describe('clientOrderId', () => {
     const b = cartSignature([{ productId: 'p2', quantity: 2 }, { productId: 'p1', quantity: 1 }])
     expect(a).toBe(b)
     expect(cartSignature([{ productId: 'p1', quantity: 2 }])).not.toBe(cartSignature([{ productId: 'p1', quantity: 1 }]))
+  })
+})
+
+describe('orderSignature (D2): cualquier dato del pedido cambia la llave', () => {
+  const base = {
+    restaurantId: 'r1',
+    items: [{ productId: 'p1', quantity: 1 }],
+    paymentMethod: 'cash_on_delivery',
+    cashAmount: 50000,
+    notes: 'sin cebolla',
+    address: 'Calle 15 #10-20',
+  }
+
+  it('los mismos datos dan la misma firma (aunque cambie el orden de los items o sobren espacios)', () => {
+    const a = orderSignature({ ...base, items: [{ productId: 'p1', quantity: 1 }, { productId: 'p2', quantity: 2 }] })
+    const b = orderSignature({
+      ...base,
+      items: [{ productId: 'p2', quantity: 2 }, { productId: 'p1', quantity: 1 }],
+      notes: '  sin cebolla ',
+      address: ' Calle 15 #10-20 ',
+    })
+    expect(a).toBe(b)
+  })
+
+  it.each([
+    ['restaurante', { restaurantId: 'r2' }],
+    ['items', { items: [{ productId: 'p1', quantity: 2 }] }],
+    ['método de pago', { paymentMethod: 'online' }],
+    ['monto en efectivo', { cashAmount: 60000 }],
+    ['notas', { notes: 'con cebolla' }],
+    ['dirección', { address: 'Calle 16 #10-20' }],
+  ])('cambiar %s => firma distinta', (_name, change) => {
+    expect(orderSignature({ ...base, ...change })).not.toBe(orderSignature(base))
+  })
+
+  it('efectivo vacío/null y notas vacías se normalizan igual', () => {
+    expect(orderSignature({ ...base, cashAmount: null, notes: '' })).toBe(orderSignature({ ...base, cashAmount: undefined, notes: undefined }))
   })
 })

@@ -25,6 +25,28 @@ export const cartSignature = (items: { productId: string; quantity: number }[]):
     .sort()
     .join('|')
 
+export interface OrderSignatureInput {
+  restaurantId: string
+  items: { productId: string; quantity: number }[]
+  paymentMethod: string
+  cashAmount?: number | null
+  notes?: string
+  address: string
+}
+
+// Firma del PEDIDO (LOOP_CLIENT_05C, D2): restaurante + items + método de pago + efectivo + notas +
+// dirección. Si cualquiera cambia => otra firma => otra llave => pedido nuevo. Con la misma firma
+// (recarga o reintento tras una respuesta perdida) se reutiliza la llave.
+export const orderSignature = (o: OrderSignatureInput): string =>
+  [
+    o.restaurantId,
+    cartSignature(o.items),
+    o.paymentMethod,
+    o.cashAmount == null ? '' : String(o.cashAmount),
+    (o.notes ?? '').trim(),
+    o.address.trim(),
+  ].join('#')
+
 const read = (): Stored | null => {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY)

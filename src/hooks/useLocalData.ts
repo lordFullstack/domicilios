@@ -598,6 +598,8 @@ const CREATE_ORDER_ERRORS: Record<string, string> = {
   not_authenticated: 'Tu sesión expiró. Vuelve a iniciar sesión para confirmar el pedido.',
   invalid_address: 'Revisa la dirección de entrega: necesitamos al menos la calle y el número.',
   invalid_payment_method: 'Elige un método de pago válido.',
+  invalid_cash_amount: 'Revisa con cuánto vas a pagar: debe cubrir el total de tu pedido.',
+  notes_too_long: 'La nota para el restaurante es muy larga: máximo 150 caracteres.',
   restaurant_unavailable: 'Este restaurante no está recibiendo pedidos en este momento.',
   restaurant_closed: 'El restaurante acaba de cerrar. Tu carrito sigue guardado.',
   empty_cart: 'Tu carrito está vacío.',
@@ -722,6 +724,8 @@ export const useOrders = (userId?: string) => {
     payment_method: string
     items: { product_id: string; quantity: number }[]
     client_order_id?: string
+    cash_amount?: number | null
+    notes_to_restaurant?: string | null
   }): Promise<{ order: Order | null; error?: string; code?: string }> => {
     const { data: newOrder, error: orderError } = await supabase.rpc('create_order', {
       p_restaurant_id: input.restaurant_id,
@@ -730,6 +734,8 @@ export const useOrders = (userId?: string) => {
       p_payment_method: input.payment_method,
       p_items: input.items,
       p_client_order_id: input.client_order_id ?? null,
+      p_cash_amount: input.cash_amount ?? null,
+      p_notes_to_restaurant: input.notes_to_restaurant ?? null,
     })
 
     if (orderError || !newOrder) {

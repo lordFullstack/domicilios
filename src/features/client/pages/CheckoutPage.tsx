@@ -17,6 +17,8 @@ import { AddressCard } from '../components/AddressCard'
 import { OrderSuccessView } from '../components/OrderSuccessView'
 import { CheckoutError } from '../components/CheckoutError'
 import { PaymentMethodSelector } from '../components/PaymentMethodSelector'
+import { OrderNotesField } from '../components/OrderNotesField'
+import { CashAmountField, parseCashInput, cashAmountError } from '../components/CashAmountField'
 import { CheckoutSummary } from '../components/CheckoutSummary'
 import { classifyCheckoutError, type CheckoutFailure } from '../utils/checkoutError'
 import { useDeliveryFee } from '@/shared/hooks/useDeliveryFee'
@@ -48,6 +50,8 @@ export const CheckoutPage = () => {
     () => localStorageService.get(STORAGE_KEYS.LAST_DELIVERY_ADDRESS) || EMPTY_ADDRESS
   )
   const [addressSheetOpen, setAddressSheetOpen] = useState(false)
+  const [cashInput, setCashInput] = useState('')
+  const [notes, setNotes] = useState('')
 
   const firstProduct = useProductById(cart[0]?.productId || '')
   const { restaurant, loading: restaurantLoading } = useRestaurantById(firstProduct.product?.restaurant_id || '')
@@ -61,6 +65,12 @@ export const CheckoutPage = () => {
   const productById = new Map(restaurantProducts.map((p) => [p.id, p]))
 
   const hasAddress = address.street.trim().length >= 5
+
+  // Total mostrado (el servidor lo recalcula y vuelve a validar el efectivo).
+  const total = getTotal() + (deliveryFee ?? 0)
+  const isCash = paymentMethod === PAYMENT_METHOD.CASH_ON_DELIVERY
+  const cashAmount = isCash ? parseCashInput(cashInput) : null
+  const cashInvalid = cashAmountError(cashAmount, total) !== null
 
   // El error solo se limpiaba al reintentar el submit — si el usuario
   // arreglaba la causa (agregaba dirección, volvía a tener conexión) el
@@ -103,6 +113,7 @@ export const CheckoutPage = () => {
     // Antes de enviar: se quedan en línea (el botón ya lo comunica).
     if (isOffline) return setError('Necesitamos conexión a internet para confirmar tu pedido. Tu carrito está guardado.')
     if (!hasAddress) return setError('Agrega una dirección de entrega para continuar.')
+    if (cashInvalid) return setError('Revisa con cuánto vas a pagar: debe cubrir el total de tu pedido.')
     if (!checkoutInfoReady || !restaurant || !user) {
       return setError('Aún estamos cargando la información del restaurante. Intenta de nuevo en un momento.')
     }
@@ -125,7 +136,18 @@ export const CheckoutPage = () => {
         payment_method: paymentMethod,
         items: cart.map((item) => ({ product_id: item.productId, quantity: item.quantity })),
         // Misma llave mientras el carrito no cambie: un reintento devuelve el mismo pedido.
-        client_order_id: clientOrderId.getOrCreate(clientOrderId.cartSignature(cart)).id,
+        cash_amount: cashAmount,
+        notes_to_restaurant: notes.trim() || null,
+        client_order_id: clientOrderId.getOrCreate(
+          clientOrderId.orderSignature({
+            restaurantId: restaurant.id,
+            items: cart,
+            paymentMethod,
+            cashAmount,
+            notes,
+            address: [deliveryAddress, address.reference].join(' | '),
+          })
+        ).id,
       })
       if (!newOrder) {
         setFailure(classifyCheckoutError(code))
@@ -175,7 +197,6 @@ export const CheckoutPage = () => {
   }
 
   const subtotal = getTotal()
-  const total = subtotal + (deliveryFee ?? 0)
   const isSubmitting = submitState === 'submitting'
 
   return (
@@ -203,6 +224,10 @@ export const CheckoutPage = () => {
         </div>
 
         <PaymentMethodSelector value={paymentMethod} onChange={setPaymentMethod} />
+
+        {isCash && <CashAmountField total={total} value={cashInput} onChange={setCashInput} />}
+
+        <OrderNotesField value={notes} onChange={setNotes} />
 
         <CheckoutSummary
           restaurant={restaurant}
@@ -236,7 +261,7 @@ export const CheckoutPage = () => {
           size="lg"
           className="tabular-nums"
           loading={isSubmitting}
-          disabled={isSubmitting || !checkoutInfoReady || isOffline || !hasAddress}
+          disabled={isSubmitting || !checkoutInfoReady || isOffline || !hasAddress || cashInvalid}
         >
           {isOffline
             ? 'Sin conexión'
@@ -246,7 +271,9 @@ export const CheckoutPage = () => {
                 ? 'Procesando pedido...'
                 : !hasAddress
                   ? 'Agrega una dirección'
-                  : `Confirmar pedido · ${formatCOP(total)}`}
+                  : cashInvalid
+                    ? 'Revisa con cuánto pagas'
+                    : `Confirmar pedido · ${formatCOP(total)}`}
         </Button>
       </div>
 
