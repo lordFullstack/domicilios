@@ -9,6 +9,7 @@ import { getAuthErrorMessage } from '../utils/authErrors'
 import { RegisterHero } from '../components/RegisterHero'
 import { AuthInput } from '../components/AuthInput'
 import { AuthPasswordInput } from '../components/AuthPasswordInput'
+import { checkPassword, PASSWORD_HINT } from '../utils/passwordPolicy'
 import { AuthRoleSelector } from '../components/AuthRoleSelector'
 import { RegisterFooter } from '../components/RegisterFooter'
 
@@ -38,6 +39,11 @@ export const RegisterPage = () => {
     setLoading(true)
 
     try {
+      const passwordError = await checkPassword(password)
+      if (passwordError) {
+        setError(passwordError)
+        return
+      }
       await register(email, password, name, role)
       navigate(ROUTE_BY_ROLE[role] || ROUTES.CLIENT_HOME)
     } catch (err) {
@@ -93,6 +99,7 @@ export const RegisterPage = () => {
               placeholder="••••••••"
               required
             />
+            <p className="text-xs text-gray-500 -mt-2">{PASSWORD_HINT}</p>
             <AuthRoleSelector value={role} onChange={setRole} />
 
             <Button

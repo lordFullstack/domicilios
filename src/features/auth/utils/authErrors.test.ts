@@ -25,4 +25,10 @@ describe('getAuthErrorMessage', () => {
     expect(getAuthErrorMessage('texto plano', 'fallback seguro')).toBe('fallback seguro')
     expect(getAuthErrorMessage(null, 'fallback seguro')).toBe('fallback seguro')
   })
+
+  it('traduce cualquier "Password should ..." de Supabase a la política en español', () => {
+    const weak = new Error('Password should contain at least one character of each: abc, ABC, 012.')
+    expect(getAuthErrorMessage(weak, 'fallback')).toMatch(/al menos 8 caracteres/)
+    expect(getAuthErrorMessage(new Error('Password should be at least 8 characters'), 'fallback')).toMatch(/mayúsculas/)
+  })
 })

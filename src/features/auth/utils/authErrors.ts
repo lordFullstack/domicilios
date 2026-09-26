@@ -1,8 +1,11 @@
+import { PASSWORD_POLICY_ERROR } from './passwordPolicy'
+
 const KNOWN_ERRORS: Record<string, string> = {
   'Invalid login credentials': 'Correo o contraseña incorrectos.',
   'Email not confirmed': 'Confirma tu correo antes de iniciar sesión.',
   'User already registered': 'Ya existe una cuenta con ese correo.',
-  'Password should be at least 6 characters': 'La contraseña debe tener al menos 6 caracteres.',
+  'Password should be at least 6 characters': PASSWORD_POLICY_ERROR,
+  'Password should be at least 8 characters': PASSWORD_POLICY_ERROR,
   'Unable to validate email address: invalid format': 'Ese correo no parece válido.',
   'Email rate limit exceeded': 'Demasiados intentos. Espera unos minutos y vuelve a intentar.',
   'New password should be different from the old password.':
@@ -19,5 +22,7 @@ const KNOWN_ERRORS: Record<string, string> = {
  */
 export const getAuthErrorMessage = (error: unknown, fallback: string): string => {
   const raw = error instanceof Error ? error.message : ''
+  // Supabase describe de varias formas una contraseña débil (largo, mayúsculas, números...).
+  if (raw.startsWith('Password should')) return PASSWORD_POLICY_ERROR
   return KNOWN_ERRORS[raw] || fallback
 }

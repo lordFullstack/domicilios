@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { checkPassword, PASSWORD_HINT } from '../utils/passwordPolicy'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle2 } from 'lucide-react'
 import { supabase } from '@/shared/utils/supabase'
@@ -33,12 +34,13 @@ export const ResetPasswordPage = () => {
     e.preventDefault()
     setError('')
 
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.')
-      return
-    }
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden.')
+      return
+    }
+    const passwordError = await checkPassword(password)
+    if (passwordError) {
+      setError(passwordError)
       return
     }
 
@@ -111,6 +113,7 @@ export const ResetPasswordPage = () => {
           placeholder="••••••••"
           required
         />
+        <p className="text-xs text-gray-500 -mt-2">{PASSWORD_HINT}</p>
         <Input
           label="Confirmar contraseña"
           type="password"
