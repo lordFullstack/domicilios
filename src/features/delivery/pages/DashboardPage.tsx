@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapPin, MapPinOff, Wifi, WifiOff } from 'lucide-react'
+import { RocketMark } from '@/shared/components/RocketMark'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders, useRestaurants } from '@/hooks/useLocalData'
 import {
@@ -151,17 +152,19 @@ export const DeliveryDashboard = () => {
     isOffline || !!processingOrderId || (!detailIsActive && activeDeliveries.length > 0)
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
+    <div className="dark min-h-screen bg-night-950 max-w-md mx-auto pb-28">
       <Toast message={toastMessage} />
 
       {/* Header */}
-      <div className="flex items-start justify-between px-5 pt-6 pb-1">
-        <div>
-          <span className="inline-block w-8 h-1 bg-primary rounded-full mb-3" />
-          <h1 className="font-display text-xl font-bold text-secondary">🚴 Panel de Domiciliario</h1>
-          <p className="text-sm text-gray-500">Hola {user?.name?.split(' ')[0]}, aquí tus pedidos</p>
+      <div className="flex items-center justify-between px-5 pt-6 pb-1">
+        <div className="flex items-center gap-2.5">
+          <RocketMark variant="icon" size={32} />
+          <span className="font-display text-base font-bold text-secondary">Domicilios Riohacha</span>
         </div>
-        <NotificationBell />
+        <NotificationBell variant="light" />
+      </div>
+      <div className="px-5 pt-3 pb-1">
+        <h1 className="font-display text-2xl font-bold text-secondary">Hola, {user?.name?.split(' ')[0]}</h1>
       </div>
 
       <div className="px-5 pb-3">

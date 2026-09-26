@@ -92,7 +92,7 @@ export const DeliveryProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-24">
+    <div className="dark min-h-screen bg-night-950 max-w-md mx-auto pb-24">
       <div className="flex items-center gap-3 px-5 pt-6 pb-4">
         <button onClick={() => navigate(ROUTES.DELIVERY_DASHBOARD)}>
           <ChevronLeft className="w-6 h-6 text-secondary" />

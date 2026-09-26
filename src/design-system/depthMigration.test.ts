@@ -3,7 +3,7 @@ import stylesRaw from '../styles.css?raw'
 
 // Migraciones de LOOP_VISUAL_06 (sub-tanda 2.2) verificadas sobre el código real.
 const raw = import.meta.glob<string>(
-  ['/src/features/client/**/*.tsx', '/src/shared/**/*.tsx', '/src/features/auth/**/*.tsx', '/src/features/restaurant/pages/DashboardPage.tsx', '!/src/**/*.test.*'],
+  ['/src/features/client/**/*.tsx', '/src/shared/**/*.tsx', '/src/features/auth/**/*.tsx', '/src/features/restaurant/pages/DashboardPage.tsx', '/src/features/restaurant/components/RestaurantHeader.tsx', '!/src/**/*.test.*'],
   { query: '?raw', import: 'default', eager: true }
 )
 const src = (path: string) => raw[path] ?? ''
@@ -116,7 +116,8 @@ describe('overlays de foto (LOOP_VISUAL_06)', () => {
   })
 
   it('PromoBanner y el Dashboard del restaurante usan ImageOverlay bottom-soft, sin gradientes sueltos', () => {
-    ;['/src/features/client/components/PromoBanner.tsx', '/src/features/restaurant/pages/DashboardPage.tsx'].forEach((f) => {
+    // La cabecera del restaurante vive en RestaurantHeader desde LOOP panels-refresh.
+    ;['/src/features/client/components/PromoBanner.tsx', '/src/features/restaurant/components/RestaurantHeader.tsx'].forEach((f) => {
       expect(src(f), f).toContain('<ImageOverlay variant="bottom-soft"')
       expect(src(f), f).not.toMatch(/from-black\/(60|70)/)
     })

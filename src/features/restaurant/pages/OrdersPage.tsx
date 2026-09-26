@@ -33,7 +33,7 @@ export const RestaurantOrdersPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-24 md:max-w-none md:mx-0 md:pl-60 md:pb-10">
+    <div className="theme-pulse min-h-screen bg-white max-w-md mx-auto pb-24 md:max-w-none md:mx-0 md:pl-60 md:pb-10">
       <div className="px-5 pt-6 pb-4 flex items-center gap-3 md:max-w-4xl md:mx-auto md:px-0 md:pt-8">
         <button
           onClick={() => navigate(ROUTES.RESTAURANT_DASHBOARD)}

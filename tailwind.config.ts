@@ -50,6 +50,11 @@ export default {
           900: '#1C1917',
         },
         accent:  '#F59E0B',
+        // Tema NOCHE (panel del domiciliario, LOOP panels-refresh). Solo se usa dentro de un contenedor
+        // `.dark`: fondos azul-noche y acento violeta. Contrastes medidos sobre night-900: texto #F4F6FF 16.4,
+        // #B4BDDD 9.5, #98A3CC 7.1; violeta claro #B9A8FF 8.5; verde #4ADE80 10.1; ámbar #FBBF24 10.6.
+        night: { 950: '#0A0E1F', 900: '#111730', 800: '#182040', 700: '#1E2850', 600: '#26305A' },
+        pulse: { DEFAULT: '#5B3DF5', deep: '#4F2FE0', soft: '#8B6CFF', text: '#B9A8FF' },
         // DEFAULT = color de fondo/ícono; `strong` = variante para TEXTO
         // sobre blanco (el DEFAULT no pasa WCAG AA como texto: 2.5:1 y
         // 2.15:1). strong: #047857 → 5.5:1, #92400E → 7.1:1.
@@ -88,6 +93,8 @@ export default {
         // (CTAs, hero, barra de progreso de pedido) en vez de un azul
         // plano sobre azul claro.
         'brand-gradient': 'linear-gradient(135deg, #1C2459 0%, #F4652C 62%, #FFC24B 100%)',
+        // Tema noche: barrido violeta de la tarjeta principal del domiciliario.
+        'pulse-gradient': 'linear-gradient(135deg, #4F2FE0 0%, #7C4DFF 60%, #B26BFF 100%)',
         'brand-gradient-soft':
           'linear-gradient(135deg, rgba(28,36,89,0.08) 0%, rgba(244,101,44,0.06) 60%, rgba(255,194,75,0.05) 100%)',
       },

@@ -88,7 +88,7 @@ export const CashClosingCard = ({ orders, day, baseStorageKey }: CashClosingCard
               placeholder="Con cuánto empezaste"
               value={base ? base.toLocaleString('es-CO') : ''}
               onChange={(e) => onBase(e.target.value)}
-              className="focus-ring w-full min-h-[44px] rounded-2xl border border-gray-200 pl-7 pr-3 text-sm tabular-nums"
+              className="focus-ring w-full min-h-[44px] rounded-2xl border border-gray-200 bg-white pl-7 pr-3 text-sm text-secondary tabular-nums placeholder:text-gray-500"
             />
           </div>
           <Row label="Debes tener en mano" value={inHand} strong />

@@ -46,7 +46,7 @@ export const RestaurantAccountPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md md:max-w-2xl mx-auto pb-24 md:pl-0 md:pt-8 md:px-8">
+    <div className="theme-pulse min-h-screen bg-white max-w-md md:max-w-2xl mx-auto pb-24 md:pl-0 md:pt-8 md:px-8">
       <div className="px-5 pt-6 pb-2 md:px-0">
         <h1 className="font-display text-xl font-bold text-secondary">Mi cuenta</h1>
       </div>

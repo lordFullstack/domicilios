@@ -1,34 +1,21 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MapPin, Camera, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders, useRestaurants, useProducts, updateRestaurant } from '@/hooks/useLocalData'
 import { restaurantAdvanceOrder, restaurantCancelOrder, restaurantSendOrder } from '@/services/orderActions.service'
 import { supabase } from '@/shared/utils/supabase'
 import { Card } from '@/shared/components/Card'
 import { Button } from '@/shared/components/Button'
-import { ImageOverlay } from '@/shared/components/ImageOverlay'
 import { BottomNav } from '@/shared/components/BottomNav'
-import { NotificationBell } from '@/shared/components/NotificationBell'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
-import { OrderItemsList } from '@/shared/components/OrderItemsList'
-import { RestaurantOrderActions } from '../components/RestaurantOrderActions'
-import { DeadlineCountdown } from '@/shared/components/DeadlineCountdown'
-import { OrderPaymentInfo } from '@/shared/components/OrderPaymentInfo'
+import { RestaurantHeader } from '../components/RestaurantHeader'
+import { RestaurantOrderCard } from '../components/RestaurantOrderCard'
+import { RestaurantStats } from '../components/RestaurantStats'
 import { useOrderAlarm, useWakeLock } from '../hooks/useOrderAlarm'
 import { CreateRestaurantPage } from './CreateRestaurantPage'
 import { ORDER_STATUS, ROUTES } from '@/config/constants'
 import { Order, OrderStatus } from '@/shared/types'
-
-const STATUS_LABELS: Record<string, string> = {
-  [ORDER_STATUS.PENDING]: 'Pendiente',
-  [ORDER_STATUS.CONFIRMED]: 'Confirmada',
-  [ORDER_STATUS.PREPARING]: 'Preparando',
-  [ORDER_STATUS.READY]: 'Lista',
-  [ORDER_STATUS.IN_DELIVERY]: 'En camino',
-  [ORDER_STATUS.DELIVERED]: 'Entregada',
-  [ORDER_STATUS.CANCELLED]: 'Cancelada',
-}
 
 export const RestaurantDashboard = () => {
   const navigate = useNavigate()
@@ -138,81 +125,25 @@ export const RestaurantDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-24 md:max-w-none md:mx-0 md:pl-60 md:pb-10">
+    <div className="theme-pulse min-h-screen bg-surface-soft max-w-md mx-auto pb-24 md:max-w-none md:mx-0 md:pl-60 md:pb-10">
       <NotificationPermissionCard />
 
-      {/* Hero del restaurante */}
-      <div
-        className="mx-5 mt-5 mb-4 rounded-3xl p-5 relative overflow-hidden bg-secondary bg-cover bg-center md:max-w-4xl md:mx-auto md:mt-8"
-        style={myRestaurant.cover_url ? { backgroundImage: `url(${myRestaurant.cover_url})` } : undefined}
-      >
-        {!myRestaurant.cover_url && (
-          <>
-            <div className="absolute -right-6 -top-6 w-28 h-28 bg-primary/20 rounded-full" />
-            <div className="absolute -right-2 -bottom-8 w-20 h-20 bg-primary/10 rounded-full" />
-          </>
-        )}
-        {myRestaurant.cover_url && (
-          <ImageOverlay variant="bottom-soft" />
-        )}
+      <RestaurantHeader
+        restaurant={myRestaurant}
+        uploadingCover={uploadingCover}
+        onCoverChange={handleCoverChange}
+        togglingStatus={togglingStatus}
+        onToggleStatus={handleToggleStatus}
+      />
 
-        <div className="relative flex items-start gap-3">
-          <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-3xl flex-shrink-0 backdrop-blur-sm">
-            {myRestaurant.image_url || '🍽️'}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-display text-lg font-bold text-white truncate">
-              {myRestaurant.name}
-            </h1>
-            <p className="flex items-center gap-1 text-xs text-white/70 mt-0.5 truncate">
-              <MapPin className="w-3 h-3 flex-shrink-0" />
-              {myRestaurant.address}
-            </p>
-          </div>
-          <label className="relative w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center flex-shrink-0 cursor-pointer active:scale-90 transition-transform">
-            {uploadingCover ? (
-              <Loader2 className="w-4 h-4 text-white animate-spin" />
-            ) : (
-              <Camera className="w-4 h-4 text-white" />
-            )}
-            <input
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              className="hidden"
-              onChange={handleCoverChange}
-              disabled={uploadingCover}
-            />
-          </label>
-          <NotificationBell variant="light" />
-        </div>
+      <RestaurantStats
+        pending={pendingOrders.length}
+        active={activeOrders.length}
+        deliveredToday={deliveredToday.length}
+        revenueToday={revenueToday}
+      />
 
-        <button
-          onClick={handleToggleStatus}
-          disabled={togglingStatus}
-          className="relative w-full flex items-center justify-between bg-white/10 rounded-2xl px-4 py-3 mt-4 active:scale-[0.98] transition-transform disabled:opacity-60"
-        >
-          <span className="flex items-center gap-2 text-sm font-semibold text-white">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                myRestaurant.status === 'open' ? 'bg-success' : 'bg-gray-400'
-              }`}
-            />
-            {myRestaurant.status === 'open' ? 'Abierto — recibiendo pedidos' : 'Cerrado — no recibes pedidos'}
-          </span>
-          <span
-            className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
-              myRestaurant.status === 'open' ? 'bg-success' : 'bg-gray-500'
-            }`}
-          >
-            <span
-              className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
-                myRestaurant.status === 'open' ? 'translate-x-4' : 'translate-x-0.5'
-              }`}
-            />
-          </span>
-        </button>
-      </div>
-
+      <div className="mt-2" />
       {!myRestaurant.approved && (
         <div className="mx-5 mb-4 bg-warning/10 text-warning-strong text-sm font-semibold rounded-2xl p-3 md:max-w-4xl md:mx-auto" role="status">
           Tu restaurante está en revisión. Aparecerá para los clientes cuando un administrador lo apruebe.
@@ -247,28 +178,6 @@ export const RestaurantDashboard = () => {
         </div>
       )}
 
-      {/* Estadísticas */}
-      <div className="grid grid-cols-2 gap-3 px-5 mb-4 md:grid-cols-4 md:max-w-4xl md:mx-auto md:px-0">
-        <Card className="text-center py-4">
-          <p className="text-2xl font-display font-bold text-warning-strong">{pendingOrders.length}</p>
-          <p className="text-gray-500 text-xs mt-1">Pendientes</p>
-        </Card>
-        <Card className="text-center py-4">
-          <p className="text-2xl font-display font-bold text-primary">{activeOrders.length}</p>
-          <p className="text-gray-500 text-xs mt-1">Activas</p>
-        </Card>
-        <Card className="text-center py-4">
-          <p className="text-2xl font-display font-bold text-success-strong">{deliveredToday.length}</p>
-          <p className="text-gray-500 text-xs mt-1">Entregadas hoy</p>
-        </Card>
-        <Card className="text-center py-4">
-          <p className="text-lg font-display font-bold text-primary">
-            ${revenueToday.toLocaleString('es-CO')}
-          </p>
-          <p className="text-gray-500 text-xs mt-1">Ingresos hoy</p>
-        </Card>
-      </div>
-
       {/* Info rápida */}
       <div className="px-5 mb-6 flex flex-col gap-3 md:max-w-4xl md:mx-auto md:px-0">
         <Card>
@@ -293,48 +202,14 @@ export const RestaurantDashboard = () => {
         ) : (
           <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
             {activeOrders.map((order) => (
-              <Card key={order.id}>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-semibold text-sm text-secondary">
-                    #{order.id.substring(0, 8).toUpperCase()}
-                  </span>
-                  <span className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-semibold">
-                    {STATUS_LABELS[order.status]}
-                  </span>
-                </div>
-                {order.status === ORDER_STATUS.PENDING && order.confirm_deadline && (
-                  <DeadlineCountdown deadline={order.confirm_deadline} prefix="Responde en" className="mb-1" />
-                )}
-                <p className="text-xs text-gray-500 mb-1">{order.delivery_address}</p>
-                {order.special_instructions && (
-                  <p className="text-xs text-gray-500 italic mb-1">"{order.special_instructions}"</p>
-                )}
-
-                <div className="my-2">
-                  <OrderPaymentInfo order={order} audience="restaurant" />
-                </div>
-
-                <div className="bg-gray-50 rounded-xl p-2.5 my-2">
-                  <OrderItemsList orderId={order.id} />
-                </div>
-
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-base font-display font-bold text-primary">
-                    ${order.total.toLocaleString('es-CO')}
-                  </p>
-                  <span className="text-xs text-gray-500">
-                    {order.payment_method === 'cash_on_delivery' ? '💵 Contra entrega' : '💳 Pagado en línea'}
-                  </span>
-                </div>
-
-                <RestaurantOrderActions
-                  order={order}
-                  busy={processingId === order.id}
-                  disabled={!!processingId}
-                  onAdvance={() => handleAdvanceStatus(order)}
-                  onCancel={() => handleCancelOrder(order)}
-                />
-              </Card>
+              <RestaurantOrderCard
+                key={order.id}
+                order={order}
+                busy={processingId === order.id}
+                disabled={!!processingId}
+                onAdvance={() => handleAdvanceStatus(order)}
+                onCancel={() => handleCancelOrder(order)}
+              />
             ))}
           </div>
         )}

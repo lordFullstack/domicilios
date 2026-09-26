@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useId, useRef } from 'react'
+import { ReactNode, useEffect, useId, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 
@@ -29,6 +29,9 @@ const FOCUSABLE =
 export const BottomSheet = ({ open, onClose, title, ariaLabel, children }: BottomSheetProps) => {
   const panelRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
+  // El sheet se dibuja en un portal (fuera del contenedor `.dark` del panel del domiciliario): se hereda
+  // el tema mirando dónde está el elemento que lo abrió (sigue con el foco al renderizar la apertura).
+  const dark = useMemo(() => open && !!(document.activeElement as HTMLElement | null)?.closest?.('.dark'), [open])
   // onClose suele ser una función nueva en cada render: se guarda en un ref
   // para que los efectos no se re-ejecuten (y no roben el foco) por eso.
   const onCloseRef = useRef(onClose)
@@ -89,7 +92,7 @@ export const BottomSheet = ({ open, onClose, title, ariaLabel, children }: Botto
   if (!open) return null
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className={`fixed inset-0 z-50 flex items-end justify-center${dark ? ' dark' : ''}`}>
       <div className="absolute inset-0 bg-black/40 animate-fade-in" onClick={onClose} aria-hidden="true" />
       <div
         ref={panelRef}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { SwitchTrack } from '@/shared/components/SwitchTrack'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, Plus, Pencil, Trash2 } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
@@ -82,7 +83,7 @@ export const MenuManagementPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white max-w-md mx-auto pb-24 md:max-w-none md:mx-0 md:pl-60 md:pb-10">
+    <div className="theme-pulse min-h-screen bg-white max-w-md mx-auto pb-24 md:max-w-none md:mx-0 md:pl-60 md:pb-10">
       {/* Header */}
       <div className="px-5 pt-6 pb-4 flex items-center gap-3 md:max-w-4xl md:mx-auto md:px-0 md:pt-8">
         <button
@@ -171,16 +172,12 @@ export const MenuManagementPage = () => {
                                 role="switch"
                                 aria-checked={product.available}
                                 aria-label={`${product.name} ${product.available ? 'disponible' : 'agotado'}`}
-                                className={`relative w-9 h-5 rounded-full transition-colors ${
-                                  product.available ? 'bg-success' : 'bg-gray-300'
-                                }`}
+                                className="focus-ring flex min-h-[44px] items-center gap-2 rounded-full pr-1"
                               >
-                                <span
-                                  aria-hidden="true"
-                                  className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
-                                    product.available ? 'translate-x-4' : 'translate-x-0.5'
-                                  }`}
-                                />
+                                <SwitchTrack on={product.available} />
+                                <span className="text-xs font-semibold text-gray-600">
+                                  {product.available ? 'Disponible' : 'Agotado'}
+                                </span>
                               </button>
 
                               <div className="flex gap-2">

@@ -25,6 +25,9 @@ import { BottomSheet } from '@/shared/components/BottomSheet'
 import { ErrorState } from '@/shared/components/ErrorState'
 import { RestaurantOrderActions } from '@/features/restaurant/components/RestaurantOrderActions'
 import { AccountInactiveScreen } from '@/features/auth/components/AccountInactiveScreen'
+import { DeliveryStatsGrid } from '@/features/delivery/components/DeliveryStatsGrid'
+import { ShiftToggle } from '@/features/delivery/components/ShiftToggle'
+import { RestaurantStats } from '@/features/restaurant/components/RestaurantStats'
 import type { Order } from '@/shared/types'
 
 const noop = () => {}
@@ -57,6 +60,9 @@ const CASES: [string, () => ReactElement][] = [
   ['RestaurantOrderActions · pendiente', () => <RestaurantOrderActions order={order()} busy={false} disabled={false} onAdvance={noop} onCancel={noop} />],
   ['RestaurantOrderActions · lista sin domiciliario', () => <RestaurantOrderActions order={order({ status: 'ready' })} busy={false} disabled={false} onAdvance={noop} onCancel={noop} />],
   ['AccountInactiveScreen', () => <AccountInactiveScreen />],
+  ['DeliveryStatsGrid (tema noche)', () => <div className="dark"><DeliveryStatsGrid assignedCount={1} activeCount={1} completedToday={[order({ status: 'delivered' })]} /></div>],
+  ['ShiftToggle (tema noche)', () => <div className="dark"><ShiftToggle onShift onToggle={noop} /></div>],
+  ['RestaurantStats', () => <RestaurantStats pending={1} active={3} deliveredToday={12} revenueToday={348000} />],
 ]
 
 describe('axe: sin violaciones de accesibilidad en los componentes del piloto', () => {

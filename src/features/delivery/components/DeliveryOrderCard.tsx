@@ -16,7 +16,9 @@ export const DeliveryOrderCard = ({ order, restaurant, onOpenDetail, pendingAcce
   return (
     <button
       onClick={() => onOpenDetail(order)}
-      className="focus-ring w-full text-left border border-gray-100 rounded-2xl p-3 flex items-center gap-3 active:scale-[0.98] transition-transform"
+      className={`focus-ring w-full text-left rounded-2xl p-4 flex items-center gap-3 active:scale-[0.98] transition-transform bg-white ${
+        pendingAcceptance ? 'border-2 border-primary' : 'border border-gray-100'
+      }`}
     >
       <span className="text-2xl flex-shrink-0">{restaurant?.image_url || '🏪'}</span>
       <div className="flex-1 min-w-0">
@@ -25,7 +27,7 @@ export const DeliveryOrderCard = ({ order, restaurant, onOpenDetail, pendingAcce
           {pendingAcceptance ? 'Pedido asignado — ábrelo para aceptar o rechazar' : `Entregar: ${order.delivery_address}`}
         </p>
         {pendingAcceptance && order.accept_deadline && (
-          <DeadlineCountdown deadline={order.accept_deadline} prefix="Responde en" />
+          <DeadlineCountdown deadline={order.accept_deadline} prefix="Responde en" className="mt-1 text-base" />
         )}
       </div>
       <div className="text-right flex-shrink-0">
