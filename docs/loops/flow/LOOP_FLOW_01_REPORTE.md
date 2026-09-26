@@ -1,6 +1,6 @@
 # LOOP_FLOW_01 — Reporte (25-sep-2026)
 
-**Estado:** 🟡 Backend en producción; frontend en la rama `loop/flow-01-response-timers` (sin commit, sin merge). Falta QA manual en preview.
+**Estado:** ✅ Cerrado el 25-sep-2026. Backend y frontend en producción; QA real hecho en teléfonos (restaurante y domiciliario).
 
 ## IMPLEMENTADO
 - **Datos (F1.1):** `orders.confirm_deadline`, `accept_deadline`, `cancel_reason`; `app_settings.restaurant_confirm_seconds` / `delivery_accept_seconds` (120, límites 30–900); trigger BEFORE INSERT que fija `confirm_deadline` (`create_order` intacto).
@@ -24,5 +24,12 @@ El servidor guarda la hora límite en el pedido. Las RPC rechazan actuar despué
 - Un domiciliario que se pone "En turno" después no recibe pedidos ya sin asignar (el restaurante usa "Enviar"/buscar otra vez).
 - Reembolsos con pago en línea → LOOP_CLIENT_07. Mostrar efectivo y notas → 05D (sigue bloqueante para el piloto).
 
-## QA PENDIENTE (Jorge, en preview)
+## QA REAL (hecho por Jorge, 25-sep)
+El restaurante vio el pedido sin refrescar, con cuenta regresiva y sonido; los pedidos vencidos se cancelaron solos (`restaurant_timeout`, 3 casos verificados en la base) y la reasignación del domiciliario funcionó. Hallazgos y arreglos:
+- **El sonido no sonaba** (Web Audio bloqueado hasta un toque): ahora `<audio>` con un pitido generado en memoria, desbloqueo silencioso en el primer toque y botón **"Probar sonido"**.
+- **Había que refrescar a mano** (el WebSocket se duerme en segundo plano): recarga silenciosa al volver a la app, al recuperar la red, al reconectar y cada 20 s.
+- **Push sin sonido en Android** con `tag` repetido: se agregó `renotify`.
+
+### Checklist original
+
 Restaurante no responde → a ~2 min se cancela y el cliente ve la pantalla con salidas · confirma a tiempo → no se cancela · domiciliario no acepta → pasa al otro · rechazar → pasa al otro · ninguno acepta → alerta al restaurante y "Buscando domiciliario…" al cliente · sonido y pantalla encendida · cambiar segundos en Admin surte efecto · reloj del celular desfasado.

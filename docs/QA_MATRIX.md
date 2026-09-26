@@ -1,72 +1,71 @@
-# LOOP 20 — Matriz de QA
+# Matriz de QA — actualizada 26-sep-2026
 
-No hay Playwright/Cypress instalado (ver `LOOP_STATUS.md` de este LOOP para
-la justificación). Esta matriz documenta los casos que hoy se prueban a
-mano, flujo por flujo, hasta que se decida invertir en E2E automatizado.
+No hay Playwright/Cypress. Esta matriz documenta lo que se prueba a mano (y con qué tests automáticos
+se respalda) hasta que se decida invertir en E2E. Estado actual: 61 archivos / 524 tests unitarios y
+de componentes; las pruebas de base de datos viven en `supabase/tests/` (transacción abortada).
 
-Leyenda: ✅ probado y funciona · ⚠️ funciona con matices (ver nota) · ❌ no
-soportado / fuera de alcance del backend actual.
-
----
-
-## Cliente: Explorar → restaurante → producto → carrito → checkout → pedido → tracking
-
-| Caso | Estado | Nota |
-|---|---|---|
-| Happy path completo | ✅ | Probado end-to-end en LOOPs 02-06 |
-| Buscar sin resultados | ✅ | `EmptyState` con "Limpiar filtros" |
-| Restaurante cerrado | ✅ | CTA deshabilitado, badge "Cerrado" |
-| Producto agotado | ✅ | No se puede agregar, badge visible |
-| Carrito con productos de otro restaurante | ✅ | Confirmación "Vaciar y agregar" |
-| Checkout sin dirección | ✅ | Botón deshabilitado hasta completarla |
-| Checkout offline | ✅ | Bloqueado con aviso, carrito se conserva |
-| Doble tap en "Confirmar pedido" | ✅ | Guard `submitState === 'submitting'` + botón disabled |
-| Pedido cancelado (visto desde tracking) | ✅ | Banner rojo, sin timeline activo |
-| Datos inválidos en dirección (muy corta) | ✅ | Validación mínima 5 caracteres |
-| Reordenar con producto ya no disponible | ✅ | Se salta, avisa cuántos se agregaron/omitieron |
-| ETA de entrega | ❌ | No existe ese campo en el backend (LOOP 06) |
-
-## Domiciliario: login → pedidos → aceptar → recoger → camino → entregar
-
-| Caso | Estado | Nota |
-|---|---|---|
-| Happy path completo | ✅ | Probado en LOOP 07 |
-| Dos domiciliarios aceptan el mismo pedido a la vez | ✅ | `acceptOrder` con guard `is('delivery_person_id', null)` |
-| Doble tap en aceptar/completar | ✅ | Guard `processingOrderId` |
-| Pérdida de conexión al aceptar/completar | ✅ | Bloqueado con aviso, no confirma en falso |
-| Pedido cancelado mientras está "en camino" | ✅ | Desaparece de "Mi entrega actual" automáticamente (realtime) |
-| Ubicación sin permiso del navegador | ✅ | Aviso claro, no rompe la pantalla |
-| Rechazar un pedido puntual | ❌ | No existe ese mecanismo en el backend (LOOP 07) |
-
-## Admin: login → dashboard → restaurantes → menú → pedidos → reportes
-
-| Caso | Estado | Nota |
-|---|---|---|
-| Happy path completo | ✅ | Probado en LOOPs 08-14 |
-| Filtros combinados (periodo + restaurante + estado + búsqueda) | ✅ | Probado en Pedidos, Restaurantes, Clientes |
-| Cambiar estado de un pedido con conflicto de concurrencia | ✅ | `updateOrderSafely` detecta y avisa si cambió mientras tanto |
-| Aprobar/suspender restaurante | ✅ | Con confirmación destructiva |
-| Eliminar producto con pedidos asociados | ✅ | Bloqueado por FK, mensaje claro (antes mentía — bug corregido en LOOP 10) |
-| Exportar CSV con periodo vacío | ✅ | Botón deshabilitado si no hay filas |
-| Acceso de un rol no-admin a rutas `/admin/*` | ✅ | Bloqueado por `ProtectedRoute` + RLS |
-| Crear restaurante desde Admin | ❌ | Bloqueado por RLS a propósito — es del dueño (LOOP 09) |
+Leyenda: ✅ probado y funciona · ⚠️ funciona con matices · ❌ no soportado / fuera de alcance.
 
 ---
 
-## Permisos (todos los roles)
+## Cliente: explorar → carrito → checkout → pedido → seguimiento
+| Caso | Estado | Nota |
+|---|---|---|
+| Happy path completo | ✅ | |
+| Buscar sin resultados · restaurante cerrado · producto agotado · carrito de otro restaurante | ✅ | `EmptyState` / badges / confirmación "Vaciar y agregar" |
+| Checkout sin dirección u offline | ✅ | Errores en línea; el botón lo comunica; carrito se conserva |
+| Doble tap en "Confirmar pedido" | ✅ | `inFlightRef` + botón deshabilitado + `client_order_id` (idempotencia en servidor) |
+| **Fallo del servidor al confirmar** | ✅ | `ErrorState` por causa (sesión, red, validación, cerrado, carrito); "Reintentar" reutiliza la llave |
+| **Efectivo: "¿con cuánto pagas?"** | ✅ | Opcional, cambio en vivo; el servidor exige ≥ total (`invalid_cash_amount`) |
+| **Nota al restaurante** | ✅ | Tope 150 con contador; el servidor rechaza más (`notes_too_long`) |
+| Cambiar efectivo o nota tras respuesta perdida | ✅ | Otra firma → otra llave → pedido nuevo |
+| **Restaurante no responde en 120 s** | ✅ | Cancelación `restaurant_timeout`; pantalla "no respondió a tiempo" con salidas |
+| **Pedido listo sin domiciliario** | ✅ | "Buscando domiciliario…" |
+| Cancelar (pending/confirmed) | ✅ | RPC `client_cancel_order` |
+| Reordenar con producto no disponible | ✅ | Se salta y avisa |
+| ETA de entrega | ❌ | No existe en el backend |
 
-Confirmado por auditoría de RLS (LOOPs 06, 09-14, 17), no por test automatizado:
+## Restaurante
+| Caso | Estado | Nota |
+|---|---|---|
+| Recibir pedido sin refrescar | ✅ | Realtime + recarga al volver a la app y cada 20 s |
+| Cuenta regresiva, sonido repetido y pantalla encendida | ✅ | Audio con `<audio>` + botón "Probar sonido"; Wake Lock |
+| Confirmar → preparar → lista → **Enviar** (asignación automática) | ✅ | RPC del servidor; rechaza si venció (`order_expired`) |
+| Cancelar hasta "lista" | ✅ | Libera al domiciliario asignado |
+| Ver nota del cliente y con cuánto paga | ✅ | `OrderPaymentInfo` |
+| Alerta y "buscar otra vez" si nadie aceptó | ✅ | |
+| Cuenta sin aprobar | ✅ | Aviso "en revisión"; no aparece a clientes |
 
-- Un cliente no puede leer/modificar pedidos de otro cliente.
-- Un restaurante no puede editar productos de otro restaurante.
-- Un domiciliario no puede tomar un pedido ya asignado a otro.
-- Ningún rol puede autoasignarse `admin` al registrarse (whitelist en el trigger `handle_new_user`).
+## Domiciliario
+| Caso | Estado | Nota |
+|---|---|---|
+| Interruptor **En turno** | ✅ | Solo en turno recibe pedidos |
+| Pedido asignado con cuenta regresiva; **Aceptar / Rechazar** | ✅ | Rechazar reasigna al instante; sin respuesta → reasigna a los 120 s |
+| Dos domiciliarios / doble tap | ✅ | Asignación atómica (`SKIP LOCKED` + índice único) |
+| Un pedido en camino a la vez | ✅ | `delivery_busy` |
+| Ver dirección antes de aceptar | ⚠️ | Oculta en la interfaz; el servidor aún devuelve la fila (deuda aceptada para el piloto) |
+| Cobrar en efectivo, cambio y lo que paga al restaurante | ✅ | `OrderPaymentInfo` |
+| **Cuadre del día** con su base | ✅ | Base guardada solo en el teléfono |
+| Ubicación GPS sin permiso | ✅ | Aviso, no rompe la pantalla |
+| Cuenta nueva sin aprobar | ✅ | Pantalla "cuenta en revisión" hasta que el admin la active |
+
+## Admin
+| Caso | Estado | Nota |
+|---|---|---|
+| Filtros, reportes, exportar CSV | ✅ | |
+| Aprobar / suspender restaurante; activar domiciliario | ✅ | Con confirmación |
+| Cambiar los tiempos de respuesta | ✅ | Tarjeta "Tiempos de respuesta" (30–900 s) |
+| Ver efectivo, notas y cuadre por domiciliario | ✅ | |
+| Editar cualquier pedido | ⚠️ | Por diseño el admin no tiene restricciones |
+| Acceso de otro rol a `/admin/*` | ✅ | `ProtectedRoute` + RLS |
+
+## Seguridad (verificada en base real, transacción abortada)
+- Nadie sin rol admin cambia `role`, `active`, `approved` ni columnas de dinero (`guard_profile_update`, `guard_restaurant_write`, `guard_order_update`).
+- Un cliente **no puede** crear pedidos insertando directo, ni modificar `total`, `cash_amount`, `notes_to_restaurant` ni `client_order_id`.
+- Solo `authenticated` y `service_role` ejecutan las RPC; `send-push` solo acepta `{notification_id}`.
+- Contraseñas: 8+ con mayúsculas, minúsculas y números; comprobación de filtraciones en la app (la del servidor es del plan Pro).
 
 ## Deuda técnica reconocida
-
-- Sin tests automatizados de integración/E2E — ver `LOOP_STATUS.md`.
-- Cobertura real: 2.1% de statements (solo utilidades puras + 3 componentes
-  de presentación). Hooks con llamadas a Supabase, páginas completas y
-  flujos de varios pasos no tienen test automatizado todavía.
-- Esta matriz depende de que un humano la ejecute — no se re-valida sola
-  en cada cambio.
+- Sin E2E automatizado: esta matriz depende de que una persona la ejecute.
+- Cobertura de código no re-medida desde el 2.1% antiguo; hoy hay 524 tests, la mayoría de lógica y componentes.
+- Auditoría de accesibilidad y Lighthouse pendientes.
