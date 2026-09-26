@@ -21,6 +21,8 @@ import { DeliveryOrderCard } from '../components/DeliveryOrderCard'
 import { DeliveryOrderDetailSheet } from '../components/DeliveryOrderDetailSheet'
 import { ActiveDeliveryBar } from '../components/ActiveDeliveryBar'
 import { ShiftToggle } from '../components/ShiftToggle'
+import { ThemeToggleButton } from '../components/ThemeToggleButton'
+import { useDriverTheme } from '../hooks/useDriverTheme'
 import { useDriverShift } from '../hooks/useDriverShift'
 import { ORDER_STATUS } from '@/config/constants'
 import { Order } from '@/shared/types'
@@ -34,6 +36,7 @@ export const DeliveryDashboard = () => {
   const { user } = useAuth()
   const { getOrdersByDelivery, reload } = useOrders()
   const shift = useDriverShift(user?.id)
+  const { theme, setTheme, isDark, rootClass } = useDriverTheme()
   const { restaurants } = useRestaurants()
   const restaurantsById = new Map(restaurants.map((r) => [r.id, r]))
   const connectionStatus = useOnlineStatus()
@@ -152,7 +155,7 @@ export const DeliveryDashboard = () => {
     isOffline || !!processingOrderId || (!detailIsActive && activeDeliveries.length > 0)
 
   return (
-    <div className="dark min-h-screen bg-night-950 max-w-md mx-auto pb-28">
+    <div className={`${rootClass} min-h-screen max-w-md mx-auto pb-28`}>
       <Toast message={toastMessage} />
 
       {/* Header */}
@@ -161,7 +164,10 @@ export const DeliveryDashboard = () => {
           <RocketMark variant="icon" size={32} />
           <span className="font-display text-base font-bold text-secondary">Domicilios Riohacha</span>
         </div>
-        <NotificationBell variant="light" />
+        <div className="flex items-center gap-2">
+          <ThemeToggleButton theme={theme} onChange={setTheme} />
+          <NotificationBell variant={isDark ? 'light' : 'dark'} />
+        </div>
       </div>
       <div className="px-5 pt-3 pb-1">
         <h1 className="font-display text-2xl font-bold text-secondary">Hola, {user?.name?.split(' ')[0]}</h1>

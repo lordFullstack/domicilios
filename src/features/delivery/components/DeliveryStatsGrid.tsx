@@ -9,11 +9,11 @@ interface DeliveryStatsGridProps {
 }
 
 const Tile = ({ icon: Icon, label, value, tone }: { icon: LucideIcon; label: string; value: number; tone: string }) => (
-  <div className="rounded-2xl border border-night-600 bg-night-900 p-3">
+  <div className="rounded-2xl border border-gray-100 bg-white p-3">
     <span className={`flex h-8 w-8 items-center justify-center rounded-xl ${tone}`}>
       <Icon className="h-4 w-4" aria-hidden="true" />
     </span>
-    <p className="mt-2 font-display text-3xl font-bold leading-none tabular-nums text-white">{value}</p>
+    <p className="mt-2 font-display text-3xl font-bold leading-none tabular-nums text-secondary">{value}</p>
     <p className="mt-1 text-xs text-gray-500">{label}</p>
   </div>
 )

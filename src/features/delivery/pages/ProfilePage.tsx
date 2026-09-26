@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { AppearanceSelector } from '../components/AppearanceSelector'
+import { useDriverTheme } from '../hooks/useDriverTheme'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, Camera, Bike, LogOut, Loader2, Package, Wallet } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
@@ -18,6 +20,7 @@ export const DeliveryProfilePage = () => {
   const navigate = useNavigate()
   const { user, updateProfile, logout } = useAuth()
   const { getOrdersByDelivery } = useOrders()
+  const { theme, setTheme, rootClass } = useDriverTheme()
 
   const [name, setName] = useState(user?.name || '')
   const [phone, setPhone] = useState(user?.phone || '')
@@ -92,7 +95,7 @@ export const DeliveryProfilePage = () => {
   }
 
   return (
-    <div className="dark min-h-screen bg-night-950 max-w-md mx-auto pb-24">
+    <div className={`${rootClass} min-h-screen max-w-md mx-auto pb-24`}>
       <div className="flex items-center gap-3 px-5 pt-6 pb-4">
         <button onClick={() => navigate(ROUTES.DELIVERY_DASHBOARD)}>
           <ChevronLeft className="w-6 h-6 text-secondary" />
@@ -141,6 +144,10 @@ export const DeliveryProfilePage = () => {
           </p>
           <p className="text-gray-500 text-xs">Ganado en total</p>
         </Card>
+      </div>
+
+      <div className="px-5 mb-6">
+        <AppearanceSelector theme={theme} onChange={setTheme} />
       </div>
 
       {message && (
