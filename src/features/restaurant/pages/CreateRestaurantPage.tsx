@@ -68,10 +68,11 @@ export const CreateRestaurantPage = ({ onCreated }: CreateRestaurantPageProps) =
           required
         />
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="restaurant-description" className="block text-sm font-medium text-gray-700 mb-2">
             Descripción
           </label>
           <textarea
+            id="restaurant-description"
             className="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             placeholder="Ej: Comida italiana casera, pastas y pizzas al horno de leña"
             value={description}

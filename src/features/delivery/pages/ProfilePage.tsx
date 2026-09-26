@@ -159,14 +159,15 @@ export const DeliveryProfilePage = () => {
         <Input label="Nombre completo" value={name} onChange={(e) => setName(e.target.value)} required />
         <Input label="Teléfono" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Vehículo</label>
+        <div role="group" aria-labelledby="vehicle-label">
+          <p id="vehicle-label" className="block text-sm font-medium text-gray-700 mb-2">Vehículo</p>
           <div className="flex gap-3">
             {(['moto', 'bici'] as const).map((type) => (
               <button
                 key={type}
                 type="button"
                 onClick={() => setVehicleType(type)}
+                aria-pressed={vehicleType === type}
                 className={`flex-1 flex items-center justify-center gap-2 rounded-2xl border-2 py-3 text-sm font-semibold capitalize transition-all active:scale-95 ${
                   vehicleType === type
                     ? 'border-primary bg-primary/10 text-primary'

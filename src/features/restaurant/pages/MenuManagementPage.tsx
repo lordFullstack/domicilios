@@ -118,9 +118,10 @@ export const MenuManagementPage = () => {
           </p>
           <button
             onClick={handleOpenCreate}
-            className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
+            aria-label="Agregar producto"
+            className="touch-target focus-ring w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform"
           >
-            <Plus className="w-4 h-4 text-white" />
+            <Plus className="w-4 h-4 text-white" aria-hidden="true" />
           </button>
         </div>
 

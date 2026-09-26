@@ -69,7 +69,7 @@ export const OrderStatusTimeline = ({ status, updatedAt }: OrderStatusTimelinePr
                   {step.label}
                 </p>
                 {isCurrent && updatedTime && (
-                  <span className="text-xs tabular-nums text-gray-400">{updatedTime}</span>
+                  <span className="text-xs tabular-nums text-gray-500">{updatedTime}</span>
                 )}
               </div>
             </div>

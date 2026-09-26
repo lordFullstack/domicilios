@@ -150,8 +150,8 @@ export const ProductFormModal = ({
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Foto real o icono */}
-            <div>
-              <label className="block text-sm font-semibold text-secondary mb-2">Foto del producto</label>
+            <div role="group" aria-labelledby="product-photo-label">
+              <p id="product-photo-label" className="block text-sm font-semibold text-secondary mb-2">Foto del producto</p>
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center text-3xl overflow-hidden flex-shrink-0">
                   {uploading ? (
@@ -177,6 +177,7 @@ export const ProductFormModal = ({
                 ) : (
                   <input
                     type="text"
+                    aria-label="URL de la imagen"
                     placeholder="URL de imagen (https://...)"
                     value={imageUrl.startsWith('http') ? imageUrl : ''}
                     onChange={(e) => setImageUrl(e.target.value)}
@@ -204,14 +205,15 @@ export const ProductFormModal = ({
             />
 
             {/* Categoría */}
-            <div>
-              <label className="block text-sm font-semibold text-secondary mb-2">Categoría</label>
+            <div role="group" aria-labelledby="product-category-label">
+              <p id="product-category-label" className="block text-sm font-semibold text-secondary mb-2">Categoría</p>
               <div className="flex flex-wrap gap-2">
                 {PRODUCT_CATEGORIES.map((cat) => (
                   <button
                     key={cat}
                     type="button"
                     onClick={() => setCategory(cat)}
+                    aria-pressed={category === cat}
                     className={`px-3 py-2 rounded-xl text-xs font-semibold border-2 transition-all active:scale-95 ${
                       category === cat
                         ? 'border-primary bg-primary/10 text-primary'
@@ -226,8 +228,9 @@ export const ProductFormModal = ({
 
             {/* Descripción */}
             <div>
-              <label className="block text-sm font-semibold text-secondary mb-2">Descripción</label>
+              <label htmlFor="product-description" className="block text-sm font-semibold text-secondary mb-2">Descripción</label>
               <textarea
+                id="product-description"
                 className="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                 placeholder="Ej: Tomate, mozzarella, albahaca"
                 value={description}

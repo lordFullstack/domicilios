@@ -60,6 +60,7 @@ export const RatingModal = ({
       )}
 
       <textarea
+        aria-label="Comentario (opcional)"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="Comentario (opcional)"
