@@ -2,6 +2,7 @@ import { ErrorState } from '@/shared/components/ErrorState'
 import { Button } from '@/shared/components/Button'
 import { ERROR_COPY } from '@/shared/constants/stateCopy'
 import { useAuth } from '@/shared/hooks/useAuth'
+import { SupportLink } from '@/shared/components/SupportLink'
 
 /**
  * Pantalla para cuentas con `profiles.active = false`: restaurantes y
@@ -18,9 +19,12 @@ export const AccountInactiveScreen = () => {
       title={copy.title}
       description={copy.description}
       action={
-        <Button variant="tertiary" onClick={() => void logout()}>
-          {copy.cta}
-        </Button>
+        <div className="flex flex-col items-center gap-2">
+          <SupportLink message="Hola, mi cuenta en Domicilios Riohacha sigue en revisión." label="Escribir a soporte" />
+          <Button variant="tertiary" onClick={() => void logout()}>
+            {copy.cta}
+          </Button>
+        </div>
       }
     />
   )
