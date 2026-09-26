@@ -7,6 +7,7 @@ import { BottomNav } from '@/shared/components/BottomNav'
 import { LogoutConfirmSheet } from '@/shared/components/LogoutConfirmSheet'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
 import { InstallAppCard } from '@/shared/components/InstallAppCard'
+import { SupportLink } from '@/shared/components/SupportLink'
 import { Input } from '@/shared/components/Input'
 import { Button } from '@/shared/components/Button'
 import { ROUTES } from '@/config/constants'
@@ -98,6 +99,7 @@ export const RestaurantAccountPage = () => {
       {/* Configuración */}
       <div className="px-5 md:px-0 mb-6">
         <h2 className="text-xs font-bold text-gray-500 tracking-wide mb-2">CONFIGURACIÓN</h2>
+        <SupportLink className="w-full mb-3" />
         <InstallAppCard />
         <NotificationPermissionCard />
       </div>

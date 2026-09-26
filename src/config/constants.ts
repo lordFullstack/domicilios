@@ -1,5 +1,7 @@
 export const APP_NAME = 'Domicilios Riohacha'
 export const APP_VERSION = '0.1.0'
+// WhatsApp de soporte (formato internacional, sin +): restaurantes, domiciliarios y clientes.
+export const SUPPORT_WHATSAPP = '573205390468'
 
 export const ROUTES = {
   // Public
