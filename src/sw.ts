@@ -119,8 +119,8 @@ self.addEventListener('push', (event) => {
   event.waitUntil(
     self.registration.showNotification(payload.title, {
       body: payload.body,
-      icon: '/brand/rocket-app-icon-192.png',
-      badge: '/brand/rocket-app-icon-192.png',
+      icon: '/brand/app-icon-192.png',
+      badge: '/brand/app-icon-192.png',
       data: { url: payload.url, orderId: payload.orderId },
       tag: `order-${payload.orderId}`, // reemplaza notificaciones previas del mismo pedido en vez de acumularlas
       // Sin `renotify` un aviso que reemplaza a otro con el mismo tag llega en silencio (Android).
