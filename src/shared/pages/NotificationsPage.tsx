@@ -27,10 +27,10 @@ export const NotificationsPage = () => {
 
   const visible = tab === 'unread' ? notifications.filter((n) => !n.read) : notifications
 
-  const handleClick = async (id: string, orderId?: string | null) => {
+  const handleClick = async (id: string, orderId?: string | null, errandId?: string | null) => {
     await markAsRead(id)
     if (!user) return
-    const target = getNotificationTarget(user.role, orderId)
+    const target = getNotificationTarget(user.role, orderId, errandId)
     if (target) navigate(target)
   }
 
@@ -101,7 +101,7 @@ export const NotificationsPage = () => {
             return (
               <button
                 key={n.id}
-                onClick={() => handleClick(n.id, n.order_id)}
+                onClick={() => handleClick(n.id, n.order_id, n.errand_id)}
                 className={`focus-ring text-left rounded-2xl p-3 flex items-start gap-3 transition-colors ${
                   n.read ? 'bg-white border border-gray-100' : 'bg-danger/10 border border-danger/10'
                 }`}

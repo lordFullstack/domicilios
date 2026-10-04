@@ -152,6 +152,8 @@ export interface AppNotification {
   body: string
   type: string
   order_id?: string | null
+  /** Domi (mandado) al que se refiere la notificación. */
+  errand_id?: string | null
   read: boolean
   created_at: string
 }

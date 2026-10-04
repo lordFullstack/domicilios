@@ -49,11 +49,11 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [open])
 
-  const handleNotificationClick = async (id: string, orderId?: string | null) => {
+  const handleNotificationClick = async (id: string, orderId?: string | null, errandId?: string | null) => {
     await markAsRead(id)
     setOpen(false)
     if (!user) return
-    const target = getNotificationTarget(user.role, orderId)
+    const target = getNotificationTarget(user.role, orderId, errandId)
     if (target) navigate(target)
   }
 
@@ -120,7 +120,7 @@ export const NotificationBell = ({ variant = 'dark' }: NotificationBellProps) =>
                 <button
                   type="button"
                   key={n.id}
-                  onClick={() => handleNotificationClick(n.id, n.order_id)}
+                  onClick={() => handleNotificationClick(n.id, n.order_id, n.errand_id)}
                   className={`w-full text-left px-4 py-3 border-b border-gray-50 last:border-0 transition-colors ${
                     n.read ? 'bg-white' : 'bg-danger/10'
                   }`}

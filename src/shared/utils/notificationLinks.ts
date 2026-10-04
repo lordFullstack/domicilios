@@ -1,4 +1,4 @@
-import { ShoppingBag, RefreshCw, Bike, Bell, LucideIcon } from 'lucide-react'
+import { ShoppingBag, RefreshCw, Bike, Bell, Package, LucideIcon } from 'lucide-react'
 import { ROUTES, USER_ROLES } from '@/config/constants'
 
 /**
@@ -9,6 +9,8 @@ import { ROUTES, USER_ROLES } from '@/config/constants'
  * nueva.
  */
 export const getNotificationIcon = (title: string): LucideIcon => {
+  if (title.includes('Domi')) return Package
+  if (title.includes('Cotización')) return Package
   if (title.includes('Nuevo pedido')) return ShoppingBag
   if (title.includes('Entrega asignada')) return Bike
   if (title.includes('Actualización')) return RefreshCw
@@ -21,7 +23,13 @@ export const getNotificationIcon = (title: string): LucideIcon => {
  * Restaurante/Domiciliario (solo listados), así que el deep-link llega
  * hasta donde realmente hay una pantalla — no se inventa una ruta.
  */
-export const getNotificationTarget = (role: string, orderId?: string | null): string | null => {
+export const getNotificationTarget = (role: string, orderId?: string | null, errandId?: string | null): string | null => {
+  // Domi (mandado): el cliente abre su seguimiento; el domiciliario, su panel.
+  if (errandId) {
+    if (role === USER_ROLES.CLIENT) return ROUTES.DOMI_DETAIL.replace(':id', errandId)
+    if (role === USER_ROLES.DELIVERY) return ROUTES.DELIVERY_DASHBOARD
+    return null
+  }
   if (!orderId) return null
   if (role === USER_ROLES.CLIENT) return ROUTES.CLIENT_ORDER.replace(':id', orderId)
   if (role === USER_ROLES.RESTAURANT) return ROUTES.RESTAURANT_ORDERS

@@ -12,6 +12,10 @@ import { FeaturedSection } from '../components/FeaturedSection'
 import { RestaurantsGrid } from '../components/RestaurantsGrid'
 import { ActiveOrderCard } from '../components/ActiveOrderCard'
 import { CartFloatingBar } from '../components/CartFloatingBar'
+import { DomiFab } from '@/features/errands/components/DomiFab'
+import { ActiveErrandCard } from '@/features/errands/components/ActiveErrandCard'
+import { useMyErrands } from '@/features/errands/hooks/useErrands'
+import { isActiveErrand } from '@/features/errands/utils/errandStatus'
 import { ORDER_STATUS } from '@/config/constants'
 
 const TERMINAL_STATUSES: string[] = [ORDER_STATUS.DELIVERED, ORDER_STATUS.CANCELLED]
@@ -20,6 +24,7 @@ export const ClientDashboardPage = () => {
   const { user } = useAuth()
   const { restaurants, loading, error, reload } = useRestaurants({ approvedOnly: true })
   const { orders } = useOrders(user?.id)
+  const { errands } = useMyErrands(user?.id)
 
   // El pedido activo más reciente (si existe). `orders` ya viene ordenado
   // por created_at descendente desde useOrders, así que el primero que no
@@ -29,6 +34,8 @@ export const ClientDashboardPage = () => {
     [orders]
   )
 
+  const activeErrand = useMemo(() => errands.find((e) => isActiveErrand(e.status)), [errands])
+
   return (
     <AppShell>
       {/* Home adaptativo: con un pedido en curso, ese pedido es el protagonista
@@ -36,6 +43,7 @@ export const ClientDashboardPage = () => {
           con él; el h1 sigue existiendo, solo para lectores de pantalla. */}
       <HomeHeader showGreeting={!activeOrder} />
       {activeOrder && <ActiveOrderCard order={activeOrder} />}
+      {activeErrand && <ActiveErrandCard errand={activeErrand} />}
       <SearchBar />
       {!activeOrder && <HomeHeroBanner />}
       <CategoryScroller />
@@ -51,6 +59,7 @@ export const ClientDashboardPage = () => {
         onRetry={reload}
       />
 
+      <DomiFab />
       <CartFloatingBar />
       <BottomNav />
     </AppShell>

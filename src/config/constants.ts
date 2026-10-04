@@ -23,6 +23,11 @@ export const ROUTES = {
   CLIENT_ORDER: '/app/order/:id',
   CLIENT_CATEGORY: '/app/category/:category',
   CLIENT_ACCOUNT: '/app/account',
+
+  // Domi (mandados): el cliente le pide un mandado directo a un domiciliario
+  DOMI: '/domi',
+  DOMI_NEW: '/domi/nuevo',
+  DOMI_DETAIL: '/domi/:id',
   
   // Restaurant
   RESTAURANT_DASHBOARD: '/restaurant/dashboard',

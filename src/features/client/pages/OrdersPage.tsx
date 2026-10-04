@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { ChevronLeft } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { useOrders } from '@/hooks/useLocalData'
@@ -11,6 +11,8 @@ import { EMPTY_COPY } from '@/shared/constants/stateCopy'
 import { OrderCard } from '../components/OrderCard'
 import { OfflineDataBadge } from '@/shared/components/OfflineDataBadge'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
+import { ErrandCard } from '@/features/errands/components/ErrandCard'
+import { useMyErrands } from '@/features/errands/hooks/useErrands'
 import { ROUTES } from '@/config/constants'
 
 export const OrdersPage = () => {
@@ -18,6 +20,9 @@ export const OrdersPage = () => {
   const location = useLocation()
   const { user } = useAuth()
   const { orders, loading, fromCache, cachedAt } = useOrders(user?.id)
+  const { errands, loading: errandsLoading, error: errandsError } = useMyErrands(user?.id)
+  const [params, setParams] = useSearchParams()
+  const tab: 'orders' | 'domis' = params.get('tab') === 'domis' ? 'domis' : 'orders'
 
   const successMessage = (location.state as any)?.message
 
@@ -35,7 +40,53 @@ export const OrdersPage = () => {
         <h1 className="font-display text-lg font-bold text-secondary">Mis Órdenes</h1>
       </div>
 
-      {/* Contenido */}
+      {/* Pedidos de restaurantes / Domis (mandados) */}
+      <div className="mx-5 mb-4 flex w-fit gap-1 rounded-xl bg-gray-100 p-1" role="tablist" aria-label="Tipo de pedido">
+        {([
+          ['orders', 'Pedidos'],
+          ['domis', 'Domis'],
+        ] as const).map(([key, label]) => (
+          <button
+            key={key}
+            type="button"
+            role="tab"
+            aria-selected={tab === key}
+            onClick={() => setParams(key === 'orders' ? {} : { tab: key }, { replace: true })}
+            className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors ${
+              tab === key ? 'bg-white text-secondary shadow-card' : 'text-gray-500'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'domis' ? (
+        <div className="px-5" role="tabpanel">
+          {errandsLoading ? (
+            <LoadingState label="Cargando Domis" className="flex flex-col gap-3">
+              {[0, 1].map((i) => (
+                <Skeleton key={i} className="h-20 w-full rounded-2xl" />
+              ))}
+            </LoadingState>
+          ) : errandsError ? (
+            <p className="py-8 text-center text-sm text-gray-500" role="alert">{errandsError}</p>
+          ) : errands.length > 0 ? (
+            <div className="flex flex-col gap-3">
+              {errands.map((errand) => (
+                <ErrandCard key={errand.id} errand={errand} onClick={() => navigate(ROUTES.DOMI_DETAIL.replace(':id', errand.id))} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              illustration="idle"
+              title="Aún no has pedido un Domi"
+              description="Pídele un mandado a un domiciliario: compras o recogidas, sin restaurante."
+              action={<Button variant="gradient" onClick={() => navigate(ROUTES.DOMI)}>Pide tu Domi</Button>}
+            />
+          )}
+        </div>
+      ) : (
       <div className="px-5">
         {successMessage && (
           <div className="mb-4 bg-success/10 text-success-strong text-sm font-semibold rounded-2xl p-3">
@@ -78,6 +129,7 @@ export const OrdersPage = () => {
           />
         )}
       </div>
+      )}
 
       <BottomNav />
     </div>

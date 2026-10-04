@@ -11,6 +11,10 @@ vi.mock('@/hooks/useLocalData', () => ({
   useRestaurants: () => ({ restaurants: [], loading: false, error: null, reload: vi.fn() }),
   useOrders: () => ({ orders: state.orders }),
 }))
+// Domi: no forma parte de la estructura que se comprueba aquí (el botón flotante no ocupa lugar en el flujo).
+vi.mock('@/features/errands/hooks/useErrands', () => ({ useMyErrands: () => ({ errands: [] }) }))
+vi.mock('@/features/errands/components/DomiFab', () => ({ DomiFab: () => null }))
+vi.mock('@/features/errands/components/ActiveErrandCard', () => ({ ActiveErrandCard: () => null }))
 vi.mock('@/shared/components/AppShell', () => ({ AppShell: ({ children }: { children: React.ReactNode }) => <main>{children}</main> }))
 vi.mock('@/shared/components/BottomNav', () => ({ BottomNav: () => <nav data-testid="bottom-nav" /> }))
 vi.mock('../components/CartFloatingBar', () => ({ CartFloatingBar: () => <div data-testid="cart-bar" /> }))

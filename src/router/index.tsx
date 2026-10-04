@@ -90,6 +90,16 @@ const CategoryResultsPage = lazy(() =>
 const ClientAccountPage = lazy(() =>
   import('@/features/client/pages/ClientAccountPage').then((m) => ({ default: m.ClientAccountPage }))
 )
+// Domi (mandados)
+const DomiTypePage = lazy(() =>
+  import('@/features/errands/pages/DomiTypePage').then((m) => ({ default: m.DomiTypePage }))
+)
+const DomiNewPage = lazy(() =>
+  import('@/features/errands/pages/DomiNewPage').then((m) => ({ default: m.DomiNewPage }))
+)
+const DomiDetailPage = lazy(() =>
+  import('@/features/errands/pages/DomiDetailPage').then((m) => ({ default: m.DomiDetailPage }))
+)
 const RestaurantAccountPage = lazy(() =>
   import('@/features/restaurant/pages/AccountPage').then((m) => ({ default: m.RestaurantAccountPage }))
 )
@@ -190,6 +200,32 @@ export const Router = () => {
           element={
             <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
               <ClientAccountPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Domi (mandados) */}
+        <Route
+          path={ROUTES.DOMI}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
+              <DomiTypePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.DOMI_NEW}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
+              <DomiNewPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.DOMI_DETAIL}
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLES.CLIENT]}>
+              <DomiDetailPage />
             </ProtectedRoute>
           }
         />
