@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { AdminSidebar, AdminMobileNav } from '../components/AdminSidebar'
 import { useAdminOrders } from '../hooks/useAdminOrders'
 import { useAdminUsers } from '../hooks/useAdminUsers'
@@ -10,6 +11,7 @@ import { OrderDetailPanel } from '../components/OrderDetailPanel'
 import { USER_ROLES } from '@/config/constants'
 import { Order } from '@/shared/types'
 import { AdminListSkeleton } from '../components/AdminListSkeleton'
+import { AdminErrandsPanel } from '../components/AdminErrandsPanel'
 
 export const AdminOrdersPage = () => {
   const {
@@ -31,6 +33,8 @@ export const AdminOrdersPage = () => {
   const { restaurants } = useAdminRestaurants()
 
   const [detailOrder, setDetailOrder] = useState<Order | null>(null)
+  const [params, setParams] = useSearchParams()
+  const tab: 'orders' | 'domis' = params.get('tab') === 'domis' ? 'domis' : 'orders'
 
   const usersById = useMemo(() => new Map(users.map((u) => [u.id, u])), [users])
   const restaurantsById = useMemo(() => new Map(restaurants.map((r) => [r.id, r])), [restaurants])
@@ -50,7 +54,33 @@ export const AdminOrdersPage = () => {
       <AdminSidebar />
 
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
-        <h1 className="font-display text-2xl font-bold text-secondary mb-1">Pedidos</h1>
+        <h1 className="font-display text-2xl font-bold text-secondary mb-3">Pedidos</h1>
+
+        {/* Pedidos de restaurantes / Domis (mandados) */}
+        <div className="mb-4 flex w-fit gap-1 rounded-xl bg-gray-100 p-1" role="tablist" aria-label="Tipo de pedido">
+          {([
+            ['orders', 'Pedidos'],
+            ['domis', '🛵 Domis'],
+          ] as const).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={tab === key}
+              onClick={() => setParams(key === 'orders' ? {} : { tab: key }, { replace: true })}
+              className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors ${
+                tab === key ? 'bg-white text-secondary shadow-card' : 'text-gray-500'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {tab === 'domis' ? (
+          <AdminErrandsPanel usersById={usersById} />
+        ) : (
+          <>
         <p className="text-sm text-gray-500 mb-1">
           {orders.length} de {allOrders.length} pedido(s)
         </p>
@@ -101,6 +131,8 @@ export const AdminOrdersPage = () => {
                 </div>
               </>
             )}
+          </>
+        )}
           </>
         )}
       </div>

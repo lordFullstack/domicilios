@@ -105,6 +105,11 @@ export const clientCancelErrand = (errandId: string) => callErrandRpc('client_ca
 export const clientRespondQuote = (errandId: string, approve: boolean, note?: string) =>
   callErrandRpc('client_respond_errand_quote', { p_errand_id: errandId, p_approve: approve, p_note: note ?? null })
 
+// ---------------- Admin ----------------
+
+/** Cancela un Domi atascado (domi desaparecido, cliente que no responde). Avisa a las dos partes. */
+export const adminCancelErrand = (errandId: string) => callErrandRpc('admin_cancel_errand', { p_errand_id: errandId })
+
 // ---------------- Domiciliario ----------------
 
 export const deliveryAcceptErrand = (errandId: string) => callErrandRpc('delivery_errand_accept', { p_errand_id: errandId })

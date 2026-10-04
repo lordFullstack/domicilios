@@ -13,6 +13,7 @@ import { User } from '@/shared/types'
 import { AdminListSkeleton } from '../components/AdminListSkeleton'
 import { DeliveryFeeCard } from '../components/DeliveryFeeCard'
 import { ResponseTimesCard } from '../components/ResponseTimesCard'
+import { ErrandSettingsCard } from '../components/ErrandSettingsCard'
 
 type QuickFilter = 'all' | 'active_now' | 'disabled'
 
@@ -83,6 +84,7 @@ export const AdminDeliveryPeoplePage = () => {
 
         <DeliveryFeeCard />
         <ResponseTimesCard />
+        <ErrandSettingsCard />
 
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <input

@@ -180,6 +180,11 @@ export interface ErrandSettings {
 const DEFAULT_SETTINGS: ErrandSettings = { minFee: 5000, maxBudget: 100000, quoteSeconds: 120 }
 let cachedSettings: ErrandSettings | null = null
 
+/** El panel admin avisa aquí cuando guarda, para que el formulario del cliente use los valores nuevos. */
+export const setErrandSettingsCache = (next: ErrandSettings) => {
+  cachedSettings = next
+}
+
 export const useErrandSettings = () => {
   const [settings, setSettings] = useState<ErrandSettings>(cachedSettings ?? DEFAULT_SETTINGS)
 
