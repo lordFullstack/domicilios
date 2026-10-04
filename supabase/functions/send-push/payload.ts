@@ -32,10 +32,18 @@ export interface NotificationRow {
   body: string
   type: string
   order_id: string | null
+  /** Domi (mandado) al que se refiere; null en notificaciones de pedidos. */
+  errand_id?: string | null
 }
 
 /** Pantalla que abre el push, según el rol del destinatario (la app ya tiene estas rutas). */
-export const pathFor = (role: string | null | undefined, orderId: string | null): string => {
+export const pathFor = (role: string | null | undefined, orderId: string | null, errandId?: string | null): string => {
+  // Domi (mandado): el cliente abre su seguimiento; el domiciliario, su panel; el admin, la pestaña Domis.
+  if (errandId) {
+    if (role === 'delivery') return '/delivery/dashboard'
+    if (role === 'admin') return '/admin/orders?tab=domis'
+    return `/domi/${errandId}`
+  }
   if (role === 'restaurant') return '/restaurant/orders'
   if (role === 'delivery') return '/delivery/active'
   return orderId ? `/app/order/${orderId}` : '/app'
@@ -46,6 +54,7 @@ export const buildPayload = (n: NotificationRow, role: string | null | undefined
   JSON.stringify({
     title: n.title,
     body: n.body,
-    url: pathFor(role, n.order_id),
+    url: pathFor(role, n.order_id, n.errand_id),
     orderId: n.order_id,
+    errandId: n.errand_id ?? null,
   })

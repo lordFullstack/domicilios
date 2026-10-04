@@ -42,6 +42,19 @@ describe('send-push: pathFor y buildPayload', () => {
     expect(pathFor('client', null)).toBe('/app')
   })
 
+  it('un Domi abre su pantalla según el rol (cliente, domiciliario, admin)', () => {
+    expect(pathFor('client', null, 'e1')).toBe('/domi/e1')
+    expect(pathFor('delivery', null, 'e1')).toBe('/delivery/dashboard')
+    expect(pathFor('admin', null, 'e1')).toBe('/admin/orders?tab=domis')
+    // Un pedido normal no cambia
+    expect(pathFor('client', 'o1', null)).toBe('/app/order/o1')
+  })
+
+  it('el payload de un Domi lleva errandId y su ruta', () => {
+    const domi: NotificationRow = { ...row, title: 'Actualización de tu Domi', order_id: null, errand_id: 'e1' }
+    expect(JSON.parse(buildPayload(domi, 'client'))).toMatchObject({ url: '/domi/e1', errandId: 'e1', orderId: null })
+  })
+
   it('el payload sale solo de la fila: título, cuerpo, pedido y ruta', () => {
     const payload = JSON.parse(buildPayload(row, 'restaurant'))
     expect(payload).toEqual({
@@ -49,6 +62,7 @@ describe('send-push: pathFor y buildPayload', () => {
       body: 'Te llegó un pedido nuevo por $10000',
       url: '/restaurant/orders',
       orderId: 'o1',
+      errandId: null,
     })
   })
 })
