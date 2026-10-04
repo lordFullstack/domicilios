@@ -21,6 +21,7 @@ import { DeliveryOrderCard } from '../components/DeliveryOrderCard'
 import { DeliveryOrderDetailSheet } from '../components/DeliveryOrderDetailSheet'
 import { ActiveDeliveryBar } from '../components/ActiveDeliveryBar'
 import { ShiftToggle } from '../components/ShiftToggle'
+import { DriverErrandsSection } from '@/features/errands/components/DriverErrandsSection'
 import { ThemeToggleButton } from '../components/ThemeToggleButton'
 import { useDriverTheme } from '../hooks/useDriverTheme'
 import { useDriverShift } from '../hooks/useDriverShift'
@@ -215,6 +216,9 @@ export const DeliveryDashboard = () => {
           />
         </div>
       )}
+
+      {/* Domis (mandados): ofertas, cotizaciones y el Domi activo */}
+      {user && <DriverErrandsSection userId={user.id} hasActiveOrder={activeDeliveries.length > 0} />}
 
       {/* Entrega activa */}
       {activeDeliveries.length > 0 && (
