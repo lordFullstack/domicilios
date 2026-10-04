@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LogOut, ChevronRight, Store } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
-import { useRestaurants } from '@/hooks/useLocalData'
+import { updateRestaurant, useRestaurants } from '@/hooks/useLocalData'
+import { CategoryPicker } from '@/shared/components/CategoryPicker'
+import type { RestaurantCategory } from '@/shared/types'
 import { BottomNav } from '@/shared/components/BottomNav'
 import { LogoutConfirmSheet } from '@/shared/components/LogoutConfirmSheet'
 import { NotificationPermissionCard } from '@/shared/components/NotificationPermissionCard'
@@ -15,7 +17,7 @@ import { ROUTES } from '@/config/constants'
 export const RestaurantAccountPage = () => {
   const { user, updateProfile, logout } = useAuth()
   const navigate = useNavigate()
-  const { restaurants, loading: loadingRestaurants } = useRestaurants()
+  const { restaurants, loading: loadingRestaurants, reload: reloadRestaurants } = useRestaurants()
   const myRestaurant = restaurants.find((r) => r.owner_id === user?.id)
 
   const [name, setName] = useState(user?.name || '')
@@ -25,6 +27,29 @@ export const RestaurantAccountPage = () => {
   const [logoutSheetOpen, setLogoutSheetOpen] = useState(false)
 
   const hasChanges = name.trim().length > 0 && name !== user?.name
+
+  // Tipo de comida del negocio (decide en qué categoría del Inicio del cliente aparece)
+  const [category, setCategory] = useState<RestaurantCategory | null>(null)
+  const [savingCategory, setSavingCategory] = useState(false)
+  const [categoryMessage, setCategoryMessage] = useState<{ text: string; error: boolean } | null>(null)
+  const currentCategory = category ?? myRestaurant?.category ?? 'Asados'
+  const categoryChanged = !!myRestaurant && currentCategory !== myRestaurant.category
+
+  const handleSaveCategory = async () => {
+    if (!myRestaurant) return
+    setSavingCategory(true)
+    setCategoryMessage(null)
+    try {
+      await updateRestaurant(myRestaurant.id, { category: currentCategory })
+      await reloadRestaurants()
+      setCategory(null)
+      setCategoryMessage({ text: '✓ Tipo de comida guardado', error: false })
+    } catch {
+      setCategoryMessage({ text: 'No se pudo guardar. Intenta de nuevo.', error: true })
+    } finally {
+      setSavingCategory(false)
+    }
+  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -94,6 +119,23 @@ export const RestaurantAccountPage = () => {
           </div>
           <ChevronRight className="w-4 h-4 text-gray-300 flex-shrink-0" />
         </button>
+
+        {myRestaurant && (
+          <div className="border border-gray-100 rounded-2xl p-4 mt-3">
+            <CategoryPicker value={currentCategory} onChange={(c) => { setCategory(c); setCategoryMessage(null) }} disabled={savingCategory} />
+            <p className="text-sm text-gray-500 mt-2">Los clientes te encuentran en este botón de categoría del Inicio.</p>
+            {categoryMessage && (
+              <p role="status" className={`text-sm mt-2 font-semibold ${categoryMessage.error ? 'text-danger' : 'text-success-strong'}`}>
+                {categoryMessage.text}
+              </p>
+            )}
+            {categoryChanged && (
+              <Button size="sm" loading={savingCategory} onClick={handleSaveCategory} className="mt-3">
+                Guardar tipo de comida
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Configuración */}

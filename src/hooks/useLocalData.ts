@@ -13,7 +13,7 @@ import { localStorageService, STORAGE_KEYS } from '@/services/storage.service'
 import { offlineCache } from '@/services/offlineCache.service'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { playNotificationSound, showBrowserNotification } from '@/shared/utils/notificationSound'
-import { Restaurant, Product, Order, AppNotification, OrderRating } from '@/shared/types'
+import { Restaurant, RestaurantCategory, Product, Order, AppNotification, OrderRating } from '@/shared/types'
 
 // ============================================
 // HOOK: useOrderItems
@@ -317,6 +317,8 @@ export const createRestaurant = async (restaurant: {
   description: string
   address: string
   phone: string
+  /** Tipo de comida: decide en qué botón de categoría del Inicio aparece. */
+  category: RestaurantCategory
 }) => {
   const { data, error } = await supabase
     .from('restaurants')

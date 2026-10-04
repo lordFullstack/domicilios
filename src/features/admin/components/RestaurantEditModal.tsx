@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Restaurant } from '@/shared/types'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
+import { CategoryPicker } from '@/shared/components/CategoryPicker'
+import type { RestaurantCategory } from '@/shared/types'
 
 interface RestaurantEditModalProps {
   restaurant: Restaurant
@@ -14,6 +16,7 @@ export const RestaurantEditModal = ({ restaurant, onClose, onSave }: RestaurantE
   const [description, setDescription] = useState(restaurant.description || '')
   const [address, setAddress] = useState(restaurant.address || '')
   const [phone, setPhone] = useState(restaurant.phone || '')
+  const [category, setCategory] = useState<RestaurantCategory>(restaurant.category)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -21,7 +24,7 @@ export const RestaurantEditModal = ({ restaurant, onClose, onSave }: RestaurantE
     setSaving(true)
     setError(null)
     try {
-      await onSave({ name, description, address, phone })
+      await onSave({ name, description, address, phone, category })
       onClose()
     } catch (err) {
       console.error(err)
@@ -40,6 +43,7 @@ export const RestaurantEditModal = ({ restaurant, onClose, onSave }: RestaurantE
           <Input label="Nombre" value={name} onChange={(e) => setName(e.target.value)} />
           <Input label="Dirección" value={address} onChange={(e) => setAddress(e.target.value)} />
           <Input label="Teléfono" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <CategoryPicker value={category} onChange={setCategory} disabled={saving} />
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2">Descripción</label>
             <textarea

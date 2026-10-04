@@ -3,7 +3,9 @@ import { Store } from 'lucide-react'
 import { useAuth } from '@/shared/hooks/useAuth'
 import { Button } from '@/shared/components/Button'
 import { Input } from '@/shared/components/Input'
+import { CategoryPicker } from '@/shared/components/CategoryPicker'
 import { createRestaurant } from '@/hooks/useLocalData'
+import type { RestaurantCategory } from '@/shared/types'
 
 interface CreateRestaurantPageProps {
   onCreated: () => void
@@ -15,6 +17,7 @@ export const CreateRestaurantPage = ({ onCreated }: CreateRestaurantPageProps) =
   const [description, setDescription] = useState('')
   const [address, setAddress] = useState('')
   const [phone, setPhone] = useState('')
+  const [category, setCategory] = useState<RestaurantCategory>('Asados')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -30,6 +33,7 @@ export const CreateRestaurantPage = ({ onCreated }: CreateRestaurantPageProps) =
         description,
         address,
         phone,
+        category,
       })
       onCreated()
     } catch (err: any) {
@@ -96,6 +100,7 @@ export const CreateRestaurantPage = ({ onCreated }: CreateRestaurantPageProps) =
           placeholder="Ej: 3001234567"
           required
         />
+        <CategoryPicker value={category} onChange={setCategory} />
 
         <Button type="submit" fullWidth size="lg" loading={loading} className="mt-2">
           Crear restaurante
