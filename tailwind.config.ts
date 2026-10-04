@@ -49,8 +49,8 @@ export default {
           800: '#292524',
           900: '#1C1917',
         },
-        // Domi (servicio de mandados): azul cobalto propio, distinto al azul profundo de marca.
-        domi: { DEFAULT: '#2F5EFF', dark: '#1F46D6', soft: '#E8EEFF', text: '#1F46D6' },
+        // Domi (servicio de mandados): usa la paleta de marca (azul profundo + atardecer), sin color propio.
+        domi: { DEFAULT: '#1C2459', dark: '#151A42', soft: '#EEF0FA', text: '#242E70' },
         accent:  '#F59E0B',
         // Tema NOCHE (panel del domiciliario, LOOP panels-refresh). Solo se usa dentro de un contenedor
         // `.dark`: fondos azul-noche y acento violeta. Contrastes medidos sobre night-900: texto #F4F6FF 16.4,

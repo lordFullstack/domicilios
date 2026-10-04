@@ -59,7 +59,7 @@ export const ErrandActiveSheet = ({ errand, open, busy, disabled, onPickedUp, on
   return (
     <BottomSheet open={open} onClose={onClose} title={`${ERRAND_TYPE_EMOJI[errand.type]} ${ERRAND_TYPE_LABEL[errand.type]}`}>
       <div className="flex flex-col gap-4">
-        <span className="w-fit rounded-full bg-domi px-2.5 py-1 text-xs font-bold text-white">🛵 DOMI</span>
+        <span className="w-fit rounded-full bg-domi px-2.5 py-1 text-xs font-bold text-white dark:bg-pulse">🛵 DOMI</span>
 
         <div>
           <p className="mb-1 text-xs font-bold tracking-wide text-gray-500">MANDADO</p>

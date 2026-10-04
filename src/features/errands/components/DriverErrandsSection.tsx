@@ -226,14 +226,14 @@ const ErrandRow = ({ errand, offer = false, waiting = false, onOpen }: { errand:
       {...(waiting ? {} : { type: 'button' as const, onClick: onOpen })}
       className={`flex w-full items-center gap-3 rounded-2xl bg-white p-4 text-left ${
         waiting ? '' : 'focus-ring transition-transform active:scale-[0.98]'
-      } ${offer ? 'border-2 border-domi' : 'border border-gray-100'}`}
+      } ${offer ? 'border-2 border-domi dark:border-pulse-soft' : 'border border-gray-100'}`}
     >
       <span className="flex-shrink-0 text-2xl" aria-hidden="true">
         {ERRAND_TYPE_EMOJI[errand.type]}
       </span>
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-2 text-sm font-semibold text-secondary">
-          <span className="rounded-full bg-domi px-2 py-0.5 text-xs font-bold text-white">🛵 DOMI</span>
+          <span className="rounded-full bg-domi px-2 py-0.5 text-xs font-bold text-white dark:bg-pulse">🛵 DOMI</span>
           <span className="truncate">{ERRAND_TYPE_LABEL[errand.type]}</span>
         </p>
         <p className="truncate text-xs text-gray-500">

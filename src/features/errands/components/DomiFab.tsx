@@ -10,7 +10,7 @@ import { useDomisAvailable } from '../hooks/useErrands'
 const SCROLL_THRESHOLD = 12
 
 /**
- * Botón flotante "Pide tu Domi" (solo en el Home del cliente). Píldora cobalto abajo a la derecha,
+ * Botón flotante "Pide tu Domi" (solo en el Home del cliente). Píldora con el degradado de marca abajo a la derecha,
  * encima del menú inferior y de la barra del carrito. Al bajar el scroll se encoge a círculo; al subir
  * se expande. Sin Domis en turno queda gris y avisa al tocarlo.
  */
@@ -75,7 +75,7 @@ export const DomiFab = () => {
             'focus-ring pointer-events-auto flex h-14 items-center justify-center overflow-hidden rounded-full font-display text-sm font-bold text-white shadow-floating',
             'transition-[width,padding,background-color] duration-200 ease-out motion-reduce:transition-none active:scale-95',
             expanded ? 'gap-2 px-5' : 'w-14',
-            unavailable ? 'bg-gray-500' : 'bg-domi hover:bg-domi-dark'
+            unavailable ? 'bg-gray-500' : 'bg-brand-gradient hover:opacity-90'
           )}
         >
           <span className="text-xl leading-none" aria-hidden="true">
