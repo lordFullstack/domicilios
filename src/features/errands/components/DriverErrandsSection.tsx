@@ -121,8 +121,7 @@ export const DriverErrandsSection = ({ userId, hasActiveOrder }: DriverErrandsSe
       e,
       async () => {
         let receiptPath: string | undefined
-        if (e.type === 'purchase') {
-          if (!input.receipt) return { ok: false, errand: null, code: 'receipt_required', reason: 'Sube la foto de la factura para continuar.' }
+        if (e.type === 'purchase' && input.receipt) {
           receiptPath = errandFilePath(userId, e.id, 'receipt', input.receipt.extension)
           const uploaded = await uploadErrandFile(receiptPath, input.receipt)
           if (!uploaded) return { ok: false, errand: null, reason: 'No pudimos subir la factura. Revisa tu conexión.' }

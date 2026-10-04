@@ -42,7 +42,8 @@ export const ErrandActiveSheet = ({ errand, open, busy, disabled, onPickedUp, on
   const amount = Number(amountText.replace(/\D/g, '')) || 0
   const overBudget = isPurchase && errand.max_budget !== null && amount > errand.max_budget
   const due = errandAmountDue(errand)
-  const purchaseReady = !isPurchase || (amount > 0 && !overBudget && !!receipt)
+  // La foto de la factura es opcional: solo el monto es obligatorio
+  const purchaseReady = !isPurchase || (amount > 0 && !overBudget)
 
   const pickReceipt = async (file?: File) => {
     if (!file) return
@@ -119,7 +120,7 @@ export const ErrandActiveSheet = ({ errand, open, busy, disabled, onPickedUp, on
             ) : (
               <label className="flex h-20 cursor-pointer items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-gray-200 text-sm font-semibold text-gray-500">
                 <Camera className="h-5 w-5" aria-hidden="true" />
-                Foto de la factura (obligatoria)
+                Foto de la factura (opcional)
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp"

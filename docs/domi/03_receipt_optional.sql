@@ -1,0 +1,3 @@
+-- DOMI: la foto de la factura pasa a ser OPCIONAL. En compras el monto sigue siendo obligatorio y no puede
+-- superar el presupuesto; si hay foto, debe ser un archivo propio ya subido a errand-files.
+-- (Definición completa de delivery_errand_picked_up aplicada en producción el 2026-10-04.)
