@@ -23,9 +23,79 @@
   rel="stylesheet"
 />
     <title>Domicilios Riohacha - Domicilios a tu puerta</title>
+
+    <!-- SPLASH (PWA Fase D): CSS inline para que pinte antes que el bundle de React.
+         El fondo #1C2459 es el mismo background_color del manifest → transición sin salto. -->
+    <style>
+      #splash{position:fixed;inset:0;z-index:9999;background:#1C2459;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:env(safe-area-inset-top,0) 24px env(safe-area-inset-bottom,0);transition:opacity .35s ease,visibility .35s ease}
+      #splash.splash--out{opacity:0;visibility:hidden}
+      .splash__logo{width:112px;height:112px;animation:sp-pop .7s cubic-bezier(.2,.9,.3,1.2) both,sp-float 2.6s ease-in-out .8s infinite}
+      .splash__name{font:700 22px/1.2 Sora,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#fff;margin:22px 0 6px;animation:sp-up .5s ease .3s both}
+      .splash__tag{font:400 13px/1.4 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#B9C0E8;animation:sp-up .5s ease .45s both}
+      .splash__bar{width:128px;height:3px;border-radius:3px;background:rgba(255,255,255,.14);margin-top:30px;overflow:hidden;animation:sp-up .4s ease .6s both}
+      .splash__bar i{display:block;height:100%;width:40%;border-radius:3px;background:#FF8515;animation:sp-load 1.2s ease-in-out infinite}
+      .splash__sign{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);display:flex;flex-direction:column;align-items:center;gap:2px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;animation:sp-up .5s ease .8s both}
+      .splash__by{font-size:10px;letter-spacing:.06em;color:#8A93C9}
+      .splash__brand{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.01em}
+      .splash__ai{font-weight:700;background:linear-gradient(90deg,#00E5FF,#0066FF,#8A2BE2,#00E5FF);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sp-grad 6s linear infinite}
+      @keyframes sp-pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+      @keyframes sp-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+      @keyframes sp-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+      @keyframes sp-load{from{transform:translateX(-100%)}to{transform:translateX(260%)}}
+      @keyframes sp-grad{from{background-position:0% 50%}to{background-position:300% 50%}}
+      @media (prefers-reduced-motion:reduce){#splash *{animation:none!important}#splash{transition:none}}
+    </style>
   </head>
   <body>
     <div id="root"></div>
+
+    <div id="splash" role="status" aria-live="polite" aria-label="Cargando Domicilios Riohacha">
+      <svg class="splash__logo" viewBox="0 0 316.71 316.71" aria-hidden="true">
+        <defs><linearGradient id="splash-g" x1="284.67" y1="74.5" x2="20.81" y2="249.67" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffa31f"/><stop offset="0.06" stop-color="#f89831" stop-opacity="0.97"/><stop offset="0.17" stop-color="#e67b5f" stop-opacity="0.91"/><stop offset="0.31" stop-color="#ca4daa" stop-opacity="0.79"/><stop offset="0.45" stop-color="#a918ff" stop-opacity="0.67"/><stop offset="0.82" stop-color="#0a18ff"/></linearGradient></defs>
+        <rect fill="#fff" width="316.71" height="316.71" rx="70.07"/>
+        <rect fill="url(#splash-g)" width="316.71" height="316.71" rx="70.07"/>
+        <g transform="translate(-92.1 -91.28)">
+          <path fill="#ff8515" d="M209,277a14.66,14.66,0,0,0-7.16-3.27c-7.68-1.11-16.09,4.63-21.56,14.39q-4.06,11.55-8.15,23.11a38,38,0,0,1-9,14.51,33,33,0,0,1-11.91,7.66c10.23,1.38,29.13,2,44.93-10.9a50.88,50.88,0,0,0,4.61-4.26q-1.24,5.82-2.51,11.63c15.23-7.94,25.21-19.19,24.3-29a13.83,13.83,0,0,0-1.41-4.87c-3.75,6.21-9.4,9.91-14.78,9.3a11.25,11.25,0,0,1-5.45-2.24l-12.85,10.45c2-6.78,3.91-12.38,5.34-16.49,2.3-6.63,3.16-8.52,4.44-10.48A26.88,26.88,0,0,1,209,277Z"/>
+          <path fill="#fff" d="M343,170.6a124.65,124.65,0,0,0-60.71,9.18c-35.8,15.21-53.52,42.94-59.2,52.77l-29.23.77a177.35,177.35,0,0,0-26.38,33l40.73-2.71c-.87,1.8-1.75,3.59-2.62,5.38l26.66,29.52,6.7-1.18q-3.48,20.31-6.94,40.6,7.71-4.67,15.8-10.05c6.46-4.31,12.53-8.63,18.21-12.88l4.14-28.49c10.34-4.82,38.27-19.51,56.76-52.25A125.66,125.66,0,0,0,343,170.6Zm-56.84,69.19a17.68,17.68,0,1,1,18.35-17.07A17.68,17.68,0,0,1,286.14,239.79Z"/>
+        </g>
+      </svg>
+      <div class="splash__name">Domicilios</div>
+      <div class="splash__tag">Rápido, fácil y sin filas</div>
+      <div class="splash__bar" aria-hidden="true"><i></i></div>
+      <div class="splash__sign" aria-hidden="true">
+        <span class="splash__by">hecho por</span>
+        <span class="splash__brand">Synaptix <span class="splash__ai">AI Labs</span></span>
+      </div>
+    </div>
+
+    <!-- Quita el splash cuando React pinta algo en #root (sin tocar main.tsx).
+         MIN evita un parpadeo si carga muy rápido; MAX garantiza que nunca se quede pegado. -->
+    <script>
+      (function () {
+        var splash = document.getElementById('splash');
+        var root = document.getElementById('root');
+        if (!splash || !root) return;
+        var start = Date.now(), MIN = 500, MAX = 10000, done = false;
+        function hide() {
+          if (done) return;
+          done = true;
+          var wait = Math.max(0, MIN - (Date.now() - start));
+          setTimeout(function () {
+            splash.classList.add('splash--out');
+            setTimeout(function () { splash.remove(); }, 400);
+          }, wait);
+        }
+        if (root.childElementCount > 0) { hide(); }
+        else {
+          var obs = new MutationObserver(function () {
+            if (root.childElementCount > 0) { obs.disconnect(); hide(); }
+          });
+          obs.observe(root, { childList: true });
+        }
+        setTimeout(hide, MAX);
+      })();
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

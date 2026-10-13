@@ -16,6 +16,8 @@ export default defineConfig({
         'brand/app-icon.svg',
         'brand/app-icon-192.png',
         'brand/app-icon-512.png',
+        'brand/app-icon-any-192.png',
+        'brand/app-icon-any-512.png',
         'brand/app-icon-maskable-512.png',
         'brand/apple-touch-icon-180.png',
         'brand/favicon-64.png',
@@ -24,22 +26,27 @@ export default defineConfig({
         name: 'Domicilios Riohacha',
         short_name: 'Domicilios',
         description: 'Pide a domicilio en Riohacha — rápido, fácil y sin filas.',
+        lang: 'es',
         theme_color: '#1C2459',
-        background_color: '#FFFFFF',
+        // Mismo azul del splash de index.html (PWA Fase D): sin salto de color al abrir.
+        background_color: '#1C2459',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/app/home',
         scope: '/',
         icons: [
           {
-            src: '/brand/app-icon-192.png',
+            // Esquinas transparentes (PWA Fase D): reemplaza el PNG cuadrado viejo.
+            src: '/brand/app-icon-any-192.png',
             sizes: '192x192',
             type: 'image/png',
+            purpose: 'any',
           },
           {
-            src: '/brand/app-icon-512.png',
+            src: '/brand/app-icon-any-512.png',
             sizes: '512x512',
             type: 'image/png',
+            purpose: 'any',
           },
           {
             src: '/brand/app-icon-maskable-512.png',
